@@ -14,12 +14,12 @@ const managerRoutes = require('./routes/manager.routes');
 
 const app = express();
 
-// ─── Security & parsing ───────────────────────────────
+// ─── Security & Parsing ───────────────────────────────
 app.use(helmet({
-  crossOriginResourcePolicy: false, // Helps with image loading if you add photos later
+  crossOriginResourcePolicy: false,
 }));
 
-// ✅ CORS FIX: Added https:// and improved options
+// ✅ FIXED CORS CONFIGURATION
 const allowedOrigins = [
   "http://localhost:5173",
   "https://invencea-frontend-2yj9.vercel.app" 
@@ -27,6 +27,7 @@ const allowedOrigins = [
 
 const corsOptions = {
   origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps/Postman) or if in allowed list
     if (!origin || allowedOrigins.indexOf(origin) !== -1) {
       callback(null, true);
     } else {
@@ -35,11 +36,12 @@ const corsOptions = {
   },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept'],
+  optionsSuccessStatus: 200 // Important for legacy browser support
 };
 
 app.use(cors(corsOptions));
-app.options('*', cors(corsOptions)); // ✅ Enable pre-flight for all routes
+app.options('*', cors(corsOptions)); // ✅ Robust Pre-flight handling
 
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
@@ -47,10 +49,10 @@ app.use(express.urlencoded({ extended: true }));
 // ─── Logging ───────────────────────────────
 app.use(morgan('combined', { stream: { write: (msg) => logger.http(msg.trim()) } }));
 
-// ─── Rate limiting ───────────────────────────────
+// ─── Rate Limiting ───────────────────────────────
 app.use('/api/', rateLimiter);
 
-// ─── Swagger docs ───────────────────────────────
+// ─── Swagger Docs ───────────────────────────────
 try {
   const swaggerDoc = YAML.load(path.join(__dirname, '../docs/openapi.yaml'));
   app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerDoc));
@@ -59,13 +61,14 @@ try {
 }
 
 // ─── API Routes ───────────────────────────────
+// Mount manager routes separately if they are outside the standard v1 index
 app.use('/api/v1/manager', managerRoutes); 
 app.use('/api/v1', routes);
 
-// ─── Health check ───────────────────────────────
+// ─── Health Check ───────────────────────────────
 app.get('/health', (_req, res) => res.json({
   status: 'ok',
-  env: process.env.NODE_ENV || 'development',
+  env: process.env.NODE_ENV || 'production',
 }));
 
 // ─── 404 Handler ───────────────────────────────
@@ -74,6 +77,7 @@ app.use((_req, res) => res.status(404).json({
   message: 'Route not found',
 }));
 
+// ─── Global Error Handler ──────────────────────
 app.use(errorHandler);
 
 module.exports = app;
