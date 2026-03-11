@@ -1,0 +1,361 @@
+2026-03-06 21:04:50 [error]: error: column "password" of relation "users" does not exist
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg\lib\client.js:631:17
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async seed (C:\Users\Teacher\Music\invencea\backend\seeds\index.js:35:7)
+2026-03-06 21:05:40 [error]: error: permission denied for table users
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg\lib\client.js:631:17
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async seed (C:\Users\Teacher\Music\invencea\backend\seeds\index.js:35:7)
+2026-03-06 22:23:16 [error]: Error: Invalid credentials
+    at Object.adminLogin (C:\Users\Teacher\Music\invencea\backend\src\services\auth.service.js:113:41)
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async adminLogin (C:\Users\Teacher\Music\invencea\backend\src\controllers\auth.controller.js:39:20)
+2026-03-06 23:03:20 [error]: Error: Invalid credentials
+    at Object.adminLogin (C:\Users\Teacher\Music\invencea\backend\src\services\auth.service.js:119:35)
+    at async adminLogin (C:\Users\Teacher\Music\invencea\backend\src\controllers\auth.controller.js:39:20)
+2026-03-07 11:27:20 [error]: Error: Invalid credentials
+    at Object.adminLogin (C:\Users\Teacher\Music\invencea\backend\src\services\auth.service.js:119:35)
+    at async adminLogin (C:\Users\Teacher\Music\invencea\backend\src\controllers\auth.controller.js:39:20)
+2026-03-07 17:01:10 [error]: Error: Room is required
+    at Object.createUnifiedItem (C:\Users\Teacher\Music\invencea\backend\src\services\inventory.service.js:157:25)
+    at createItem (C:\Users\Teacher\Music\invencea\backend\src\controllers\inventory.controller.js:74:41)
+    at Layer.handle [as handle_request] (C:\Users\Teacher\Music\invencea\backend\node_modules\express\lib\router\layer.js:95:5)
+    at next (C:\Users\Teacher\Music\invencea\backend\node_modules\express\lib\router\route.js:149:13)
+    at C:\Users\Teacher\Music\invencea\backend\src\middleware\roleMiddleware.js:13:5
+    at Layer.handle [as handle_request] (C:\Users\Teacher\Music\invencea\backend\node_modules\express\lib\router\layer.js:95:5)
+    at next (C:\Users\Teacher\Music\invencea\backend\node_modules\express\lib\router\route.js:149:13)
+    at Route.dispatch (C:\Users\Teacher\Music\invencea\backend\node_modules\express\lib\router\route.js:119:3)
+    at Layer.handle [as handle_request] (C:\Users\Teacher\Music\invencea\backend\node_modules\express\lib\router\layer.js:95:5)
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\express\lib\router\index.js:284:15
+    at router.process_params (C:\Users\Teacher\Music\invencea\backend\node_modules\express\lib\router\index.js:346:12)
+    at next (C:\Users\Teacher\Music\invencea\backend\node_modules\express\lib\router\index.js:280:10)
+    at protect (C:\Users\Teacher\Music\invencea\backend\src\middleware\authMiddleware.js:31:5)
+    at Layer.handle [as handle_request] (C:\Users\Teacher\Music\invencea\backend\node_modules\express\lib\router\layer.js:95:5)
+    at trim_prefix (C:\Users\Teacher\Music\invencea\backend\node_modules\express\lib\router\index.js:328:13)
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\express\lib\router\index.js:286:9
+2026-03-07 17:01:43 [error]: Error: Room is required
+    at Object.createUnifiedItem (C:\Users\Teacher\Music\invencea\backend\src\services\inventory.service.js:157:25)
+    at createItem (C:\Users\Teacher\Music\invencea\backend\src\controllers\inventory.controller.js:74:41)
+    at Layer.handle [as handle_request] (C:\Users\Teacher\Music\invencea\backend\node_modules\express\lib\router\layer.js:95:5)
+    at next (C:\Users\Teacher\Music\invencea\backend\node_modules\express\lib\router\route.js:149:13)
+    at C:\Users\Teacher\Music\invencea\backend\src\middleware\roleMiddleware.js:13:5
+    at Layer.handle [as handle_request] (C:\Users\Teacher\Music\invencea\backend\node_modules\express\lib\router\layer.js:95:5)
+    at next (C:\Users\Teacher\Music\invencea\backend\node_modules\express\lib\router\route.js:149:13)
+    at Route.dispatch (C:\Users\Teacher\Music\invencea\backend\node_modules\express\lib\router\route.js:119:3)
+    at Layer.handle [as handle_request] (C:\Users\Teacher\Music\invencea\backend\node_modules\express\lib\router\layer.js:95:5)
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\express\lib\router\index.js:284:15
+    at router.process_params (C:\Users\Teacher\Music\invencea\backend\node_modules\express\lib\router\index.js:346:12)
+    at next (C:\Users\Teacher\Music\invencea\backend\node_modules\express\lib\router\index.js:280:10)
+    at protect (C:\Users\Teacher\Music\invencea\backend\src\middleware\authMiddleware.js:31:5)
+    at Layer.handle [as handle_request] (C:\Users\Teacher\Music\invencea\backend\node_modules\express\lib\router\layer.js:95:5)
+    at trim_prefix (C:\Users\Teacher\Music\invencea\backend\node_modules\express\lib\router\index.js:328:13)
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\express\lib\router\index.js:286:9
+2026-03-07 17:03:15 [error]: Error: Room is required
+    at Object.createUnifiedItem (C:\Users\Teacher\Music\invencea\backend\src\services\inventory.service.js:157:25)
+    at createItem (C:\Users\Teacher\Music\invencea\backend\src\controllers\inventory.controller.js:74:41)
+    at Layer.handle [as handle_request] (C:\Users\Teacher\Music\invencea\backend\node_modules\express\lib\router\layer.js:95:5)
+    at next (C:\Users\Teacher\Music\invencea\backend\node_modules\express\lib\router\route.js:149:13)
+    at C:\Users\Teacher\Music\invencea\backend\src\middleware\roleMiddleware.js:13:5
+    at Layer.handle [as handle_request] (C:\Users\Teacher\Music\invencea\backend\node_modules\express\lib\router\layer.js:95:5)
+    at next (C:\Users\Teacher\Music\invencea\backend\node_modules\express\lib\router\route.js:149:13)
+    at Route.dispatch (C:\Users\Teacher\Music\invencea\backend\node_modules\express\lib\router\route.js:119:3)
+    at Layer.handle [as handle_request] (C:\Users\Teacher\Music\invencea\backend\node_modules\express\lib\router\layer.js:95:5)
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\express\lib\router\index.js:284:15
+    at router.process_params (C:\Users\Teacher\Music\invencea\backend\node_modules\express\lib\router\index.js:346:12)
+    at next (C:\Users\Teacher\Music\invencea\backend\node_modules\express\lib\router\index.js:280:10)
+    at protect (C:\Users\Teacher\Music\invencea\backend\src\middleware\authMiddleware.js:31:5)
+    at Layer.handle [as handle_request] (C:\Users\Teacher\Music\invencea\backend\node_modules\express\lib\router\layer.js:95:5)
+    at trim_prefix (C:\Users\Teacher\Music\invencea\backend\node_modules\express\lib\router\index.js:328:13)
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\express\lib\router\index.js:286:9
+2026-03-07 17:03:39 [error]: Error: Room is required
+    at Object.createUnifiedItem (C:\Users\Teacher\Music\invencea\backend\src\services\inventory.service.js:157:25)
+    at createItem (C:\Users\Teacher\Music\invencea\backend\src\controllers\inventory.controller.js:74:41)
+    at Layer.handle [as handle_request] (C:\Users\Teacher\Music\invencea\backend\node_modules\express\lib\router\layer.js:95:5)
+    at next (C:\Users\Teacher\Music\invencea\backend\node_modules\express\lib\router\route.js:149:13)
+    at C:\Users\Teacher\Music\invencea\backend\src\middleware\roleMiddleware.js:13:5
+    at Layer.handle [as handle_request] (C:\Users\Teacher\Music\invencea\backend\node_modules\express\lib\router\layer.js:95:5)
+    at next (C:\Users\Teacher\Music\invencea\backend\node_modules\express\lib\router\route.js:149:13)
+    at Route.dispatch (C:\Users\Teacher\Music\invencea\backend\node_modules\express\lib\router\route.js:119:3)
+    at Layer.handle [as handle_request] (C:\Users\Teacher\Music\invencea\backend\node_modules\express\lib\router\layer.js:95:5)
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\express\lib\router\index.js:284:15
+    at router.process_params (C:\Users\Teacher\Music\invencea\backend\node_modules\express\lib\router\index.js:346:12)
+    at next (C:\Users\Teacher\Music\invencea\backend\node_modules\express\lib\router\index.js:280:10)
+    at protect (C:\Users\Teacher\Music\invencea\backend\src\middleware\authMiddleware.js:31:5)
+    at Layer.handle [as handle_request] (C:\Users\Teacher\Music\invencea\backend\node_modules\express\lib\router\layer.js:95:5)
+    at trim_prefix (C:\Users\Teacher\Music\invencea\backend\node_modules\express\lib\router\index.js:328:13)
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\express\lib\router\index.js:286:9
+2026-03-07 17:23:06 [error]: Error: Student with ID 2022-92929 not found
+    at C:\Users\Teacher\Music\invencea\backend\src\services\request.service.js:47:17
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async withTransaction (C:\Users\Teacher\Music\invencea\backend\src\config\db.js:37:20)
+    at async createRequest (C:\Users\Teacher\Music\invencea\backend\src\controllers\request.controller.js:13:18)
+2026-03-07 17:28:23 [error]: Error: Each companion must have a name and student ID
+    at C:\Users\Teacher\Music\invencea\backend\src\services\request.service.js:44:19
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async withTransaction (C:\Users\Teacher\Music\invencea\backend\src\config\db.js:37:20)
+    at async createRequest (C:\Users\Teacher\Music\invencea\backend\src\controllers\request.controller.js:13:18)
+2026-03-07 17:28:50 [error]: Error: Each companion must have a name and student ID
+    at C:\Users\Teacher\Music\invencea\backend\src\services\request.service.js:44:19
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async withTransaction (C:\Users\Teacher\Music\invencea\backend\src\config\db.js:37:20)
+    at async createRequest (C:\Users\Teacher\Music\invencea\backend\src\controllers\request.controller.js:13:18)
+2026-03-07 18:46:21 [error]: Error: Invalid credentials
+    at Object.adminLogin (C:\Users\Teacher\Music\invencea\backend\src\services\auth.service.js:120:41)
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async adminLogin (C:\Users\Teacher\Music\invencea\backend\src\controllers\auth.controller.js:78:20)
+2026-03-07 19:59:51 [error]: Failed to send email to invencea@gmail.com:
+2026-03-07 19:59:51 [error]: Error: self-signed certificate in certificate chain
+    at TLSSocket.onConnectSecure (node:_tls_wrap:1631:34)
+    at TLSSocket.emit (node:events:508:28)
+    at TLSSocket._finishInit (node:_tls_wrap:1077:8)
+    at ssl.onhandshakedone (node:_tls_wrap:863:12)
+2026-03-07 20:00:13 [error]: Failed to send email to invencea@gmail.com:
+2026-03-07 20:00:13 [error]: Error: self-signed certificate in certificate chain
+    at TLSSocket.onConnectSecure (node:_tls_wrap:1631:34)
+    at TLSSocket.emit (node:events:508:28)
+    at TLSSocket._finishInit (node:_tls_wrap:1077:8)
+    at ssl.onhandshakedone (node:_tls_wrap:863:12)
+2026-03-10 12:21:17 [error]: Error: Request not found
+    at Object.getRequestByQR (C:\Users\Teacher\Music\invencea\backend\src\services\request.service.js:100:41)
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async getRequestByQR (C:\Users\Teacher\Music\invencea\backend\src\controllers\request.controller.js:41:18)
+2026-03-10 12:25:47 [error]: error: update or delete on table "inventory_items" violates foreign key constraint "request_items_inventory_item_id_fkey" on table "request_items"
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async Object.deleteUnifiedItem (C:\Users\Teacher\Music\invencea\backend\src\services\inventory.service.js:264:18)
+    at async deleteItemUnified (C:\Users\Teacher\Music\invencea\backend\src\controllers\inventory.controller.js:91:18)
+2026-03-10 12:25:54 [error]: error: update or delete on table "inventory_items" violates foreign key constraint "request_items_inventory_item_id_fkey" on table "request_items"
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async Object.deleteUnifiedItem (C:\Users\Teacher\Music\invencea\backend\src\services\inventory.service.js:264:18)
+    at async deleteItemUnified (C:\Users\Teacher\Music\invencea\backend\src\controllers\inventory.controller.js:91:18)
+2026-03-10 12:26:35 [error]: Error: Request not found
+    at Object.getRequestByQR (C:\Users\Teacher\Music\invencea\backend\src\services\request.service.js:100:41)
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async getRequestByQR (C:\Users\Teacher\Music\invencea\backend\src\controllers\request.controller.js:41:18)
+2026-03-10 12:46:00 [error]: Error: Invalid credentials
+    at Object.adminLogin (C:\Users\Teacher\Music\invencea\backend\src\services\auth.service.js:120:41)
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async adminLogin (C:\Users\Teacher\Music\invencea\backend\src\controllers\auth.controller.js:78:20)
+2026-03-10 14:57:18 [error]: Error: Faculty not found
+    at Object.sendFacultyOTP (C:\Users\Teacher\Music\invencea\backend\src\services\auth.service.js:20:41)
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async sendOTP (C:\Users\Teacher\Music\invencea\backend\src\controllers\auth.controller.js:16:20)
+2026-03-10 15:12:15 [error]: error: new row for relation "requests" violates check constraint "requests_status_check"
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg\lib\client.js:631:17
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async C:\Users\Teacher\Music\invencea\backend\src\services\request.service.js:40:22
+    at async withTransaction (C:\Users\Teacher\Music\invencea\backend\src\config\db.js:37:20)
+    at async createRequest (C:\Users\Teacher\Music\invencea\backend\src\controllers\request.controller.js:14:18)
+2026-03-10 15:12:59 [error]: error: new row for relation "requests" violates check constraint "requests_status_check"
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg\lib\client.js:631:17
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async C:\Users\Teacher\Music\invencea\backend\src\services\request.service.js:40:22
+    at async withTransaction (C:\Users\Teacher\Music\invencea\backend\src\config\db.js:37:20)
+    at async createRequest (C:\Users\Teacher\Music\invencea\backend\src\controllers\request.controller.js:14:18)
+2026-03-10 15:13:02 [error]: error: new row for relation "requests" violates check constraint "requests_status_check"
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg\lib\client.js:631:17
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async C:\Users\Teacher\Music\invencea\backend\src\services\request.service.js:40:22
+    at async withTransaction (C:\Users\Teacher\Music\invencea\backend\src\config\db.js:37:20)
+    at async createRequest (C:\Users\Teacher\Music\invencea\backend\src\controllers\request.controller.js:14:18)
+2026-03-10 16:40:42 [error]: Error: Invalid credentials
+    at Object.adminLogin (C:\Users\Teacher\Music\invencea\backend\src\services\auth.service.js:120:41)
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async adminLogin (C:\Users\Teacher\Music\invencea\backend\src\controllers\auth.controller.js:78:20)
+2026-03-10 16:58:37 [error]: error: column ri.assigned_to does not exist
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async Object.listRequests (C:\Users\Teacher\Music\invencea\backend\src\services\request.service.js:165:20)
+    at async listRequests (C:\Users\Teacher\Music\invencea\backend\src\controllers\request.controller.js:78:18)
+2026-03-10 16:58:38 [error]: error: column ri.assigned_to does not exist
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async Object.listRequests (C:\Users\Teacher\Music\invencea\backend\src\services\request.service.js:165:20)
+    at async listRequests (C:\Users\Teacher\Music\invencea\backend\src\controllers\request.controller.js:78:18)
+2026-03-10 16:58:59 [error]: error: column ri.assigned_to does not exist
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async Object.listRequests (C:\Users\Teacher\Music\invencea\backend\src\services\request.service.js:165:20)
+    at async listRequests (C:\Users\Teacher\Music\invencea\backend\src\controllers\request.controller.js:78:18)
+2026-03-10 16:59:00 [error]: error: column ri.assigned_to does not exist
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async Object.listRequests (C:\Users\Teacher\Music\invencea\backend\src\services\request.service.js:165:20)
+    at async listRequests (C:\Users\Teacher\Music\invencea\backend\src\controllers\request.controller.js:78:18)
+2026-03-10 17:02:36 [error]: error: column ri.assigned_to does not exist
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async Object.listRequests (C:\Users\Teacher\Music\invencea\backend\src\services\request.service.js:165:20)
+    at async listRequests (C:\Users\Teacher\Music\invencea\backend\src\controllers\request.controller.js:78:18)
+2026-03-10 17:02:36 [error]: error: column ri.assigned_to does not exist
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async Object.listRequests (C:\Users\Teacher\Music\invencea\backend\src\services\request.service.js:165:20)
+    at async listRequests (C:\Users\Teacher\Music\invencea\backend\src\controllers\request.controller.js:78:18)
+2026-03-10 17:02:43 [error]: error: column ri.assigned_to does not exist
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async Object.listRequests (C:\Users\Teacher\Music\invencea\backend\src\services\request.service.js:165:20)
+    at async listRequests (C:\Users\Teacher\Music\invencea\backend\src\controllers\request.controller.js:78:18)
+2026-03-10 17:02:43 [error]: error: column ri.assigned_to does not exist
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async Object.listRequests (C:\Users\Teacher\Music\invencea\backend\src\services\request.service.js:165:20)
+    at async listRequests (C:\Users\Teacher\Music\invencea\backend\src\controllers\request.controller.js:78:18)
+2026-03-10 17:02:47 [error]: error: column ri.assigned_to does not exist
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async Object.listRequests (C:\Users\Teacher\Music\invencea\backend\src\services\request.service.js:165:20)
+    at async listRequests (C:\Users\Teacher\Music\invencea\backend\src\controllers\request.controller.js:78:18)
+2026-03-10 17:02:47 [error]: error: column ri.assigned_to does not exist
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async Object.listRequests (C:\Users\Teacher\Music\invencea\backend\src\services\request.service.js:165:20)
+    at async listRequests (C:\Users\Teacher\Music\invencea\backend\src\controllers\request.controller.js:78:18)
+2026-03-10 17:02:48 [error]: error: column ri.assigned_to does not exist
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async Object.listRequests (C:\Users\Teacher\Music\invencea\backend\src\services\request.service.js:165:20)
+    at async listRequests (C:\Users\Teacher\Music\invencea\backend\src\controllers\request.controller.js:78:18)
+2026-03-10 17:02:48 [error]: error: column ri.assigned_to does not exist
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async Object.listRequests (C:\Users\Teacher\Music\invencea\backend\src\services\request.service.js:165:20)
+    at async listRequests (C:\Users\Teacher\Music\invencea\backend\src\controllers\request.controller.js:78:18)
+2026-03-10 17:03:00 [error]: error: column ri.assigned_to does not exist
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async Object.listRequests (C:\Users\Teacher\Music\invencea\backend\src\services\request.service.js:165:20)
+    at async listRequests (C:\Users\Teacher\Music\invencea\backend\src\controllers\request.controller.js:78:18)
+2026-03-10 17:03:00 [error]: error: column ri.assigned_to does not exist
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async Object.listRequests (C:\Users\Teacher\Music\invencea\backend\src\services\request.service.js:165:20)
+    at async listRequests (C:\Users\Teacher\Music\invencea\backend\src\controllers\request.controller.js:78:18)
+2026-03-11 08:19:05 [error]: Error: Invalid credentials
+    at Object.adminLogin (C:\Users\Teacher\Music\invencea\backend\src\services\auth.service.js:126:35)
+    at async adminLogin (C:\Users\Teacher\Music\invencea\backend\src\controllers\auth.controller.js:78:20)
+2026-03-11 09:55:47 [error]: Error: Invalid Barcode: Item not found in database
+    at C:\Users\Teacher\Music\invencea\backend\src\services\request.service.js:315:47
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async withTransaction (C:\Users\Teacher\Music\invencea\backend\src\config\db.js:37:20)
+    at async returnItemByBarcode (C:\Users\Teacher\Music\invencea\backend\src\controllers\request.controller.js:154:20)
+2026-03-11 10:26:10 [error]: Error: Invalid Barcode: Item not found in database
+    at C:\Users\Teacher\Music\invencea\backend\src\services\request.service.js:315:47
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async withTransaction (C:\Users\Teacher\Music\invencea\backend\src\config\db.js:37:20)
+    at async returnItemByBarcode (C:\Users\Teacher\Music\invencea\backend\src\controllers\request.controller.js:154:20)
+2026-03-11 13:41:59 [error]: Error: Faculty not found
+    at Object.sendFacultyOTP (C:\Users\Teacher\Music\invencea\backend\src\services\auth.service.js:20:41)
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async sendOTP (C:\Users\Teacher\Music\invencea\backend\src\controllers\auth.controller.js:16:20)
+2026-03-11 13:42:32 [error]: Error: Faculty not found
+    at Object.sendFacultyOTP (C:\Users\Teacher\Music\invencea\backend\src\services\auth.service.js:20:41)
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async sendOTP (C:\Users\Teacher\Music\invencea\backend\src\controllers\auth.controller.js:16:20)
+2026-03-11 13:50:55 [error]: Error: Invalid credentials
+    at Object.adminLogin (C:\Users\Teacher\Music\invencea\backend\src\services\auth.service.js:126:35)
+    at async adminLogin (C:\Users\Teacher\Music\invencea\backend\src\controllers\auth.controller.js:78:20)
+2026-03-11 13:57:01 [error]: Error: Faculty not found
+    at Object.sendFacultyOTP (C:\Users\Teacher\Music\invencea\backend\src\services\auth.service.js:20:41)
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async sendOTP (C:\Users\Teacher\Music\invencea\backend\src\controllers\auth.controller.js:16:20)
+2026-03-11 14:29:49 [error]: Error: Invalid credentials
+    at Object.adminLogin (C:\Users\Teacher\Music\invencea\backend\src\services\auth.service.js:126:35)
+    at async adminLogin (C:\Users\Teacher\Music\invencea\backend\src\controllers\auth.controller.js:78:20)
+2026-03-11 14:53:25 [error]: error: invalid input syntax for type bigint: "{"room_id":"2"}"
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async Object.listAll (C:\Users\Teacher\Music\invencea\backend\src\services\inventory.service.js:149:25)
+    at async listAll (C:\Users\Teacher\Music\invencea\backend\src\controllers\inventory.controller.js:63:18)
+2026-03-11 14:53:28 [error]: error: invalid input syntax for type bigint: "{"room_id":"1"}"
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async Object.listAll (C:\Users\Teacher\Music\invencea\backend\src\services\inventory.service.js:149:25)
+    at async listAll (C:\Users\Teacher\Music\invencea\backend\src\controllers\inventory.controller.js:63:18)
+2026-03-11 19:36:47 [error]: error: column "returned_time" of relation "requests" does not exist
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg\lib\client.js:631:17
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async logRetroactiveRequest (C:\Users\Teacher\Music\invencea\backend\src\controllers\admin.controller.js:578:31)
+2026-03-11 19:37:25 [error]: error: column "returned_time" of relation "requests" does not exist
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg\lib\client.js:631:17
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async logRetroactiveRequest (C:\Users\Teacher\Music\invencea\backend\src\controllers\admin.controller.js:578:31)
+2026-03-11 19:39:45 [error]: Error: This item is not currently issued to anyone.
+    at C:\Users\Teacher\Music\invencea\backend\src\services\request.service.js:324:47
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async withTransaction (C:\Users\Teacher\Music\invencea\backend\src\config\db.js:37:20)
+    at async returnItemByBarcode (C:\Users\Teacher\Music\invencea\backend\src\controllers\request.controller.js:165:20)
+2026-03-11 20:01:26 [error]: Error: This item is not currently issued to anyone.
+    at C:\Users\Teacher\Music\invencea\backend\src\services\request.service.js:324:47
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async withTransaction (C:\Users\Teacher\Music\invencea\backend\src\config\db.js:37:20)
+    at async returnItemByBarcode (C:\Users\Teacher\Music\invencea\backend\src\controllers\request.controller.js:165:20)
+2026-03-11 20:01:37 [error]: Error: This item is not currently issued to anyone.
+    at C:\Users\Teacher\Music\invencea\backend\src\services\request.service.js:324:47
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async withTransaction (C:\Users\Teacher\Music\invencea\backend\src\config\db.js:37:20)
+    at async returnItemByBarcode (C:\Users\Teacher\Music\invencea\backend\src\controllers\request.controller.js:165:20)
+2026-03-11 20:03:20 [error]: Error: This item is not currently issued to anyone.
+    at C:\Users\Teacher\Music\invencea\backend\src\services\request.service.js:324:47
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async withTransaction (C:\Users\Teacher\Music\invencea\backend\src\config\db.js:37:20)
+    at async returnItemByBarcode (C:\Users\Teacher\Music\invencea\backend\src\controllers\request.controller.js:165:20)
+2026-03-11 20:04:41 [error]: Error: This item is not currently issued to anyone.
+    at C:\Users\Teacher\Music\invencea\backend\src\services\request.service.js:324:47
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async withTransaction (C:\Users\Teacher\Music\invencea\backend\src\config\db.js:37:20)
+    at async returnItemByBarcode (C:\Users\Teacher\Music\invencea\backend\src\controllers\request.controller.js:165:20)
+2026-03-11 20:04:59 [error]: Error: This item is not currently issued to anyone.
+    at C:\Users\Teacher\Music\invencea\backend\src\services\request.service.js:324:47
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async withTransaction (C:\Users\Teacher\Music\invencea\backend\src\config\db.js:37:20)
+    at async returnItemByBarcode (C:\Users\Teacher\Music\invencea\backend\src\controllers\request.controller.js:165:20)
+2026-03-11 20:05:28 [error]: Error: This item is not currently issued to anyone.
+    at C:\Users\Teacher\Music\invencea\backend\src\services\request.service.js:324:47
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async withTransaction (C:\Users\Teacher\Music\invencea\backend\src\config\db.js:37:20)
+    at async returnItemByBarcode (C:\Users\Teacher\Music\invencea\backend\src\controllers\request.controller.js:165:20)
+2026-03-11 20:06:59 [error]: Error: This item is not currently issued to anyone.
+    at C:\Users\Teacher\Music\invencea\backend\src\services\request.service.js:324:47
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async withTransaction (C:\Users\Teacher\Music\invencea\backend\src\config\db.js:37:20)
+    at async returnItemByBarcode (C:\Users\Teacher\Music\invencea\backend\src\controllers\request.controller.js:165:20)
+2026-03-11 20:11:23 [error]: Error: This item is not currently issued to anyone.
+    at C:\Users\Teacher\Music\invencea\backend\src\services\request.service.js:324:47
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async withTransaction (C:\Users\Teacher\Music\invencea\backend\src\config\db.js:37:20)
+    at async returnItemByBarcode (C:\Users\Teacher\Music\invencea\backend\src\controllers\request.controller.js:165:20)
+2026-03-11 20:15:56 [error]: Error: This item is not currently issued to anyone.
+    at C:\Users\Teacher\Music\invencea\backend\src\services\request.service.js:324:47
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async withTransaction (C:\Users\Teacher\Music\invencea\backend\src\config\db.js:37:20)
+    at async returnItemByBarcode (C:\Users\Teacher\Music\invencea\backend\src\controllers\request.controller.js:165:20)
+2026-03-11 20:16:51 [error]: Error: This item is not currently issued to anyone.
+    at C:\Users\Teacher\Music\invencea\backend\src\services\request.service.js:324:47
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async withTransaction (C:\Users\Teacher\Music\invencea\backend\src\config\db.js:37:20)
+    at async returnItemByBarcode (C:\Users\Teacher\Music\invencea\backend\src\controllers\request.controller.js:165:20)
+2026-03-11 20:19:02 [error]: Error: This item is not currently issued to anyone.
+    at C:\Users\Teacher\Music\invencea\backend\src\services\request.service.js:324:47
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async withTransaction (C:\Users\Teacher\Music\invencea\backend\src\config\db.js:37:20)
+    at async returnItemByBarcode (C:\Users\Teacher\Music\invencea\backend\src\controllers\request.controller.js:165:20)
+2026-03-11 22:55:39 [error]: Error: Faculty not found
+    at Object.sendFacultyOTP (C:\Users\Teacher\Music\invencea\backend\src\services\auth.service.js:20:41)
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async sendOTP (C:\Users\Teacher\Music\invencea\backend\src\controllers\auth.controller.js:16:20)
+2026-03-11 22:55:50 [error]: Error: Faculty not found
+    at Object.sendFacultyOTP (C:\Users\Teacher\Music\invencea\backend\src\services\auth.service.js:20:41)
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async sendOTP (C:\Users\Teacher\Music\invencea\backend\src\controllers\auth.controller.js:16:20)
+2026-03-11 22:56:03 [error]: Error: Faculty not found
+    at Object.sendFacultyOTP (C:\Users\Teacher\Music\invencea\backend\src\services\auth.service.js:20:41)
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async sendOTP (C:\Users\Teacher\Music\invencea\backend\src\controllers\auth.controller.js:16:20)
+2026-03-11 22:59:03 [error]: Error: Faculty not found
+    at Object.sendFacultyOTP (C:\Users\Teacher\Music\invencea\backend\src\services\auth.service.js:20:41)
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async sendOTP (C:\Users\Teacher\Music\invencea\backend\src\controllers\auth.controller.js:16:20)
+2026-03-11 23:30:01 [error]: [Job] expireRequests error:

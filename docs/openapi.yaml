@@ -1,0 +1,425 @@
+openapi: 3.0.3
+info:
+  title: InvenCEA API
+  description: Inventory Management System for CEA — Production-ready REST API
+  version: 1.0.0
+  contact:
+    email: admin@invencea.edu
+
+servers:
+  - url: http://localhost:4000/api/v1
+    description: Local development
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    ApiResponse:
+      type: object
+      properties:
+        success: { type: boolean }
+        message: { type: string }
+        data: {}
+
+    User:
+      type: object
+      properties:
+        id: { type: integer }
+        email: { type: string }
+        name: { type: string }
+        role: { type: string, enum: [admin, faculty] }
+        created_at: { type: string, format: date-time }
+
+    Student:
+      type: object
+      properties:
+        id: { type: integer }
+        full_name: { type: string }
+        student_id: { type: string }
+        department: { type: string }
+
+    Room:
+      type: object
+      properties:
+        id: { type: integer }
+        code: { type: string }
+        name: { type: string }
+        is_available: { type: boolean }
+
+    InventoryType:
+      type: object
+      properties:
+        id: { type: integer }
+        sku: { type: string }
+        name: { type: string }
+        category: { type: string }
+        type: { type: string, enum: [borrowable, consumable] }
+
+    Request:
+      type: object
+      properties:
+        id: { type: integer }
+        requester_type: { type: string, enum: [faculty, student] }
+        requester_id: { type: integer }
+        room_id: { type: integer }
+        purpose: { type: string }
+        status:
+          type: string
+          enum: [PENDING, APPROVED, REJECTED, ISSUED, RETURNED, EXPIRED]
+        requested_time: { type: string, format: date-time }
+        approved_time: { type: string, format: date-time }
+        issued_time: { type: string, format: date-time }
+
+security:
+  - BearerAuth: []
+
+paths:
+  /auth/faculty/send-otp:
+    post:
+      tags: [Auth]
+      summary: Send OTP to faculty email
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email]
+              properties:
+                email: { type: string, format: email }
+      responses:
+        '200':
+          description: OTP sent
+        '404':
+          description: Faculty not found
+        '429':
+          description: Too many requests
+
+  /auth/faculty/verify-otp:
+    post:
+      tags: [Auth]
+      summary: Verify OTP and get JWT
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, code]
+              properties:
+                email: { type: string, format: email }
+                code: { type: string, minLength: 6, maxLength: 6 }
+      responses:
+        '200':
+          description: Returns JWT token and user info
+        '401':
+          description: Invalid or expired OTP
+
+  /auth/student/login:
+    post:
+      tags: [Auth]
+      summary: Student login (auto-registers on first login)
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [full_name, student_id]
+              properties:
+                full_name: { type: string }
+                student_id: { type: string }
+      responses:
+        '200':
+          description: Returns JWT token and student info
+        '401':
+          description: Name mismatch
+
+  /auth/me:
+    get:
+      tags: [Auth]
+      summary: Get current user profile
+      responses:
+        '200':
+          description: Current user info
+        '401':
+          description: Unauthorized
+
+  /admin/faculty:
+    post:
+      tags: [Admin]
+      summary: Add a faculty member
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, name]
+              properties:
+                email: { type: string, format: email }
+                name: { type: string }
+      responses:
+        '201':
+          description: Faculty created
+        '409':
+          description: Email already exists
+    get:
+      tags: [Admin]
+      summary: List all faculty
+      responses:
+        '200':
+          description: Array of faculty users
+
+  /admin/rooms:
+    get:
+      tags: [Admin]
+      summary: List all rooms
+      responses:
+        '200':
+          description: Array of rooms
+
+  /admin/rooms/{id}/availability:
+    put:
+      tags: [Admin]
+      summary: Set room availability
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: integer }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [is_available]
+              properties:
+                is_available: { type: boolean }
+      responses:
+        '200':
+          description: Room availability updated
+
+  /inventory:
+    get:
+      tags: [Inventory]
+      summary: List all inventory items and consumables
+      responses:
+        '200':
+          description: Items and consumables
+
+  /inventory/types:
+    post:
+      tags: [Inventory]
+      summary: Create an inventory type
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [sku, name, type]
+              properties:
+                sku: { type: string }
+                name: { type: string }
+                category: { type: string }
+                type: { type: string, enum: [borrowable, consumable] }
+      responses:
+        '201':
+          description: Type created
+
+  /inventory/items:
+    post:
+      tags: [Inventory]
+      summary: Add a physical borrowable item
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [inventory_type_id, barcode]
+              properties:
+                inventory_type_id: { type: integer }
+                barcode: { type: string }
+                location_room_id: { type: integer }
+      responses:
+        '201':
+          description: Item added
+
+  /inventory/items/{id}:
+    put:
+      tags: [Inventory]
+      summary: Update item
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: integer }
+      responses:
+        '200':
+          description: Item updated
+    delete:
+      tags: [Inventory]
+      summary: Delete item
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: integer }
+      responses:
+        '200':
+          description: Item deleted
+
+  /requests:
+    post:
+      tags: [Requests]
+      summary: Create a borrow/consumable request
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [items]
+              properties:
+                room_id: { type: integer }
+                purpose: { type: string }
+                items:
+                  type: array
+                  items:
+                    type: object
+                    required: [inventory_type_id]
+                    properties:
+                      inventory_type_id: { type: integer }
+                      consumable_id: { type: integer }
+                      quantity: { type: integer, default: 1 }
+      responses:
+        '201':
+          description: Request created
+    get:
+      tags: [Requests]
+      summary: List requests
+      parameters:
+        - in: query
+          name: status
+          schema: { type: string }
+        - in: query
+          name: room_id
+          schema: { type: integer }
+        - in: query
+          name: requester_type
+          schema: { type: string }
+      responses:
+        '200':
+          description: Array of requests
+
+  /requests/{id}/approve:
+    put:
+      tags: [Requests]
+      summary: Approve a request (Admin only)
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: integer }
+      responses:
+        '200':
+          description: Request approved
+
+  /requests/{id}/issue:
+    put:
+      tags: [Requests]
+      summary: Issue items for a request (Admin only, transactional)
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: integer }
+      responses:
+        '200':
+          description: Items issued
+        '409':
+          description: No available item or insufficient quantity
+
+  /requests/{id}/return:
+    put:
+      tags: [Requests]
+      summary: Mark items as returned
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: integer }
+      responses:
+        '200':
+          description: Items returned
+
+  /reports/issued:
+    get:
+      tags: [Reports]
+      summary: Get issued reports with optional filters (Admin only)
+      parameters:
+        - in: query
+          name: type
+          schema: { type: string, enum: [faculty, student] }
+        - in: query
+          name: from
+          schema: { type: string, format: date }
+        - in: query
+          name: to
+          schema: { type: string, format: date }
+      responses:
+        '200':
+          description: Array of issued report rows
+
+  /reports/export:
+    get:
+      tags: [Reports]
+      summary: Export reports to .xlsx (Admin only)
+      parameters:
+        - in: query
+          name: type
+          schema: { type: string }
+        - in: query
+          name: from
+          schema: { type: string }
+        - in: query
+          name: to
+          schema: { type: string }
+      responses:
+        '200':
+          description: Returns .xlsx file
+          content:
+            application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+              schema:
+                type: string
+                format: binary
+
+  /reports:
+    delete:
+      tags: [Reports]
+      summary: Delete filtered report rows (Admin only, filter mode)
+      parameters:
+        - in: query
+          name: type
+          schema: { type: string }
+        - in: query
+          name: from
+          schema: { type: string }
+        - in: query
+          name: to
+          schema: { type: string }
+      responses:
+        '200':
+          description: Rows deleted
+        '400':
+          description: No filters provided

@@ -1,0 +1,49 @@
+{
+  "name": "invencea-backend",
+  "version": "1.0.0",
+  "description": "InvenCEA Inventory Management Backend API",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js",
+    "migrate": "node-pg-migrate up",
+    "migrate:down": "node-pg-migrate down",
+    "seed": "node seeds/index.js",
+    "test": "jest --runInBand --detectOpenHandles",
+    "test:coverage": "jest --coverage --runInBand"
+  },
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.6.1",
+    "exceljs": "^4.4.0",
+    "express": "^4.18.2",
+    "express-rate-limit": "^7.1.5",
+    "express-validator": "^7.0.1",
+    "helmet": "^7.1.0",
+    "jsonwebtoken": "^9.0.3",
+    "morgan": "^1.10.0",
+    "node-cron": "^3.0.3",
+    "nodemailer": "^6.9.7",
+    "pg": "^8.11.3",
+    "socket.io": "^4.6.2",
+    "swagger-ui-express": "^5.0.0",
+    "winston": "^3.11.0",
+    "yamljs": "^0.3.0"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "nodemon": "^3.0.2",
+    "supertest": "^6.3.3"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "testMatch": [
+      "**/tests/**/*.test.js"
+    ],
+    "setupFilesAfterFramework": [
+      "./tests/setup.js"
+    ]
+  }
+}
