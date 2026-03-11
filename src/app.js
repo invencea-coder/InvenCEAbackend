@@ -6,29 +6,46 @@ const swaggerUi = require('swagger-ui-express');
 const YAML = require('yamljs');
 const path = require('path');
 
-const routes = require('./routes'); // your main routes index
+const routes = require('./routes');
 const errorHandler = require('./middleware/errorHandler');
 const rateLimiter = require('./middleware/rateLimiter');
 const logger = require('./utils/logger');
-const managerRoutes = require('./routes/manager.routes'); // <-- Manager routes imported
+const managerRoutes = require('./routes/manager.routes');
+
 const app = express();
 
 // ─── Security & parsing ───────────────────────────────
-app.use(helmet());
-app.use(cors({
-  origin: [
-    "http://localhost:5173", // For local testing
-    "https://your-frontend-name.vercel.app" // Your future Vercel URL
-  ],
-  credentials: true
+app.use(helmet({
+  crossOriginResourcePolicy: false, // Helps with image loading if you add photos later
 }));
+
+// ✅ CORS FIX: Added https:// and improved options
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://invencea-frontend-2yj9.vercel.app" 
+];
+
+const corsOptions = {
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+};
+
+app.use(cors(corsOptions));
+app.options('*', cors(corsOptions)); // ✅ Enable pre-flight for all routes
+
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 
 // ─── Logging ───────────────────────────────
-app.use(
-  morgan('combined', { stream: { write: (msg) => logger.http(msg.trim()) } })
-);
+app.use(morgan('combined', { stream: { write: (msg) => logger.http(msg.trim()) } }));
 
 // ─── Rate limiting ───────────────────────────────
 app.use('/api/', rateLimiter);
@@ -42,10 +59,7 @@ try {
 }
 
 // ─── API Routes ───────────────────────────────
-// ✅ THE FIX: Mount the manager routes exactly here
 app.use('/api/v1/manager', managerRoutes); 
-
-// Your existing main routes (Auth, Admin, Faculty, etc.)
 app.use('/api/v1', routes);
 
 // ─── Health check ───────────────────────────────
@@ -60,7 +74,6 @@ app.use((_req, res) => res.status(404).json({
   message: 'Route not found',
 }));
 
-// ─── Global error handler (must be last) ───────────────
 app.use(errorHandler);
 
 module.exports = app;
