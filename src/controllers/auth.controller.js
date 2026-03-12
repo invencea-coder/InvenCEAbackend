@@ -1,3 +1,4 @@
+// backend/src/controllers/auth.controller.js
 const { validationResult } = require('express-validator');
 const authService = require('../services/auth.service');
 const { success, badRequest, unauthorized } = require('../utils/apiResponse');
@@ -32,9 +33,8 @@ const verifyOTP = async (req, res, next) => {
     }
 
     const { email, code } = req.body;
-
     const result = await authService.verifyFacultyOTP(email, code);
-    // should return { token, user }
+    // returns { token, user }
 
     return success(res, result, 'Login successful');
   } catch (err) {
@@ -53,9 +53,8 @@ const studentLogin = async (req, res, next) => {
     }
 
     const { full_name, student_id } = req.body;
-
     const result = await authService.studentLogin(full_name, student_id);
-    // should return { token, user }
+    // returns { token, user }
 
     return success(res, result, 'Login successful');
   } catch (err) {
@@ -65,6 +64,7 @@ const studentLogin = async (req, res, next) => {
 
 /**
  * Admin Login
+ * Returns needs_password_reset so the frontend can gate the dashboard.
  */
 const adminLogin = async (req, res, next) => {
   try {
@@ -74,11 +74,47 @@ const adminLogin = async (req, res, next) => {
     }
 
     const { email, password } = req.body;
-
     const result = await authService.adminLogin(email, password);
-    // must return { token, user }
+    // result = { token, user: { ..., needs_password_reset } }
 
-    return success(res, result, 'Login successful');
+    return success(
+      res,
+      {
+        token: result.token,
+        user: result.user,
+        needs_password_reset: result.user?.needs_password_reset ?? false,
+      },
+      'Login successful'
+    );
+  } catch (err) {
+    next(err);
+  }
+};
+
+/**
+ * Admin — Change Password on First Login
+ * Protected route — req.user set by auth middleware.
+ */
+const changePassword = async (req, res, next) => {
+  try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return badRequest(res, 'Validation failed', errors.array());
+    }
+
+    const { current_password, new_password } = req.body;
+
+    if (!current_password || !new_password) {
+      return badRequest(res, 'current_password and new_password are required.');
+    }
+
+    if (new_password.length < 8) {
+      return badRequest(res, 'New password must be at least 8 characters.');
+    }
+
+    await authService.changeAdminPassword(req.user.id, current_password, new_password);
+
+    return success(res, null, 'Password updated successfully.');
   } catch (err) {
     next(err);
   }
@@ -93,7 +129,7 @@ const logout = async (_req, res) => {
 
 /**
  * Get current authenticated user
- * Used by frontend session restoration
+ * Used by frontend session restoration.
  */
 const getMe = async (req, res, next) => {
   try {
@@ -114,6 +150,7 @@ module.exports = {
   verifyOTP,
   studentLogin,
   adminLogin,
+  changePassword,
   logout,
-  getMe
+  getMe,
 };
