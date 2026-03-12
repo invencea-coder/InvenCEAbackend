@@ -1,33 +1,35 @@
-const nodemailer = require('nodemailer');
-const logger = require('../utils/logger'); // Ensure this points to your logger
-
-let transporter;
-
-const getTransporter = () => {
-  if (!transporter) {
-    // ✅ The ultimate timeout fix: Use the built-in 'gmail' service
-    transporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
-      }
-    });
-  }
-  return transporter;
-};
+// src/config/mailer.js
+const logger = require('../utils/logger'); 
 
 const sendMail = async ({ to, subject, html, text }) => {
   try {
-    const info = await getTransporter().sendMail({
-      from: `"InvenCEA System" <${process.env.EMAIL_USER}>`,
-      to,
-      subject,
-      html,
-      text,
+    const response = await fetch('https://api.brevo.com/v3/smtp/email', {
+      method: 'POST',
+      headers: {
+        'accept': 'application/json',
+        'api-key': process.env.BREVO_API_KEY,
+        'content-type': 'application/json'
+      },
+      body: JSON.stringify({
+        sender: {
+          name: 'InvenCEA System',
+          email: process.env.EMAIL_USER // Must match your Brevo account email
+        },
+        to: [{ email: to }],
+        subject: subject,
+        htmlContent: html,
+        textContent: text
+      })
     });
-    logger.info(`Email sent to ${to}: ${info.messageId}`);
-    return info;
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.message || 'Failed to send via Brevo API');
+    }
+
+    logger.info(`Email sent to ${to} via Brevo API: ${data.messageId}`);
+    return data;
   } catch (err) {
     logger.error(`Failed to send email to ${to}: ${err.message}`);
     throw err;
