@@ -1,29 +1,17 @@
-// src/utils/mailer.js
 const nodemailer = require('nodemailer');
-const logger = require('../utils/logger'); // Adjust path if logger is in the same folder, or '../utils/logger'
+const logger = require('../utils/logger'); // Ensure this points to your logger
 
 let transporter;
 
 const getTransporter = () => {
   if (!transporter) {
+    // ✅ The ultimate timeout fix: Use the built-in 'gmail' service
     transporter = nodemailer.createTransport({
-      host: process.env.SMTP_HOST || 'smtp.gmail.com',
-      // ✅ FIX 1: Force Port 465 for cloud deployments
-      port: parseInt(process.env.SMTP_PORT || '465'), 
-      // ✅ FIX 2: Secure must be TRUE for port 465
-      secure: true, 
+      service: 'gmail',
       auth: {
-        // ✅ FIX 3: Fallbacks just in case Render variables are named differently
-        user: process.env.GMAIL_USER || process.env.EMAIL_USER,
-        pass: process.env.GMAIL_PASS || process.env.EMAIL_PASS,
-      },
-      tls: {
-        rejectUnauthorized: false, 
-      },
-      // ✅ FIX 4: Explicit timeouts (10 seconds) so the server doesn't hang indefinitely
-      connectionTimeout: 10000,
-      greetingTimeout: 10000,
-      socketTimeout: 15000,
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
+      }
     });
   }
   return transporter;
@@ -31,9 +19,8 @@ const getTransporter = () => {
 
 const sendMail = async ({ to, subject, html, text }) => {
   try {
-    const fromEmail = process.env.GMAIL_USER || process.env.EMAIL_USER;
     const info = await getTransporter().sendMail({
-      from: `"InvenCEA" <${fromEmail}>`,
+      from: `"InvenCEA System" <${process.env.EMAIL_USER}>`,
       to,
       subject,
       html,
@@ -52,7 +39,7 @@ const sendStatusEmail = async (email, request, status) => {
   if (!email) return;
 
   const isApproved = status === 'APPROVED';
-  const color = isApproved ? '#10b981' : '#ef4444'; // Green or Red
+  const color = isApproved ? '#10b981' : '#ef4444'; 
   const title = isApproved ? 'Request Approved!' : 'Request Denied';
 
   const html = `
