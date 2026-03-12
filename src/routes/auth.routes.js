@@ -46,7 +46,21 @@ router.post(
   ctrl.adminLogin
 );
 
-// ✅ Authenticated route to get current user (FIXED: use authMiddleware.protect)
+// Admin — change password (first-login reset)
+// Protected: must be authenticated; only admins will hit this in practice
+router.post(
+  '/change-password',
+  authMiddleware.protect,
+  [
+    body('current_password').notEmpty().withMessage('Current password is required.'),
+    body('new_password')
+      .isLength({ min: 8 })
+      .withMessage('New password must be at least 8 characters.'),
+  ],
+  ctrl.changePassword
+);
+
+// Get current authenticated user (session restore)
 router.get('/me', authMiddleware.protect, ctrl.getMe);
 
 module.exports = router;

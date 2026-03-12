@@ -1,4 +1,5 @@
 // backend/src/controllers/manager.controller.js
+const bcrypt = require('bcrypt');
 const { query } = require('../config/db');
 const { success, badRequest, notFound } = require('../utils/apiResponse');
 const { sendMail } = require('../config/mailer');
@@ -13,13 +14,13 @@ const getManagerStats = async (req, res, next) => {
         COUNT(*) FILTER (WHERE role = 'faculty') AS total_faculty
       FROM users
     `);
-    
+
     const { rows: roomStats } = await query(`SELECT COUNT(*) AS total_rooms FROM rooms`);
 
     return success(res, {
       admins: parseInt(userStats[0].total_admins),
       faculty: parseInt(userStats[0].total_faculty),
-      rooms: parseInt(roomStats[0].total_rooms)
+      rooms: parseInt(roomStats[0].total_rooms),
     });
   } catch (e) { next(e); }
 };
@@ -41,7 +42,7 @@ const getAllSystemUsers = async (req, res, next) => {
 
 const provisionUser = async (req, res, next) => {
   try {
-    const { email, name, role, room_id } = req.body;
+    const { email, name, role, room_id, password } = req.body;
 
     if (!email || !name || !role) {
       return badRequest(res, 'Email, name, and role are required.');
@@ -55,17 +56,41 @@ const provisionUser = async (req, res, next) => {
       return badRequest(res, 'Admins must be assigned to a specific room_id.');
     }
 
-    // Insert the new user
+    if (role === 'admin' && !password) {
+      return badRequest(res, 'A temporary password is required when provisioning an admin.');
+    }
+
+    // Hash the password for admin accounts; faculty use OTP so no password needed
+    let hashedPassword = null;
+    if (role === 'admin') {
+      const SALT_ROUNDS = 12;
+      hashedPassword = await bcrypt.hash(password, SALT_ROUNDS);
+    }
+
+    // Insert the new user — admins get a hashed password and must reset on first login
     const { rows } = await query(
-      `INSERT INTO users (email, name, role, room_id)
-       VALUES ($1, $2, $3, $4)
-       RETURNING id, email, name, role, room_id, created_at`,
-      [email, name, role, role === 'admin' ? room_id : null]
+      `INSERT INTO users (email, name, role, room_id, password_hash, needs_password_reset)
+       VALUES ($1, $2, $3, $4, $5, $6)
+       RETURNING id, email, name, role, room_id, needs_password_reset, created_at`,
+      [
+        email,
+        name,
+        role,
+        role === 'admin' ? room_id : null,
+        hashedPassword,
+        role === 'admin' ? true : false,
+      ]
     );
 
     // Send Welcome Email
     try {
       const roleTitle = role === 'admin' ? 'Laboratory Administrator' : 'Faculty Member';
+      const adminPasswordNote =
+        role === 'admin'
+          ? `<p>Your temporary password is: <strong>${password}</strong></p>
+             <p style="color:#800000"><strong>You will be required to change this password on your first login.</strong></p>`
+          : `<p>You can log in using the One-Time Password (OTP) sent to this email address.</p>`;
+
       await sendMail({
         to: email,
         subject: `InvenCEA — ${roleTitle} Account Created`,
@@ -74,7 +99,7 @@ const provisionUser = async (req, res, next) => {
             <h2 style="color:#800000">Welcome to InvenCEA</h2>
             <p>Hello ${name},</p>
             <p>Your <strong>${roleTitle}</strong> account has been provisioned by the System Manager.</p>
-            <p>You can now log in to the system using the One-Time Password (OTP) sent to this email address.</p>
+            ${adminPasswordNote}
           </div>`,
       });
     } catch (mailErr) {
@@ -91,8 +116,8 @@ const provisionUser = async (req, res, next) => {
 const removeUser = async (req, res, next) => {
   try {
     const { id } = req.params;
-    
-    // Prevent the manager from deleting themselves!
+
+    // Prevent the manager from deleting themselves
     if (String(id) === String(req.user.id)) {
       return badRequest(res, 'You cannot delete your own manager account.');
     }
@@ -111,5 +136,5 @@ module.exports = {
   getManagerStats,
   getAllSystemUsers,
   provisionUser,
-  removeUser
+  removeUser,
 };

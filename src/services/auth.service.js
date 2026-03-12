@@ -64,7 +64,7 @@ const verifyFacultyOTP = async (email, code) => {
 
   // 3. Get User Details
   const { rows: userRows } = await query(
-    `SELECT id, email, name, role, room_id FROM users WHERE email = $1 AND role IN ('faculty', 'manager')`, 
+    `SELECT id, email, name, role, room_id FROM users WHERE email = $1 AND role IN ('faculty', 'manager')`,
     [email]
   );
   if (!userRows.length) throw Object.assign(new Error('User not found'), { status: 404 });
@@ -73,12 +73,12 @@ const verifyFacultyOTP = async (email, code) => {
 
   // 4. Sign JWT Payload
   const token = jwt.sign(
-    { 
-      id: user.id, 
-      role: user.role, 
+    {
+      id: user.id,
+      role: user.role,
       email: user.email,
       name: user.name,
-      room_id: user.room_id  
+      room_id: user.room_id,
     },
     process.env.JWT_SECRET,
     { expiresIn: process.env.JWT_EXPIRES_IN || '7d' }
@@ -117,49 +117,93 @@ const studentLogin = async (full_name, student_id) => {
 // ─── Admin Auth ───────────────────────────────────────────────────────────────
 const adminLogin = async (email, password) => {
   const { rows } = await query(
-    `SELECT id, email, name, password_hash, role, room_id FROM users WHERE email = $1`,
+    // Fetch needs_password_reset alongside the other fields
+    `SELECT id, email, name, password_hash, role, room_id, needs_password_reset
+     FROM users
+     WHERE email = $1`,
     [email]
   );
 
   if (!rows.length) throw Object.assign(new Error('Invalid credentials'), { status: 401 });
+
   const user = rows[0];
+
   if (user.role !== 'admin') throw Object.assign(new Error('Not an administrator'), { status: 403 });
-  if (!user.password_hash) throw Object.assign(new Error('No password set for this account'), { status: 401 });
+  if (!user.password_hash)   throw Object.assign(new Error('No password set for this account'), { status: 401 });
 
   const match = await bcrypt.compare(password, user.password_hash);
   if (!match) throw Object.assign(new Error('Invalid credentials'), { status: 401 });
 
   const token = jwt.sign(
-    { 
-      id: user.id, 
-      role: user.role, 
-      email: user.email, 
-      name: user.name, 
-      room_id: user.room_id 
+    {
+      id: user.id,
+      role: user.role,
+      email: user.email,
+      name: user.name,
+      room_id: user.room_id,
     },
     process.env.JWT_SECRET,
     { expiresIn: process.env.JWT_EXPIRES_IN || '7d' }
   );
 
-  return { 
-    token, 
-    user: { 
-      id: user.id, 
-      email: user.email, 
-      name: user.name, 
+  return {
+    token,
+    user: {
+      id: user.id,
+      email: user.email,
+      name: user.name,
       role: user.role,
-      room_id: user.room_id 
-    } 
+      room_id: user.room_id,
+      needs_password_reset: user.needs_password_reset ?? false,
+    },
   };
 };
 
-// ─── Get current user info ─────────────────────────────────────────────────────
+// ─── Admin — Change Password ──────────────────────────────────────────────────
+const changeAdminPassword = async (userId, currentPassword, newPassword) => {
+  // 1. Fetch current hash
+  const { rows } = await query(
+    `SELECT password_hash FROM users WHERE id = $1 AND role = 'admin'`,
+    [userId]
+  );
+
+  if (!rows.length) throw Object.assign(new Error('Admin account not found'), { status: 404 });
+  if (!rows[0].password_hash) throw Object.assign(new Error('No password set for this account'), { status: 401 });
+
+  // 2. Verify the current (temporary) password
+  const match = await bcrypt.compare(currentPassword, rows[0].password_hash);
+  if (!match) throw Object.assign(new Error('Current password is incorrect'), { status: 401 });
+
+  // 3. Hash and save the new password, clear the reset flag in one query
+  const SALT_ROUNDS = 12;
+  const newHash = await bcrypt.hash(newPassword, SALT_ROUNDS);
+
+  await query(
+    `UPDATE users
+     SET password_hash = $1, needs_password_reset = FALSE
+     WHERE id = $2`,
+    [newHash, userId]
+  );
+
+  logger.info(`Admin ${userId} changed their password successfully.`);
+};
+
+// ─── Get current user info ────────────────────────────────────────────────────
 const getMe = async (userId, role) => {
   if (role === 'student') {
-    const { rows } = await query(`SELECT id, full_name, student_id, department FROM students WHERE id = $1`, [userId]);
+    const { rows } = await query(
+      `SELECT id, full_name, student_id, department FROM students WHERE id = $1`,
+      [userId]
+    );
     return rows[0] ? { ...rows[0], role: 'student' } : null;
   }
-  const { rows } = await query(`SELECT id, email, name, role, room_id FROM users WHERE id = $1`, [userId]);
+
+  const { rows } = await query(
+    // Include needs_password_reset so session restores on page-refresh
+    // preserve the gate correctly for admins
+    `SELECT id, email, name, role, room_id, needs_password_reset FROM users WHERE id = $1`,
+    [userId]
+  );
   return rows[0] || null;
 };
 
@@ -168,6 +212,7 @@ module.exports = {
   sendFacultyOTP,
   verifyFacultyOTP,
   studentLogin,
-  adminLogin,      
+  adminLogin,
+  changeAdminPassword,
   getMe,
 };
