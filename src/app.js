@@ -13,7 +13,7 @@ const logger = require('./utils/logger');
 const managerRoutes = require('./routes/manager.routes');
 
 const app = express();
-
+app.set('trust proxy', 1)
 app.use(helmet({
   crossOriginResourcePolicy: false,
 }));
