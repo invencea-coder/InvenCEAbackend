@@ -1,12 +1,24 @@
+// backend/src/config/socket.js
 const { Server } = require('socket.io');
 const logger = require('../utils/logger');
 
 let io;
 
+const ALLOWED_ORIGINS = [
+  'http://localhost:5173',
+  'https://invencea-frontend-2yj9.vercel.app',
+  // Add any extra origins via env so you don't need a redeploy for new domains
+  ...(process.env.EXTRA_ORIGINS ? process.env.EXTRA_ORIGINS.split(',') : []),
+];
+
 const initSocket = (server) => {
   io = new Server(server, {
     path: process.env.SOCKET_PATH || '/socket.io',
-    cors: { origin: process.env.BASE_URL || '*', credentials: true },
+    cors: {
+      origin: ALLOWED_ORIGINS,
+      methods: ['GET', 'POST'],
+      credentials: true,
+    },
   });
 
   io.on('connection', (socket) => {
