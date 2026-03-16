@@ -271,17 +271,35 @@ const updateUnifiedItem = async (id, itemData) => {
 };
 
 const deleteUnifiedItem = async (id, type) => {
-  if (type) {
-    const table = type === 'consumable' ? 'inventory_consumables' : 'inventory_items';
-    const result = await query(`DELETE FROM ${table} WHERE id = $1 RETURNING id`, [id]);
-    if (!result.rows.length) throw Object.assign(new Error(`${type} item not found`), { status: 404 });
-    return result.rows[0];
-  } else {
-    let result = await query(`DELETE FROM inventory_items WHERE id = $1 RETURNING id`, [id]);
-    if (result.rows.length) return result.rows[0];
-    result = await query(`DELETE FROM inventory_consumables WHERE id = $1 RETURNING id`, [id]);
-    if (result.rows.length) return result.rows[0];
-    throw Object.assign(new Error('Item not found'), { status: 404 });
+  try {
+    if (type) {
+      const table = type === 'consumable' ? 'inventory_consumables' : 'inventory_items';
+      const result = await query(`DELETE FROM ${table} WHERE id = $1 RETURNING id`, [id]);
+      if (!result.rows.length) throw Object.assign(new Error(`${type} item not found`), { status: 404 });
+      return result.rows[0];
+    } else {
+      let result = await query(`DELETE FROM inventory_items WHERE id = $1 RETURNING id`, [id]);
+      if (result.rows.length) return result.rows[0];
+      result = await query(`DELETE FROM inventory_consumables WHERE id = $1 RETURNING id`, [id]);
+      if (result.rows.length) return result.rows[0];
+      throw Object.assign(new Error('Item not found'), { status: 404 });
+    }
+  } catch (error) {
+    // 23503 is the PostgreSQL code for Foreign Key Violation
+    if (error.code === '23503') {
+      // Soft Delete: Instead of deleting, mark it as archived so it keeps transaction history intact
+      if (type !== 'consumable') {
+        const softDelete = await query(
+          `UPDATE inventory_items SET status = 'archived' WHERE id = $1 RETURNING id`, 
+          [id]
+        );
+        return softDelete.rows[0];
+      }
+      // If it's a consumable with history, we just throw a friendly error
+      throw Object.assign(new Error('Cannot delete this item because it has a borrowing history. Please update its available quantity to 0 instead.'), { status: 400 });
+    }
+    // Throw any other unexpected errors normally
+    throw error;
   }
 };
 
