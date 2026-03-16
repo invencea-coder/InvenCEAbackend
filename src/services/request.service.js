@@ -15,11 +15,12 @@ const checkExpiration = (createdAt) => {
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
-// 1. Smart Creation (Schedules & Status)
+// 1. Smart Creation (Schedules, Status & Expiration)
 // ─────────────────────────────────────────────────────────────────────────────
 const createRequest = async ({ requester_type, requester_id, requester_email, room_id, purpose, items, companions, scheduled_time }) => {
   return withTransaction(async (client) => {
     let returnDeadline = null;
+    let expiresAt = null;
 
     // Faculty Smart Scheduling: Find the absolute latest end_time among companions
     if (requester_type === 'faculty') {
@@ -34,15 +35,19 @@ const createRequest = async ({ requester_type, requester_id, requester_email, ro
         });
       }
       if (latestTime > 0) returnDeadline = new Date(latestTime);
+    } else {
+      // V2 Student Walk-in Rule: Requests expire if not scanned within 15 minutes
+      expiresAt = new Date();
+      expiresAt.setMinutes(expiresAt.getMinutes() + 15);
     }
 
     const groupQr = crypto.randomBytes(16).toString('hex');
     const initialStatus = requester_type === 'faculty' ? 'PENDING APPROVAL' : 'PENDING';
 
     const { rows } = await client.query(
-      `INSERT INTO requests (requester_type, requester_id, room_id, purpose, qr_code, scheduled_time, return_deadline, status)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *`,
-      [requester_type, requester_id, room_id || null, purpose || null, groupQr, scheduled_time || null, returnDeadline, initialStatus]
+      `INSERT INTO requests (requester_type, requester_id, room_id, purpose, qr_code, qr_token, scheduled_time, return_deadline, expires_at, status)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING *`,
+      [requester_type, requester_id, room_id || null, purpose || null, groupQr, groupQr, scheduled_time || null, returnDeadline, expiresAt, initialStatus]
     );
 
     const request = rows[0];
@@ -224,14 +229,87 @@ const listRequests = async ({ room_id, status, requester_type, requester_id } = 
 // ─────────────────────────────────────────────────────────────────────────────
 // 5. Approvals
 // ─────────────────────────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────────────────────────────────
+// 5. Approvals (V2: Auto-Reserves Physical Items)
+// ─────────────────────────────────────────────────────────────────────────────
 const approveRequest = async (id, email) => {
-  const { rows: reqs } = await query(`SELECT created_at FROM requests WHERE id = $1 AND status IN ('PENDING APPROVAL', 'PENDING')`, [id]);
-  if (!reqs.length) throw Object.assign(new Error('Request not found or already processed'), { status: 400 });
+  return withTransaction(async (client) => {
+    // 1. Lock the request so nobody else can modify it at the same exact millisecond
+    const { rows: reqs } = await client.query(
+      `SELECT * FROM requests WHERE id = $1 AND status IN ('PENDING APPROVAL', 'PENDING') FOR UPDATE`, 
+      [id]
+    );
+    if (!reqs.length) throw Object.assign(new Error('Request not found or already processed'), { status: 400 });
 
-  const { rows } = await query(`UPDATE requests SET status = 'APPROVED', approved_time = now() WHERE id = $1 RETURNING *`, [id]);
-  if (email) await sendStatusEmail(email, rows[0], 'APPROVED');
-  await notificationService.notifyApproved(rows[0]);
-  return rows[0];
+    const request = reqs[0];
+
+    // 2. Fetch the requested items to allocate them
+    const { rows: reqItems } = await client.query(`SELECT * FROM request_items WHERE request_id = $1`, [id]);
+
+    for (const item of reqItems) {
+      if (!item.consumable_id) {
+        // Borrowable Item: Reserve specific physical items
+        for (let i = 0; i < item.quantity; i++) {
+          // Find 1 available item of this type
+          const { rows: available } = await client.query(
+            `SELECT id FROM inventory_items WHERE inventory_type_id = $1 AND status = 'available' FOR UPDATE SKIP LOCKED LIMIT 1`,
+            [item.inventory_type_id]
+          );
+          
+          if (!available.length) {
+            throw Object.assign(new Error('Not enough available stock to approve this request right now.'), { status: 409 });
+          }
+
+          const physicalItemId = available[0].id;
+          
+          // Change physical item to 'reserved'
+          await client.query(`UPDATE inventory_items SET status = 'reserved' WHERE id = $1`, [physicalItemId]);
+
+          // Link the reserved item to the request. We split the rows just like issuance so each physical item is tracked perfectly.
+          if (i === 0) {
+            await client.query(
+              `UPDATE request_items SET inventory_item_id = $1, status = 'RESERVED', quantity = 1 WHERE id = $2`, 
+              [physicalItemId, item.id]
+            );
+          } else {
+            await client.query(
+              `INSERT INTO request_items (request_id, inventory_type_id, inventory_item_id, quantity, status, assigned_to) 
+               VALUES ($1, $2, $3, 1, 'RESERVED', $4)`,
+              [id, item.inventory_type_id, physicalItemId, item.assigned_to]
+            );
+          }
+        }
+      } else {
+        // Consumable Item: Deduct from available quantity to reserve it
+        const { rows: cons } = await client.query(
+          `SELECT quantity_available FROM inventory_consumables WHERE id = $1 FOR UPDATE`, 
+          [item.consumable_id]
+        );
+        
+        if (!cons.length || cons[0].quantity_available < item.quantity) {
+          throw Object.assign(new Error('Not enough consumable stock to approve this request.'), { status: 409 });
+        }
+        
+        await client.query(
+          `UPDATE inventory_consumables SET quantity_available = quantity_available - $1 WHERE id = $2`, 
+          [item.quantity, item.consumable_id]
+        );
+        await client.query(`UPDATE request_items SET status = 'RESERVED' WHERE id = $1`, [item.id]);
+      }
+    }
+
+    // 3. Finally, mark the request itself as APPROVED
+    const { rows } = await client.query(
+      `UPDATE requests SET status = 'APPROVED', approved_time = now() WHERE id = $1 RETURNING *`, 
+      [id]
+    );
+
+    // 4. Send notifications
+    if (email) await sendStatusEmail(email, rows[0], 'APPROVED');
+    await notificationService.notifyApproved(rows[0]);
+
+    return rows[0];
+  });
 };
 
 const rejectRequest = async (id, email) => {
@@ -244,12 +322,23 @@ const rejectRequest = async (id, email) => {
 // ─────────────────────────────────────────────────────────────────────────────
 // 6. Issue Request
 // ─────────────────────────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────────────────────────────────
+// 6. Issue Request (V2: Handles Barcode Scans, Walk-ins, & Reserved Items)
+// ─────────────────────────────────────────────────────────────────────────────
 const issueRequest = async (id, itemsToIssue = []) => {
   return withTransaction(async (client) => {
-    const { rows: reqRows } = await client.query(`SELECT * FROM requests WHERE id = $1 AND status IN ('APPROVED', 'PENDING') FOR UPDATE`, [id]);
+    // 1. Lock the request
+    const { rows: reqRows } = await client.query(
+      `SELECT * FROM requests WHERE id = $1 AND status IN ('APPROVED', 'PENDING', 'PENDING APPROVAL') FOR UPDATE`, 
+      [id]
+    );
     if (!reqRows.length) throw Object.assign(new Error('Request not found or cannot be issued'), { status: 400 });
+    
+    const request = reqRows[0];
+    const isPreviouslyApproved = request.status === 'APPROVED';
 
     for (const item of itemsToIssue) {
+      // If Admin lowered quantity to 0 in the modal, cancel this specific request item
       if (item.quantity <= 0) {
         if (item.id) await client.query(`UPDATE request_items SET status = 'CANCELLED', quantity = 0 WHERE id = $1`, [item.id]);
         continue;
@@ -258,43 +347,95 @@ const issueRequest = async (id, itemsToIssue = []) => {
       let requestItemId = item.id;
       const assignedTo = item.assigned_to || 'Shared Group';
 
-      if (!requestItemId) {
-        const { rows: inserted } = await client.query(
-          `INSERT INTO request_items (request_id, inventory_type_id, consumable_id, quantity, status, assigned_to)
-           VALUES ($1, $2, $3, $4, 'ISSUED', $5) RETURNING id`,
-          [id, item.inventory_type_id, item.consumable_id || null, item.quantity, assignedTo]
-        );
-        requestItemId = inserted[0].id;
-      }
-
-      if (!item.consumable_id) { // Borrowable
+      if (!item.consumable_id) {
+        // ─── BORROWABLE ITEMS ───
         for (let i = 0; i < item.quantity; i++) {
-          const { rows: available } = await client.query(
-            `SELECT id FROM inventory_items WHERE inventory_type_id = $1 AND status = 'available' FOR UPDATE SKIP LOCKED LIMIT 1`, [item.inventory_type_id]
-          );
-          if (!available.length) throw Object.assign(new Error(`Item out of stock`), { status: 409 });
+          let physicalItemId;
 
-          const physicalItemId = available[0].id;
+          // SCENARIO A: Admin scanned a specific barcode in the modal
+          if (item.inventory_item_id) {
+            const { rows: specificItem } = await client.query(
+              `SELECT id FROM inventory_items WHERE id = $1 AND status IN ('available', 'reserved') FOR UPDATE`,
+              [item.inventory_item_id]
+            );
+            if (!specificItem.length) {
+              throw Object.assign(new Error(`Scanned item is currently unavailable or locked by another request.`), { status: 409 });
+            }
+            physicalItemId = specificItem[0].id;
+          } 
+          // SCENARIO B: Auto-selection (picks items we previously reserved, or available ones if walk-in)
+          else {
+            // Check for pre-reserved items first
+            let { rows: physItems } = await client.query(
+              `SELECT inventory_item_id as id FROM request_items WHERE request_id = $1 AND inventory_type_id = $2 AND status = 'RESERVED' LIMIT 1`,
+              [id, item.inventory_type_id]
+            );
+            
+            // If none reserved, grab an available one
+            if (!physItems.length) {
+              const avail = await client.query(
+                `SELECT id FROM inventory_items WHERE inventory_type_id = $1 AND status = 'available' FOR UPDATE SKIP LOCKED LIMIT 1`,
+                [item.inventory_type_id]
+              );
+              physItems = avail.rows;
+            }
+
+            if (!physItems.length) throw Object.assign(new Error(`Item out of stock.`), { status: 409 });
+            physicalItemId = physItems[0].id;
+          }
+
+          // Mark physical item as borrowed
           await client.query(`UPDATE inventory_items SET status = 'borrowed' WHERE id = $1`, [physicalItemId]);
 
-          if (i === 0) {
-            await client.query(`UPDATE request_items SET inventory_item_id = $1, status = 'ISSUED', quantity = 1, assigned_to = $3 WHERE id = $2`, [physicalItemId, requestItemId, assignedTo]);
+          // Link to the request item record
+          if (i === 0 && requestItemId) {
+            await client.query(
+              `UPDATE request_items SET inventory_item_id = $1, status = 'ISSUED', quantity = 1, assigned_to = $3 WHERE id = $2`,
+              [physicalItemId, requestItemId, assignedTo]
+            );
           } else {
             await client.query(
-              `INSERT INTO request_items (request_id, inventory_type_id, inventory_item_id, quantity, status, assigned_to) VALUES ($1, $2, $3, 1, 'ISSUED', $4)`,
+              `INSERT INTO request_items (request_id, inventory_type_id, inventory_item_id, quantity, status, assigned_to) 
+               VALUES ($1, $2, $3, 1, 'ISSUED', $4)`,
               [id, item.inventory_type_id, physicalItemId, assignedTo]
             );
           }
         }
-      } else { // Consumable
-        const { rows: cons } = await client.query(`SELECT * FROM inventory_consumables WHERE id = $1 FOR UPDATE`, [item.consumable_id]);
-        if (!cons.length || cons[0].quantity_available < item.quantity) throw Object.assign(new Error(`Insufficient consumable quantity`), { status: 409 });
-
-        await client.query(`UPDATE inventory_consumables SET quantity_available = quantity_available - $1 WHERE id = $2`, [item.quantity, item.consumable_id]);
-        await client.query(`UPDATE request_items SET status = 'ISSUED', quantity = $1, assigned_to = $3 WHERE id = $2`, [item.quantity, requestItemId, assignedTo]);
+      } else {
+        // ─── CONSUMABLE ITEMS ───
+        // Only deduct stock if this is a Student Walk-in. (If it was Faculty, we already deducted it during Approval)
+        if (!isPreviouslyApproved) {
+          const { rows: cons } = await client.query(`SELECT * FROM inventory_consumables WHERE id = $1 FOR UPDATE`, [item.consumable_id]);
+          if (!cons.length || cons[0].quantity_available < item.quantity) {
+            throw Object.assign(new Error(`Insufficient consumable quantity`), { status: 409 });
+          }
+          await client.query(`UPDATE inventory_consumables SET quantity_available = quantity_available - $1 WHERE id = $2`, [item.quantity, item.consumable_id]);
+        }
+        
+        if (requestItemId) {
+          await client.query(`UPDATE request_items SET status = 'ISSUED', quantity = $1, assigned_to = $3 WHERE id = $2`, [item.quantity, requestItemId, assignedTo]);
+        } else {
+          await client.query(
+            `INSERT INTO request_items (request_id, inventory_type_id, consumable_id, quantity, status, assigned_to) VALUES ($1, $2, $3, $4, 'ISSUED', $5)`,
+            [id, item.inventory_type_id, item.consumable_id, item.quantity, assignedTo]
+          );
+        }
       }
     }
 
+    // 2. THE CLEANUP (The "Broken Item" Reality Check)
+    // If the Admin lowered the quantity, or swapped a broken reserved item for a new one, 
+    // there will be 'RESERVED' rows left over. We must free them so they aren't held hostage forever.
+    const { rows: leftover } = await client.query(`SELECT inventory_item_id FROM request_items WHERE request_id = $1 AND status = 'RESERVED'`, [id]);
+    for (const left of leftover) {
+      if (left.inventory_item_id) {
+        await client.query(`UPDATE inventory_items SET status = 'available' WHERE id = $1`, [left.inventory_item_id]);
+      }
+    }
+    // Cancel the ghost request rows
+    await client.query(`UPDATE request_items SET status = 'CANCELLED' WHERE request_id = $1 AND status = 'RESERVED'`, [id]);
+
+    // 3. Mark the main request as ISSUED
     const { rows: issued } = await client.query(`UPDATE requests SET status = 'ISSUED', issued_time = clock_timestamp() WHERE id = $1 RETURNING *`, [id]);
     return issued[0];
   });
