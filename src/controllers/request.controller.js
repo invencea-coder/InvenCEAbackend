@@ -92,18 +92,25 @@ const listRequests = async (req, res, next) => {
 const approveRequest = async (req, res, next) => {
   try {
     const requestRow = await requestService.getRequest(req.params.id);
-    if (String(requestRow.room_id) !== String(req.user.room_id)) {
-      throw Object.assign(new Error('Forbidden'), { status: 403 });
+    
+    // V2 Graceful Check: Allow approval if it belongs to your room
+    if (requestRow.room_id && String(requestRow.room_id) !== String(req.user.room_id)) {
+      return res.status(403).json({ message: 'Forbidden: Access restricted to your room' });
     }
 
     const data = await requestService.approveRequest(req.params.id);
     
-    // BROADCAST: notify client to refresh and potentially decrement badge
+    // BROADCAST: notify client to refresh
     broadcast('request-updated', { id: req.params.id, status: 'APPROVED' });
     
     return success(res, data, 'Request approved');
   } catch (e) {
-    next(e);
+    // Intercept the database error and send it cleanly to the frontend toast
+    console.error(`❌ Approval Error for Request #${req.params.id}:`, e.message);
+    return res.status(e.status || 500).json({ 
+      success: false, 
+      message: e.message || 'Internal Server Error' 
+    });
   }
 };
 
