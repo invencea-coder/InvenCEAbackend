@@ -7,16 +7,57 @@ const authMiddleware = require('../middleware/authMiddleware');
 const roleMiddleware = require('../middleware/roleMiddleware');
 
 
-router.get('/public/qr-status/:code', async (req, res, next) => {
+// ─────────────────────────────────────────────────────────────────────────────
+// PATCH: Add this route to src/routes/request.routes.js
+// Place it BEFORE the `router.use(authMiddleware.protect)` line.
+// This is the public endpoint used by KioskStatus (no login required).
+// ─────────────────────────────────────────────────────────────────────────────
+
+// In request.routes.js, replace the broken public route:
+//
+// router.get('/public/qr-status/:code', ...)   <-- REMOVE THIS
+//
+// With the new clean one below:
+
+router.get('/qr/public/:code', async (req, res, next) => {
   try {
     const { code } = req.params;
-    // Reuse your existing getRequestByQR logic, but perhaps scrub sensitive data if needed
-    const result = await require('../controllers/request.controller').getRequestByQR(req, res, next);
-    // Note: If your controller calls `res.json()`, it will handle the response itself.
-  } catch (err) {
-    next(err);
+    const requestService = require('../services/request.service');
+    const { success } = require('../utils/apiResponse');
+
+    // getRequestByQR already handles both QR string and numeric ID lookup.
+    // We call it directly here WITHOUT the room-ownership check — this is
+    // intentional for the public kiosk status page where the user is not
+    // logged in and just wants to see their own request status.
+    const data = await requestService.getRequestByQR(code);
+
+    // Scrub any sensitive fields before sending to the public
+    const safeData = {
+      id:              data.id,
+      status:          data.status,
+      requester_type:  data.requester_type,
+      requester_name:  data.requester_name  || null,
+      room_code:       data.room_code       || null,
+      created_at:      data.created_at,
+      return_deadline: data.return_deadline || null,
+      items: (data.items || []).map(i => ({
+        item_name:              i.item_name,
+        quantity:               i.quantity,
+        item_status:            i.item_status || i.status || null,
+        inventory_item_barcode: i.inventory_item_barcode || null,
+      })),
+      members: (data.members || []).map(m => ({
+        full_name:  m.full_name,
+        student_id: m.student_id,
+      })),
+    };
+
+    return success(res, safeData);
+  } catch (e) {
+    next(e);
   }
 });
+
 // Protect all routes – authentication required
 router.use(authMiddleware.protect);
 
