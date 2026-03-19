@@ -165,11 +165,11 @@ const issueRequest = async (req, res, next) => {
  */
 const returnItemByBarcode = async (req, res, next) => {
   try {
-    const { barcode, condition } = req.body;
+    const { barcode, condition, qtyReturned } = req.body;
     if (!barcode) return badRequest(res, "Barcode is required");
 
     // Pass caller's room id to the service so it can enforce ownership inside the transaction
-    const result = await requestService.returnItemByBarcode(barcode, condition, req.user.room_id);
+    const result = await requestService.returnItemByBarcode(barcode, condition, req.user.room_id, qtyReturned);
 
     broadcast('inventory-updated', { message: 'Item returned via barcode' });
     broadcast('request-updated', { id: result.requestId });
