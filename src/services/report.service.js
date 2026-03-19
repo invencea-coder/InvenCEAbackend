@@ -53,29 +53,13 @@ const getIssuedReports = async ({ type, role, from, to }) => {
         r.approved_time, 
         r.issued_time, 
         
-        -- RETURNED AT: resolve from multiple sources in priority order:
-        -- 1. If all borrowable items are returned via scanner  → MAX(ri.returned_time)
-        -- 2. If this is a retroactive log marked RETURNED      → r.full_return_time (set by logRetroactiveRequest)
-        -- 3. If request status is RETURNED but no timestamps   → r.full_return_time as last resort
-        -- 4. Otherwise null (still out)
+        -- RETURNED AT: trust r.status = 'RETURNED' as the single source of truth.
+        -- The return service only sets this status after ALL item types (unit + qty-mode)
+        -- are confirmed returned, and always writes full_return_time = NOW() at that point.
+        -- Fallback chain: full_return_time → MAX(ri.returned_time) → NULL
         CASE
-            -- Normal scanner return: all borrowable items have ri.returned_time set
-            WHEN SUM(CASE WHEN ri.inventory_item_id IS NOT NULL AND ri.status = 'ISSUED' THEN 1 ELSE 0 END) = 0
-             AND SUM(CASE WHEN ri.inventory_item_id IS NOT NULL THEN 1 ELSE 0 END) > 0
-             AND MAX(ri.returned_time) IS NOT NULL
-            THEN MAX(ri.returned_time)
-
-            -- Retroactive log that was already returned: request is RETURNED but
-            -- ri.returned_time is NULL (retroactive inserts don't set it).
-            -- Fall back to r.full_return_time, which logRetroactiveRequest does NOT set either,
-            -- so we use the issued_time of the request itself as the stored returned_time
-            -- via the retroactive payload's returned_time field stored on the request row.
-            -- The safest source is: all items RETURNED status + request status RETURNED
             WHEN r.status = 'RETURNED'
-             AND SUM(CASE WHEN ri.inventory_item_id IS NOT NULL AND ri.status = 'ISSUED' THEN 1 ELSE 0 END) = 0
-             AND SUM(CASE WHEN ri.inventory_item_id IS NOT NULL THEN 1 ELSE 0 END) > 0
-            THEN COALESCE(r.full_return_time, MAX(ri.returned_time), r.issued_time)
-
+            THEN COALESCE(r.full_return_time, MAX(ri.returned_time))
             ELSE NULL
         END AS returned_at,
 
