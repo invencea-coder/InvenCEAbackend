@@ -1,3 +1,4 @@
+// server.js
 const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
@@ -12,15 +13,13 @@ const rateLimiter = require('./middleware/rateLimiter');
 const logger = require('./utils/logger');
 const managerRoutes = require('./routes/manager.routes');
 
-const app = express();
-app.set('trust proxy', 1)
-app.use(helmet({
-  crossOriginResourcePolicy: false,
-}));
+const app = express();  // ← app must be created first
+app.set('trust proxy', 1);
+app.use(helmet({ crossOriginResourcePolicy: false }));
 
 const allowedOrigins = [
   "http://localhost:5173",
-  "https://invencea-frontend-2yj9.vercel.app" 
+  "https://invencea-frontend-2yj9.vercel.app"
 ];
 
 app.use(cors({
@@ -38,17 +37,15 @@ app.use(cors({
 }));
 
 app.options('*', cors());
-
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
-
 app.use(morgan('combined', { stream: { write: (msg) => logger.http(msg.trim()) } }));
 app.use('/api/', rateLimiter);
 
-app.use('/api/v1/manager', managerRoutes); 
+app.use('/api/v1/manager', managerRoutes);
 app.use('/api/v1', routes);
 
-app.get('/health', (_req, res) => res.json({ status: 'ok' }));
+app.get('/health', (_req, res) => res.json({ status: 'ok' }));  // ← only one, after app is created
 
 app.use((_req, res) => res.status(404).json({ success: false, message: 'Route not found' }));
 app.use(errorHandler);
