@@ -21,4 +21,11 @@ router.get('/users', managerCtrl.getAllSystemUsers);
 router.post('/users', managerCtrl.provisionUser);
 router.delete('/users/:id', managerCtrl.removeUser);
 
+router.get('/students', managerCtrl.getAllStudents);
+router.post('/students/bulk', managerCtrl.bulkAddStudents);
+router.delete('/students/bulk', managerCtrl.bulkDeleteStudents);
+
+router.post('/faculty/bulk', managerCtrl.bulkAddFaculty);
+router.delete('/faculty/bulk', managerCtrl.bulkDeleteFaculty);
+
 module.exports = router;

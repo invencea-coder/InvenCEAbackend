@@ -71,16 +71,25 @@ const getRequestByQR = async (req, res, next) => {
 
 const listRequests = async (req, res, next) => {
   try {
-    // NOTE: Strict enforcement — do NOT trust incoming room_id query param.
-    // Always limit queries to the user's own room.
     const { status, requester_type, requester_id } = req.query;
 
     const filters = {
-      room_id: req.user.room_id, // enforce caller's room only
       status,
       requester_type,
-      requester_id // still allow client to filter by requester_id, but scoped to the room above
     };
+
+    // SECURITY ENFORCEMENT:
+    // If the caller is a student, FORCE the requester_id to be their own ID.
+    // They cannot override this by sending a different ID in the query.
+    if (req.user.role === 'student') {
+      filters.requester_id = req.user.id;
+      // Do not scope students by room_id, they can see their requests across all rooms
+    } else {
+      // If the caller is Faculty/Admin, enforce room scoping
+      filters.room_id = req.user.room_id;
+      // Admins/Faculty can filter by a specific student if they want
+      filters.requester_id = requester_id; 
+    }
 
     const data = await requestService.listRequests(filters);
     return success(res, data);

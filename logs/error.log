@@ -359,3 +359,221 @@
     at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
     at async sendOTP (C:\Users\Teacher\Music\invencea\backend\src\controllers\auth.controller.js:16:20)
 2026-03-11 23:30:01 [error]: [Job] expireRequests error:
+2026-03-16 20:01:39 [error]: Error: Connection terminated due to connection timeout
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async Object.getMe (C:\Users\Teacher\Music\invencea\backend\src\services\auth.service.js:201:20)
+    at async getMe (C:\Users\Teacher\Music\invencea\backend\src\controllers\auth.controller.js:140:18)
+2026-03-16 20:01:42 [error]: Error: Connection terminated due to connection timeout
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async Object.getMe (C:\Users\Teacher\Music\invencea\backend\src\services\auth.service.js:201:20)
+    at async getMe (C:\Users\Teacher\Music\invencea\backend\src\controllers\auth.controller.js:140:18)
+2026-03-16 20:38:51 [error]: Error: Invalid Barcode: Item not found in database
+    at C:\Users\Teacher\Music\invencea\backend\src\services\request.service.js:451:47
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async withTransaction (C:\Users\Teacher\Music\invencea\backend\src\config\db.js:41:20)
+    at async returnItemByBarcode (C:\Users\Teacher\Music\invencea\backend\src\controllers\request.controller.js:165:20)
+2026-03-16 21:17:02 [error]: Error: Connection terminated due to connection timeout
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async Object.listAll (C:\Users\Teacher\Music\invencea\backend\src\services\inventory.service.js:149:25)
+    at async listAll (C:\Users\Teacher\Music\invencea\backend\src\controllers\inventory.controller.js:63:18)
+2026-03-16 21:17:02 [error]: Error: Connection terminated due to connection timeout
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async Object.listRequests (C:\Users\Teacher\Music\invencea\backend\src\services\request.service.js:194:20)
+    at async listRequests (C:\Users\Teacher\Music\invencea\backend\src\controllers\request.controller.js:85:18)
+2026-03-16 21:17:04 [error]: Error: Connection terminated due to connection timeout
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async Object.listAll (C:\Users\Teacher\Music\invencea\backend\src\services\inventory.service.js:149:25)
+    at async listAll (C:\Users\Teacher\Music\invencea\backend\src\controllers\inventory.controller.js:63:18)
+2026-03-16 21:18:02 [error]: Error: Invalid credentials
+    at Object.adminLogin (C:\Users\Teacher\Music\invencea\backend\src\services\auth.service.js:127:41)
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async adminLogin (C:\Users\Teacher\Music\invencea\backend\src\controllers\auth.controller.js:77:20)
+2026-03-16 21:18:11 [error]: Error: Invalid credentials
+    at Object.adminLogin (C:\Users\Teacher\Music\invencea\backend\src\services\auth.service.js:127:41)
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async adminLogin (C:\Users\Teacher\Music\invencea\backend\src\controllers\auth.controller.js:77:20)
+2026-03-16 21:36:01 [error]: Error: Connection terminated due to connection timeout
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async Object.listAll (C:\Users\Teacher\Music\invencea\backend\src\services\inventory.service.js:149:25)
+    at async listAll (C:\Users\Teacher\Music\invencea\backend\src\controllers\inventory.controller.js:63:18)
+2026-03-16 21:49:33 [error]: Error: Connection terminated due to connection timeout
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async Object.listRequests (C:\Users\Teacher\Music\invencea\backend\src\services\request.service.js:194:20)
+    at async listRequests (C:\Users\Teacher\Music\invencea\backend\src\controllers\request.controller.js:85:18)
+2026-03-16 21:49:33 [error]: Error: Connection terminated due to connection timeout
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async Object.listAll (C:\Users\Teacher\Music\invencea\backend\src\services\inventory.service.js:149:25)
+    at async listAll (C:\Users\Teacher\Music\invencea\backend\src\controllers\inventory.controller.js:63:18)
+2026-03-16 21:53:31 [error]: error: new row for relation "request_items" violates check constraint "request_items_status_check"
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg\lib\client.js:631:17
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async C:\Users\Teacher\Music\invencea\backend\src\services\request.service.js:270:13
+    at async withTransaction (C:\Users\Teacher\Music\invencea\backend\src\config\db.js:41:20)
+    at async approveRequest (C:\Users\Teacher\Music\invencea\backend\src\controllers\request.controller.js:99:18)
+2026-03-16 21:53:45 [error]: error: new row for relation "request_items" violates check constraint "request_items_status_check"
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg\lib\client.js:631:17
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async C:\Users\Teacher\Music\invencea\backend\src\services\request.service.js:270:13
+    at async withTransaction (C:\Users\Teacher\Music\invencea\backend\src\config\db.js:41:20)
+    at async approveRequest (C:\Users\Teacher\Music\invencea\backend\src\controllers\request.controller.js:99:18)
+2026-03-16 21:54:12 [error]: error: new row for relation "request_items" violates check constraint "request_items_status_check"
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg\lib\client.js:631:17
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async C:\Users\Teacher\Music\invencea\backend\src\services\request.service.js:270:13
+    at async withTransaction (C:\Users\Teacher\Music\invencea\backend\src\config\db.js:41:20)
+    at async approveRequest (C:\Users\Teacher\Music\invencea\backend\src\controllers\request.controller.js:99:18)
+2026-03-16 21:54:37 [error]: error: new row for relation "request_items" violates check constraint "request_items_status_check"
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg\lib\client.js:631:17
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async C:\Users\Teacher\Music\invencea\backend\src\services\request.service.js:270:13
+    at async withTransaction (C:\Users\Teacher\Music\invencea\backend\src\config\db.js:41:20)
+    at async approveRequest (C:\Users\Teacher\Music\invencea\backend\src\controllers\request.controller.js:99:18)
+2026-03-16 22:13:35 [error]: Error: Connection terminated due to connection timeout
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async Object.listAll (C:\Users\Teacher\Music\invencea\backend\src\services\inventory.service.js:149:25)
+    at async listAll (C:\Users\Teacher\Music\invencea\backend\src\controllers\inventory.controller.js:63:18)
+2026-03-16 22:13:41 [error]: Error: Connection terminated due to connection timeout
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async Object.listRequests (C:\Users\Teacher\Music\invencea\backend\src\services\request.service.js:194:20)
+    at async listRequests (C:\Users\Teacher\Music\invencea\backend\src\controllers\request.controller.js:85:18)
+2026-03-16 22:13:41 [error]: Error: Connection terminated due to connection timeout
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async Object.listAll (C:\Users\Teacher\Music\invencea\backend\src\services\inventory.service.js:149:25)
+    at async listAll (C:\Users\Teacher\Music\invencea\backend\src\controllers\inventory.controller.js:63:18)
+2026-03-16 22:13:41 [error]: Error: Connection terminated due to connection timeout
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async Object.listRequests (C:\Users\Teacher\Music\invencea\backend\src\services\request.service.js:194:20)
+    at async listRequests (C:\Users\Teacher\Music\invencea\backend\src\controllers\request.controller.js:85:18)
+2026-03-16 22:13:43 [error]: Error: Connection terminated due to connection timeout
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async Object.listRequests (C:\Users\Teacher\Music\invencea\backend\src\services\request.service.js:194:20)
+    at async listRequests (C:\Users\Teacher\Music\invencea\backend\src\controllers\request.controller.js:85:18)
+2026-03-16 22:13:43 [error]: Error: Connection terminated due to connection timeout
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async Object.listAll (C:\Users\Teacher\Music\invencea\backend\src\services\inventory.service.js:149:25)
+    at async listAll (C:\Users\Teacher\Music\invencea\backend\src\controllers\inventory.controller.js:63:18)
+2026-03-16 22:13:43 [error]: Error: Connection terminated due to connection timeout
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async Object.listRequests (C:\Users\Teacher\Music\invencea\backend\src\services\request.service.js:194:20)
+    at async listRequests (C:\Users\Teacher\Music\invencea\backend\src\controllers\request.controller.js:85:18)
+2026-03-16 22:30:02 [error]: [Job] expireRequests error:
+2026-03-16 23:52:02 [error]: Error: Connection terminated due to connection timeout
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async Object.listAll (C:\Users\Teacher\Music\invencea\backend\src\services\inventory.service.js:149:25)
+    at async listAll (C:\Users\Teacher\Music\invencea\backend\src\controllers\inventory.controller.js:63:18)
+2026-03-16 23:52:02 [error]: Error: Connection terminated due to connection timeout
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async Object.listRequests (C:\Users\Teacher\Music\invencea\backend\src\services\request.service.js:194:20)
+    at async listRequests (C:\Users\Teacher\Music\invencea\backend\src\controllers\request.controller.js:85:18)
+2026-03-16 23:52:02 [error]: Error: Connection terminated due to connection timeout
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async Object.listAll (C:\Users\Teacher\Music\invencea\backend\src\services\inventory.service.js:149:25)
+    at async listAll (C:\Users\Teacher\Music\invencea\backend\src\controllers\inventory.controller.js:63:18)
+2026-03-17 00:30:02 [error]: [Job] expireRequests error:
+2026-03-17 09:28:22 [error]: Failed to send email to invencea@gmail.com: Key not found
+2026-03-17 09:28:22 [error]: Error: Key not found
+    at sendMail (C:\Users\Teacher\Music\invencea\backend\src\config\mailer.js:28:13)
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async Object.sendFacultyOTP (C:\Users\Teacher\Music\invencea\backend\src\services\auth.service.js:33:3)
+    at async sendOTP (C:\Users\Teacher\Music\invencea\backend\src\controllers\auth.controller.js:17:20)
+2026-03-17 09:28:39 [error]: Failed to send email to invencea@gmail.com: Key not found
+2026-03-17 09:28:39 [error]: Error: Key not found
+    at sendMail (C:\Users\Teacher\Music\invencea\backend\src\config\mailer.js:28:13)
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async Object.sendFacultyOTP (C:\Users\Teacher\Music\invencea\backend\src\services\auth.service.js:33:3)
+    at async sendOTP (C:\Users\Teacher\Music\invencea\backend\src\controllers\auth.controller.js:17:20)
+2026-03-17 09:28:47 [error]: Failed to send email to romeosangaspar94@gmail.com: Key not found
+2026-03-17 09:28:47 [error]: Error: Key not found
+    at sendMail (C:\Users\Teacher\Music\invencea\backend\src\config\mailer.js:28:13)
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async Object.sendFacultyOTP (C:\Users\Teacher\Music\invencea\backend\src\services\auth.service.js:33:3)
+    at async sendOTP (C:\Users\Teacher\Music\invencea\backend\src\controllers\auth.controller.js:17:20)
+2026-03-17 09:33:25 [error]: Failed to send email to invencea@gmail.com: Key not found
+2026-03-17 09:33:25 [error]: Error: Key not found
+    at sendMail (C:\Users\Teacher\Music\invencea\backend\src\config\mailer.js:28:13)
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async Object.sendFacultyOTP (C:\Users\Teacher\Music\invencea\backend\src\services\auth.service.js:33:3)
+    at async sendOTP (C:\Users\Teacher\Music\invencea\backend\src\controllers\auth.controller.js:17:20)
+2026-03-22 21:21:17 [error]: Failed to send email to invencea@gmail.com: Key not found
+2026-03-22 21:21:17 [error]: Error: Key not found
+    at sendMail (C:\Users\Teacher\Music\invencea\backend\src\config\mailer.js:28:13)
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async Object.sendFacultyOTP (C:\Users\Teacher\Music\invencea\backend\src\services\auth.service.js:33:3)
+    at async sendOTP (C:\Users\Teacher\Music\invencea\backend\src\controllers\auth.controller.js:17:20)
+2026-03-22 21:21:26 [error]: Failed to send email to invencea@gmail.com: Key not found
+2026-03-22 21:21:26 [error]: Error: Key not found
+    at sendMail (C:\Users\Teacher\Music\invencea\backend\src\config\mailer.js:28:13)
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async Object.sendFacultyOTP (C:\Users\Teacher\Music\invencea\backend\src\services\auth.service.js:33:3)
+    at async sendOTP (C:\Users\Teacher\Music\invencea\backend\src\controllers\auth.controller.js:17:20)
+2026-03-22 21:28:48 [error]: Failed to send email to invencea@gmail.com: self-signed certificate in certificate chain
+2026-03-22 21:28:48 [error]: Error: self-signed certificate in certificate chain
+    at TLSSocket.onConnectSecure (node:_tls_wrap:1631:34)
+    at TLSSocket.emit (node:events:508:28)
+    at TLSSocket._finishInit (node:_tls_wrap:1077:8)
+    at ssl.onhandshakedone (node:_tls_wrap:863:12)
+2026-03-22 21:48:21 [error]: error: column "pin_hash" of relation "students" does not exist
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async bulkAddStudents (C:\Users\Teacher\Music\invencea\backend\src\controllers\manager.controller.js:159:26)
+2026-03-22 21:48:40 [error]: error: column "pin_hash" of relation "students" does not exist
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async bulkAddStudents (C:\Users\Teacher\Music\invencea\backend\src\controllers\manager.controller.js:159:26)
+2026-03-22 21:54:44 [error]: Error: Name does not match student ID
+    at Object.studentLogin (C:\Users\Teacher\Music\invencea\backend\src\services\auth.service.js:104:25)
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async studentLogin (C:\Users\Teacher\Music\invencea\backend\src\controllers\auth.controller.js:56:20)
+2026-03-22 21:54:52 [error]: Error: Name does not match student ID
+    at Object.studentLogin (C:\Users\Teacher\Music\invencea\backend\src\services\auth.service.js:104:25)
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async studentLogin (C:\Users\Teacher\Music\invencea\backend\src\controllers\auth.controller.js:56:20)
+2026-03-22 22:26:57 [error]: Error: data and hash arguments required
+    at Object.compare (C:\Users\Teacher\Music\invencea\backend\node_modules\bcrypt\bcrypt.js:204:17)
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\bcrypt\promises.js:26:12
+    at new Promise (<anonymous>)
+    at Object.promise (C:\Users\Teacher\Music\invencea\backend\node_modules\bcrypt\promises.js:17:12)
+    at Object.compare (C:\Users\Teacher\Music\invencea\backend\node_modules\bcrypt\bcrypt.js:200:25)
+    at Object.studentLogin (C:\Users\Teacher\Music\invencea\backend\src\services\auth.service.js:115:30)
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async studentLogin (C:\Users\Teacher\Music\invencea\backend\src\controllers\auth.controller.js:59:20)
+2026-03-22 22:27:16 [error]: Error: data and hash arguments required
+    at Object.compare (C:\Users\Teacher\Music\invencea\backend\node_modules\bcrypt\bcrypt.js:204:17)
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\bcrypt\promises.js:26:12
+    at new Promise (<anonymous>)
+    at Object.promise (C:\Users\Teacher\Music\invencea\backend\node_modules\bcrypt\promises.js:17:12)
+    at Object.compare (C:\Users\Teacher\Music\invencea\backend\node_modules\bcrypt\bcrypt.js:200:25)
+    at Object.studentLogin (C:\Users\Teacher\Music\invencea\backend\src\services\auth.service.js:115:30)
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async studentLogin (C:\Users\Teacher\Music\invencea\backend\src\controllers\auth.controller.js:59:20)
+2026-03-22 22:30:58 [error]: Error: Account not found. Please visit the System Manager to register.
+    at Object.studentLogin (C:\Users\Teacher\Music\invencea\backend\src\services\auth.service.js:101:25)
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async studentLogin (C:\Users\Teacher\Music\invencea\backend\src\controllers\auth.controller.js:59:20)
+2026-03-22 22:31:03 [error]: Error: Invalid 4-Digit PIN
+    at Object.studentLogin (C:\Users\Teacher\Music\invencea\backend\src\services\auth.service.js:117:27)
+    at async studentLogin (C:\Users\Teacher\Music\invencea\backend\src\controllers\auth.controller.js:59:20)
+2026-03-22 22:52:20 [error]: Error: Invalid 4-Digit PIN
+    at Object.studentLogin (C:\Users\Teacher\Music\invencea\backend\src\services\auth.service.js:114:27)
+    at async studentLogin (C:\Users\Teacher\Music\invencea\backend\src\controllers\auth.controller.js:55:20)
+2026-03-22 23:50:11 [error]: Error: Invalid credentials
+    at Object.adminLogin (C:\Users\Teacher\Music\invencea\backend\src\services\auth.service.js:171:35)
+    at async adminLogin (C:\Users\Teacher\Music\invencea\backend\src\controllers\auth.controller.js:96:20)

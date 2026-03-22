@@ -200,11 +200,18 @@ const getRequestByQR = async (qrCode) => {
 // ─────────────────────────────────────────────────────────────────────────────
 // 4. listRequests
 // ─────────────────────────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────────────────────────────────
+// 4. listRequests
+// ─────────────────────────────────────────────────────────────────────────────
 const listRequests = async ({ room_id, status, requester_type, requester_id } = {}) => {
   const conditions = [], values = [];
   let i = 1;
 
-  if (room_id) { conditions.push(`r.room_id = $${i++}`); values.push(room_id); }
+  // If a room_id is provided (by Faculty/Admin), scope it to that room
+  if (room_id) { 
+    conditions.push(`r.room_id = $${i++}`); 
+    values.push(room_id); 
+  }
 
   if (status) {
     if (status.includes(',')) {
@@ -213,14 +220,22 @@ const listRequests = async ({ room_id, status, requester_type, requester_id } = 
       conditions.push(`r.status IN (${placeholders})`);
       values.push(...statuses);
     } else {
-      conditions.push(`r.status = $${i++}`); values.push(status);
+      conditions.push(`r.status = $${i++}`); 
+      values.push(status);
     }
   }
 
-  if (requester_type) { conditions.push(`r.requester_type = $${i++}`); values.push(requester_type); }
+  if (requester_type) { 
+    conditions.push(`r.requester_type = $${i++}`); 
+    values.push(requester_type); 
+  }
+
+  // Securely filter by the requester ID (forced by the controller if it's a student)
   if (requester_id) {
+    // This allows the user to see requests they made OR requests where they are a companion
     conditions.push(`(r.requester_id = $${i} OR r.id IN (SELECT request_id FROM request_group_members WHERE student_id = $${i}))`);
-    values.push(requester_id); i++;
+    values.push(requester_id); 
+    i++;
   }
 
   const where = conditions.length ? `WHERE ${conditions.join(' AND ')}` : '';

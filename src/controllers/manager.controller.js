@@ -3,6 +3,7 @@ const bcrypt = require('bcrypt');
 const { query } = require('../config/db');
 const { success, badRequest, notFound } = require('../utils/apiResponse');
 const { sendMail } = require('../config/mailer');
+const format = require('pg-format');
 
 // ── Dashboard Stats ────────────────────────────────────────────────────────
 
@@ -131,10 +132,83 @@ const removeUser = async (req, res, next) => {
     return success(res, null, 'User securely removed from the system.');
   } catch (e) { next(e); }
 };
+const getAllStudents = async (req, res, next) => {
+  try {
+    const { rows } = await query(`SELECT id, full_name, student_id, department, created_at FROM students ORDER BY full_name`);
+    return success(res, rows);
+  } catch (e) { next(e); }
+};
+
+const bulkAddStudents = async (req, res, next) => {
+  try {
+    const { students } = req.body;
+    if (!students || !students.length) return badRequest(res, 'No student data provided');
+
+    // Default PIN for bulk uploads is '1234'
+    const defaultPinHash = await bcrypt.hash('1234', 10);
+
+    // Prepare array for pg-format: [[full_name, student_id, pin_hash], [...]]
+    const values = students.map(s => [s.full_name, s.student_id, defaultPinHash]);
+
+    // ON CONFLICT DO NOTHING prevents errors if a student is already in the DB
+    const sql = format(
+      `INSERT INTO students (full_name, student_id, pin_hash) VALUES %L ON CONFLICT (student_id) DO NOTHING`,
+      values
+    );
+
+    const { rowCount } = await query(sql);
+    return success(res, null, `Successfully imported ${rowCount} new students.`);
+  } catch (e) { next(e); }
+};
+
+const bulkDeleteStudents = async (req, res, next) => {
+  try {
+    const { ids } = req.body;
+    if (!ids || !ids.length) return badRequest(res, 'No IDs provided');
+
+    const { rowCount } = await query(`DELETE FROM students WHERE id = ANY($1::int[])`, [ids]);
+    return success(res, null, `Deleted ${rowCount} students.`);
+  } catch (e) { next(e); }
+};
+
+// ── Directory Management (Faculty) ────────────────────────────────────────
+
+const bulkAddFaculty = async (req, res, next) => {
+  try {
+    const { faculty } = req.body;
+    if (!faculty || !faculty.length) return badRequest(res, 'No faculty data provided');
+
+    const values = faculty.map(f => [f.name, f.email, 'faculty']);
+
+    const sql = format(
+      `INSERT INTO users (name, email, role) VALUES %L ON CONFLICT (email) DO NOTHING`,
+      values
+    );
+
+    const { rowCount } = await query(sql);
+    return success(res, null, `Successfully imported ${rowCount} new faculty members.`);
+  } catch (e) { next(e); }
+};
+
+const bulkDeleteFaculty = async (req, res, next) => {
+  try {
+    const { ids } = req.body;
+    if (!ids || !ids.length) return badRequest(res, 'No IDs provided');
+
+    // Prevent deleting non-faculty or the manager themselves just in case
+    const { rowCount } = await query(`DELETE FROM users WHERE id = ANY($1::int[]) AND role = 'faculty'`, [ids]);
+    return success(res, null, `Deleted ${rowCount} faculty members.`);
+  } catch (e) { next(e); }
+};
 
 module.exports = {
   getManagerStats,
   getAllSystemUsers,
   provisionUser,
   removeUser,
+  getAllStudents,
+  bulkAddStudents,
+  bulkDeleteStudents,
+  bulkAddFaculty,
+  bulkDeleteFaculty
 };

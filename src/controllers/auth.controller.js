@@ -1,4 +1,3 @@
-// backend/src/controllers/auth.controller.js
 const { validationResult } = require('express-validator');
 const authService = require('../services/auth.service');
 const { success, badRequest, unauthorized } = require('../utils/apiResponse');
@@ -34,7 +33,6 @@ const verifyOTP = async (req, res, next) => {
 
     const { email, code } = req.body;
     const result = await authService.verifyFacultyOTP(email, code);
-    // returns { token, user }
 
     return success(res, result, 'Login successful');
   } catch (err) {
@@ -52,9 +50,9 @@ const studentLogin = async (req, res, next) => {
       return badRequest(res, 'Validation failed', errors.array());
     }
 
-    const { full_name, student_id } = req.body;
-    const result = await authService.studentLogin(full_name, student_id);
-    // returns { token, user }
+    const { full_name, student_id, pin } = req.body; 
+    
+    const result = await authService.studentLogin(full_name, student_id, pin); 
 
     return success(res, result, 'Login successful');
   } catch (err) {
@@ -63,8 +61,29 @@ const studentLogin = async (req, res, next) => {
 };
 
 /**
+ * Student — Change PIN
+ */
+const changeStudentPin = async (req, res, next) => {
+  try {
+    const { current_pin, new_pin } = req.body;
+
+    if (!current_pin || !new_pin) {
+      return badRequest(res, 'Current PIN and New PIN are required.');
+    }
+    if (new_pin.length !== 4) {
+      return badRequest(res, 'New PIN must be exactly 4 digits.');
+    }
+
+    await authService.changeStudentPin(req.user.id, current_pin, new_pin);
+
+    return success(res, null, 'PIN updated successfully.');
+  } catch (err) {
+    next(err);
+  }
+};
+
+/**
  * Admin Login
- * Returns needs_password_reset so the frontend can gate the dashboard.
  */
 const adminLogin = async (req, res, next) => {
   try {
@@ -75,7 +94,6 @@ const adminLogin = async (req, res, next) => {
 
     const { email, password } = req.body;
     const result = await authService.adminLogin(email, password);
-    // result = { token, user: { ..., needs_password_reset } }
 
     return success(
       res,
@@ -93,7 +111,6 @@ const adminLogin = async (req, res, next) => {
 
 /**
  * Admin — Change Password on First Login
- * Protected route — req.user set by auth middleware.
  */
 const changePassword = async (req, res, next) => {
   try {
@@ -129,7 +146,6 @@ const logout = async (_req, res) => {
 
 /**
  * Get current authenticated user
- * Used by frontend session restoration.
  */
 const getMe = async (req, res, next) => {
   try {
@@ -149,6 +165,7 @@ module.exports = {
   sendOTP,
   verifyOTP,
   studentLogin,
+  changeStudentPin, // <--- Exported here
   adminLogin,
   changePassword,
   logout,

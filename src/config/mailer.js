@@ -1,42 +1,39 @@
 // src/config/mailer.js
+const nodemailer = require('nodemailer');
 const logger = require('../utils/logger'); 
+
+// Configure the SMTP transporter using your .env Gmail credentials
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: process.env.GMAIL_USER,
+    pass: process.env.GMAIL_PASS,
+  },
+  tls: {
+    // THIS IS THE FIX: Tells Node to ignore the Avast/Antivirus self-signed certificate block
+    rejectUnauthorized: false 
+  }
+});
 
 const sendMail = async ({ to, subject, html, text }) => {
   try {
-    const response = await fetch('https://api.brevo.com/v3/smtp/email', {
-      method: 'POST',
-      headers: {
-        'accept': 'application/json',
-        'api-key': process.env.BREVO_API_KEY,
-        'content-type': 'application/json'
-      },
-      body: JSON.stringify({
-        sender: {
-          name: 'InvenCEA System',
-          email: process.env.EMAIL_USER // Must match your Brevo account email
-        },
-        to: [{ email: to }],
-        subject: subject,
-        htmlContent: html,
-        textContent: text
-      })
+    const info = await transporter.sendMail({
+      from: `"InvenCEA System" <${process.env.GMAIL_USER}>`,
+      to: to,
+      subject: subject,
+      html: html,
+      text: text,
     });
 
-    const data = await response.json();
-
-    if (!response.ok) {
-      throw new Error(data.message || 'Failed to send via Brevo API');
-    }
-
-    logger.info(`Email sent to ${to} via Brevo API: ${data.messageId}`);
-    return data;
+    logger.info(`Email sent to ${to}: ${info.messageId}`);
+    return info;
   } catch (err) {
     logger.error(`Failed to send email to ${to}: ${err.message}`);
     throw err;
   }
 };
 
-// --- NEW: Status Email Template ---
+// --- Status Email Template (Unchanged) ---
 const sendStatusEmail = async (email, request, status) => {
   if (!email) return;
 

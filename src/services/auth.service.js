@@ -1,4 +1,3 @@
-// backend/services/auth.service.js
 const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
@@ -88,36 +87,73 @@ const verifyFacultyOTP = async (email, code) => {
 };
 
 // ─── Student Auth ─────────────────────────────────────────────────────────────
-const studentLogin = async (full_name, student_id) => {
-  let { rows } = await query(
-    `SELECT id, full_name, student_id, department FROM students WHERE student_id = $1`,
+const studentLogin = async (full_name, student_id, pin) => {
+  const { rows } = await query(
+    `SELECT id, full_name, student_id, department, pin_hash FROM students WHERE student_id = $1`,
     [student_id]
   );
 
+  // 1. Strict Check: If they don't exist, block them.
   if (!rows.length) {
-    const insert = await query(
-      `INSERT INTO students (full_name, student_id) VALUES ($1, $2) RETURNING id, full_name, student_id`,
-      [full_name, student_id]
-    );
-    rows = insert.rows;
-  } else if (rows[0].full_name.toLowerCase() !== full_name.toLowerCase()) {
+    throw Object.assign(new Error('Account not found. Please visit the System Manager to register.'), { status: 404 });
+  } 
+
+  const student = rows[0];
+
+  // 2. Name check
+  if (student.full_name.toLowerCase() !== full_name.toLowerCase()) {
     throw Object.assign(new Error('Name does not match student ID'), { status: 401 });
   }
 
-  const student = rows[0];
+  // 3. PIN Check
+  if (!student.pin_hash) {
+      throw Object.assign(new Error('Your account requires a PIN setup. Please contact the System Manager.'), { status: 401 });
+  }
+  const match = await bcrypt.compare(pin, student.pin_hash);
+  if (!match) {
+      throw Object.assign(new Error('Invalid 4-Digit PIN'), { status: 401 });
+  }
+
+  // 4. Issue Token
   const token = jwt.sign(
     { id: student.id, role: 'student', name: student.full_name, student_id: student.student_id },
     process.env.JWT_SECRET,
     { expiresIn: process.env.JWT_EXPIRES_IN || '7d' }
   );
 
-  return { token, user: { ...student, role: 'student' } };
+  return { token, user: { id: student.id, full_name: student.full_name, student_id: student.student_id, department: student.department, role: 'student' } };
+};
+
+// ─── Student — Change PIN ─────────────────────────────────────────────────────
+const changeStudentPin = async (userId, currentPin, newPin) => {
+  // 1. Fetch current hash
+  const { rows } = await query(
+    `SELECT pin_hash FROM students WHERE id = $1`,
+    [userId]
+  );
+
+  if (!rows.length) throw Object.assign(new Error('Student account not found'), { status: 404 });
+  if (!rows[0].pin_hash) throw Object.assign(new Error('No PIN set for this account'), { status: 401 });
+
+  // 2. Verify the current PIN
+  const match = await bcrypt.compare(currentPin, rows[0].pin_hash);
+  if (!match) throw Object.assign(new Error('Current PIN is incorrect'), { status: 401 });
+
+  // 3. Hash and save the new PIN
+  const SALT_ROUNDS = 10;
+  const newHash = await bcrypt.hash(newPin, SALT_ROUNDS);
+
+  await query(
+    `UPDATE students SET pin_hash = $1 WHERE id = $2`,
+    [newHash, userId]
+  );
+
+  logger.info(`Student ${userId} changed their PIN successfully.`);
 };
 
 // ─── Admin Auth ───────────────────────────────────────────────────────────────
 const adminLogin = async (email, password) => {
   const { rows } = await query(
-    // Fetch needs_password_reset alongside the other fields
     `SELECT id, email, name, password_hash, role, room_id, needs_password_reset
      FROM users
      WHERE email = $1`,
@@ -161,7 +197,6 @@ const adminLogin = async (email, password) => {
 
 // ─── Admin — Change Password ──────────────────────────────────────────────────
 const changeAdminPassword = async (userId, currentPassword, newPassword) => {
-  // 1. Fetch current hash
   const { rows } = await query(
     `SELECT password_hash FROM users WHERE id = $1 AND role = 'admin'`,
     [userId]
@@ -170,11 +205,9 @@ const changeAdminPassword = async (userId, currentPassword, newPassword) => {
   if (!rows.length) throw Object.assign(new Error('Admin account not found'), { status: 404 });
   if (!rows[0].password_hash) throw Object.assign(new Error('No password set for this account'), { status: 401 });
 
-  // 2. Verify the current (temporary) password
   const match = await bcrypt.compare(currentPassword, rows[0].password_hash);
   if (!match) throw Object.assign(new Error('Current password is incorrect'), { status: 401 });
 
-  // 3. Hash and save the new password, clear the reset flag in one query
   const SALT_ROUNDS = 12;
   const newHash = await bcrypt.hash(newPassword, SALT_ROUNDS);
 
@@ -199,8 +232,6 @@ const getMe = async (userId, role) => {
   }
 
   const { rows } = await query(
-    // Include needs_password_reset so session restores on page-refresh
-    // preserve the gate correctly for admins
     `SELECT id, email, name, role, room_id, needs_password_reset FROM users WHERE id = $1`,
     [userId]
   );
@@ -212,6 +243,7 @@ module.exports = {
   sendFacultyOTP,
   verifyFacultyOTP,
   studentLogin,
+  changeStudentPin, // <--- Exported here
   adminLogin,
   changeAdminPassword,
   getMe,
