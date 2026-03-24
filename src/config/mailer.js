@@ -1,40 +1,59 @@
 // src/config/mailer.js
-const axios  = require('axios');
+const https  = require('https');
 const logger = require('../utils/logger');
 
-const BREVO_API_URL = 'https://api.brevo.com/v3/smtp/email';
-
-// ── Core send function (HTTP API — not blocked by Render) ─────────────────────
+// ── Core send function (Brevo HTTP API — no SMTP, not blocked by Render) ──────
 const sendMail = async ({ to, subject, html, text }) => {
   if (!process.env.BREVO_API_KEY) {
     logger.warn('BREVO_API_KEY not set — skipping email');
     return;
   }
 
-  try {
-    const payload = {
-      sender:      { name: 'InvenCEA System', email: process.env.BREVO_SENDER_EMAIL || process.env.BREVO_USER },
-      to:          [{ email: to }],
-      subject,
-      htmlContent: html,
-    };
-    if (text) payload.textContent = text;
+  const body = JSON.stringify({
+    sender:      { name: 'InvenCEA System', email: process.env.BREVO_SENDER_EMAIL || process.env.BREVO_USER },
+    to:          [{ email: to }],
+    subject,
+    htmlContent: html,
+    ...(text ? { textContent: text } : {}),
+  });
 
-    const res = await axios.post(BREVO_API_URL, payload, {
-      headers: {
-        'api-key':      process.env.BREVO_API_KEY,
-        'Content-Type': 'application/json',
+  return new Promise((resolve, reject) => {
+    const req = https.request({
+      hostname: 'api.brevo.com',
+      path:     '/v3/smtp/email',
+      method:   'POST',
+      headers:  {
+        'api-key':        process.env.BREVO_API_KEY,
+        'Content-Type':   'application/json',
+        'Content-Length': Buffer.byteLength(body),
       },
-      timeout: 10000,
+    }, (res) => {
+      let data = '';
+      res.on('data', chunk => data += chunk);
+      res.on('end', () => {
+        if (res.statusCode >= 200 && res.statusCode < 300) {
+          logger.info(`Email sent to ${to}: status=${res.statusCode}`);
+          resolve(JSON.parse(data || '{}'));
+        } else {
+          const msg = (JSON.parse(data || '{}').message) || `HTTP ${res.statusCode}`;
+          logger.error(`Failed to send email to ${to}: ${msg}`);
+          reject(new Error(msg));
+        }
+      });
     });
 
-    logger.info(`Email sent to ${to}: messageId=${res.data?.messageId || res.status}`);
-    return res.data;
-  } catch (err) {
-    const msg = err.response?.data?.message || err.message;
-    logger.error(`Failed to send email to ${to}: ${msg}`);
-    throw err;
-  }
+    req.on('error', (err) => {
+      logger.error(`Failed to send email to ${to}: ${err.message}`);
+      reject(err);
+    });
+
+    req.setTimeout(10000, () => {
+      req.destroy(new Error('Brevo API request timed out'));
+    });
+
+    req.write(body);
+    req.end();
+  });
 };
 
 // ── Status Email Template ─────────────────────────────────────────────────────
