@@ -14163,3 +14163,18 @@
 2026-03-23 00:37:21 [info]: Socket connected: p31WB6PmmJpzpB9fAAAV
 2026-03-23 00:37:21 [debug]: Socket ss-7l1J34zyKtZIIAAAE joined room user:3691
 2026-03-23 00:38:19 [debug]: New DB client connected
+2026-03-24 12:10:31 [info]: Background jobs initialized
+2026-03-24 12:10:31 [info]: InvenCEA backend running on port 4000 [development]
+2026-03-24 12:10:32 [info]: Socket connected: -GRss1agJizHoPftAAAB
+2026-03-24 12:10:32 [debug]: Socket -GRss1agJizHoPftAAAB joined room user:1
+2026-03-24 12:10:58 [debug]: New DB client connected
+2026-03-24 12:10:58 [warn]: BREVO_API_KEY not set — skipping email
+2026-03-24 12:10:58 [info]: OTP sent to romeosangaspar94@gmail.com
+2026-03-24 12:10:58 [http]: 127.0.0.1 - - [24/Mar/2026:04:10:58 +0000] "POST /api/v1/auth/faculty/send-otp HTTP/1.1" 200 76 "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36 Avast/145.0.34156.160"
+2026-03-24 12:11:33 [debug]: New DB client connected
+2026-03-24 12:12:32 [debug]: New DB client connected
+2026-03-24 12:13:33 [debug]: New DB client connected
+2026-03-24 12:13:49 [info]: Background jobs initialized
+2026-03-24 12:13:49 [info]: InvenCEA backend running on port 4000 [development]
+2026-03-24 12:13:50 [info]: Socket connected: 5_E2ywSASMa4ecNrAAAB
+2026-03-24 12:13:50 [debug]: Socket 5_E2ywSASMa4ecNrAAAB joined room user:1
