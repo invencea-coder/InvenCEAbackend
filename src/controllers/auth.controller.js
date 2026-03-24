@@ -43,39 +43,23 @@ const verifyOTP = async (req, res, next) => {
 /**
  * Student Login
  */
-// ─── Student Auth ─────────────────────────────────────────────────────────────
-const studentLogin = async (student_id, pin) => {
-  const { rows } = await query(
-    `SELECT id, full_name, student_id, department, pin_hash FROM students WHERE student_id = $1`,
-    [student_id]
-  );
+const studentLogin = async (req, res, next) => {
+  try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return badRequest(res, 'Validation failed', errors.array());
+    }
 
-  // 1. Strict Check: If they don't exist, block them.
-  if (!rows.length) {
-    throw Object.assign(new Error('Account not found. Please visit the System Manager to register.'), { status: 404 });
-  } 
+    // Extract exactly what the frontend is sending
+    const { student_id, pin } = req.body; 
+    
+    // Pass those directly to your service
+    const result = await authService.studentLogin(student_id, pin); 
 
-  const student = rows[0];
-
-  // (The Name Check block has been completely removed from here!)
-
-  // 2. PIN Check
-  if (!student.pin_hash) {
-      throw Object.assign(new Error('Your account requires a PIN setup. Please contact the System Manager.'), { status: 401 });
+    return success(res, result, 'Login successful');
+  } catch (err) {
+    next(err);
   }
-  const match = await bcrypt.compare(pin, student.pin_hash);
-  if (!match) {
-      throw Object.assign(new Error('Invalid 4-Digit PIN'), { status: 401 });
-  }
-
-  // 3. Issue Token
-  const token = jwt.sign(
-    { id: student.id, role: 'student', name: student.full_name, student_id: student.student_id },
-    process.env.JWT_SECRET,
-    { expiresIn: process.env.JWT_EXPIRES_IN || '7d' }
-  );
-
-  return { token, user: { id: student.id, full_name: student.full_name, student_id: student.student_id, department: student.department, role: 'student' } };
 };
 
 /**
@@ -183,7 +167,7 @@ module.exports = {
   sendOTP,
   verifyOTP,
   studentLogin,
-  changeStudentPin, // <--- Exported here
+  changeStudentPin,
   adminLogin,
   changePassword,
   logout,

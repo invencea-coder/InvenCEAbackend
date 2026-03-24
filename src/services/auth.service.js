@@ -21,7 +21,6 @@ const sendFacultyOTP = async (email) => {
   const code = generateOTP();
   const expiresAt = new Date(Date.now() + OTP_EXPIRY * 1000);
 
-  // Invalidate old OTPs
   await query(`UPDATE otp_codes SET used = TRUE WHERE user_email = $1 AND used = FALSE`, [email]);
 
   await query(
@@ -48,7 +47,6 @@ const sendFacultyOTP = async (email) => {
 };
 
 const verifyFacultyOTP = async (email, code) => {
-  // 1. Check OTP validity
   const { rows: otpRows } = await query(
     `SELECT * FROM otp_codes
      WHERE user_email = $1 AND code = $2 AND used = FALSE AND expires_at > now()
@@ -58,10 +56,8 @@ const verifyFacultyOTP = async (email, code) => {
 
   if (!otpRows.length) throw Object.assign(new Error('Invalid or expired OTP'), { status: 401 });
 
-  // 2. Mark OTP as used
   await query(`UPDATE otp_codes SET used = TRUE WHERE id = $1`, [otpRows[0].id]);
 
-  // 3. Get User Details
   const { rows: userRows } = await query(
     `SELECT id, email, name, role, room_id FROM users WHERE email = $1 AND role IN ('faculty', 'manager')`,
     [email]
@@ -70,7 +66,6 @@ const verifyFacultyOTP = async (email, code) => {
 
   const user = userRows[0];
 
-  // 4. Sign JWT Payload
   const token = jwt.sign(
     {
       id: user.id,
@@ -87,22 +82,18 @@ const verifyFacultyOTP = async (email, code) => {
 };
 
 // ─── Student Auth ─────────────────────────────────────────────────────────────
-const studentLogin = async (student_id, pin) => { // Removed full_name parameter here
+const studentLogin = async (student_id, pin) => {
   const { rows } = await query(
     `SELECT id, full_name, student_id, department, pin_hash FROM students WHERE student_id = $1`,
     [student_id]
   );
 
-  // 1. Strict Check: If they don't exist, block them.
   if (!rows.length) {
     throw Object.assign(new Error('Account not found. Please visit the System Manager to register.'), { status: 404 });
   } 
 
   const student = rows[0];
 
-  // REMOVED THE NAME CHECK ENTIRELY
-
-  // 2. PIN Check
   if (!student.pin_hash) {
       throw Object.assign(new Error('Your account requires a PIN setup. Please contact the System Manager.'), { status: 401 });
   }
@@ -111,7 +102,6 @@ const studentLogin = async (student_id, pin) => { // Removed full_name parameter
       throw Object.assign(new Error('Invalid 4-Digit PIN'), { status: 401 });
   }
 
-  // 3. Issue Token
   const token = jwt.sign(
     { id: student.id, role: 'student', name: student.full_name, student_id: student.student_id },
     process.env.JWT_SECRET,
@@ -123,7 +113,6 @@ const studentLogin = async (student_id, pin) => { // Removed full_name parameter
 
 // ─── Student — Change PIN ─────────────────────────────────────────────────────
 const changeStudentPin = async (userId, currentPin, newPin) => {
-  // 1. Fetch current hash
   const { rows } = await query(
     `SELECT pin_hash FROM students WHERE id = $1`,
     [userId]
@@ -132,11 +121,9 @@ const changeStudentPin = async (userId, currentPin, newPin) => {
   if (!rows.length) throw Object.assign(new Error('Student account not found'), { status: 404 });
   if (!rows[0].pin_hash) throw Object.assign(new Error('No PIN set for this account'), { status: 401 });
 
-  // 2. Verify the current PIN
   const match = await bcrypt.compare(currentPin, rows[0].pin_hash);
   if (!match) throw Object.assign(new Error('Current PIN is incorrect'), { status: 401 });
 
-  // 3. Hash and save the new PIN
   const SALT_ROUNDS = 10;
   const newHash = await bcrypt.hash(newPin, SALT_ROUNDS);
 
@@ -240,7 +227,7 @@ module.exports = {
   sendFacultyOTP,
   verifyFacultyOTP,
   studentLogin,
-  changeStudentPin, // <--- Exported here
+  changeStudentPin,
   adminLogin,
   changeAdminPassword,
   getMe,
