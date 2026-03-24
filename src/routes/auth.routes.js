@@ -6,11 +6,10 @@ const ctrl = require('../controllers/auth.controller');
 const { authRateLimiter } = require('../middleware/rateLimiter');
 const authMiddleware = require('../middleware/authMiddleware');
 
-// Faculty OTP
 router.post(
   '/faculty/send-otp',
   authRateLimiter,
-  [body('email').isEmail().normalizeEmail()],
+  [body('email').isEmail().toLowerCase()],  // just lowercase, no normalize
   ctrl.sendOTP
 );
 
@@ -18,7 +17,7 @@ router.post(
   '/faculty/verify-otp',
   authRateLimiter,
   [
-    body('email').isEmail().normalizeEmail(),
+    body('email').isEmail().toLowerCase(),  // ← same as send-otp
     body('code').isLength({ min: 6, max: 6 }).isNumeric(),
   ],
   ctrl.verifyOTP
