@@ -1,28 +1,26 @@
 // src/config/mailer.js
 const nodemailer = require('nodemailer');
-const logger = require('../utils/logger'); 
+const logger = require('../utils/logger');
 
-// Configure the SMTP transporter using your .env Gmail credentials
 const transporter = nodemailer.createTransport({
-  service: 'gmail',
+  host: 'smtp-relay.brevo.com',
+  port: 587,
+  secure: false,
+  requireTLS: true,
   auth: {
-    user: process.env.GMAIL_USER,
-    pass: process.env.GMAIL_PASS,
+    user: process.env.BREVO_USER,   // Your Brevo account email
+    pass: process.env.BREVO_PASS,   // Your Brevo SMTP key (NOT account password)
   },
-  tls: {
-    // THIS IS THE FIX: Tells Node to ignore the Avast/Antivirus self-signed certificate block
-    rejectUnauthorized: false 
-  }
 });
 
 const sendMail = async ({ to, subject, html, text }) => {
   try {
     const info = await transporter.sendMail({
-      from: `"InvenCEA System" <${process.env.GMAIL_USER}>`,
-      to: to,
-      subject: subject,
-      html: html,
-      text: text,
+      from: `"InvenCEA System" <${process.env.BREVO_USER}>`,
+      to,
+      subject,
+      html,
+      text,
     });
 
     logger.info(`Email sent to ${to}: ${info.messageId}`);
@@ -38,7 +36,7 @@ const sendStatusEmail = async (email, request, status) => {
   if (!email) return;
 
   const isApproved = status === 'APPROVED';
-  const color = isApproved ? '#10b981' : '#ef4444'; 
+  const color = isApproved ? '#10b981' : '#ef4444';
   const title = isApproved ? 'Request Approved!' : 'Request Denied';
 
   const html = `
@@ -61,7 +59,7 @@ const sendStatusEmail = async (email, request, status) => {
   return sendMail({
     to: email,
     subject: `InvenCEA Request #${request.id} - ${title}`,
-    html
+    html,
   });
 };
 
