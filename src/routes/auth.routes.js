@@ -29,7 +29,7 @@ router.post(
   '/student/login',
   authRateLimiter,
   [
-    body('full_name').notEmpty().trim(),
+    // REMOVED: body('full_name').notEmpty().trim(),
     body('student_id').notEmpty().trim(),
     // Optional: add PIN validation here if you want express-validator to catch it early
     body('pin').isLength({ min: 4, max: 4 }).isNumeric().withMessage('PIN must be 4 digits'),
