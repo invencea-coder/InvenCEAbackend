@@ -47,17 +47,24 @@ const sendFacultyOTP = async (email) => {
 };
 
 const verifyFacultyOTP = async (email, code) => {
+  // FIX: Use Node.js current time ($3) instead of database 'now()'
+  // to prevent server timezone mismatches in production
+  const currentTime = new Date();
+
+  // 1. Check OTP validity
   const { rows: otpRows } = await query(
     `SELECT * FROM otp_codes
-     WHERE user_email = $1 AND code = $2 AND used = FALSE AND expires_at > now()
+     WHERE user_email = $1 AND code = $2 AND used = FALSE AND expires_at > $3
      ORDER BY created_at DESC LIMIT 1`,
-    [email, code]
+    [email, code, currentTime]
   );
 
   if (!otpRows.length) throw Object.assign(new Error('Invalid or expired OTP'), { status: 401 });
 
+  // 2. Mark OTP as used
   await query(`UPDATE otp_codes SET used = TRUE WHERE id = $1`, [otpRows[0].id]);
 
+  // 3. Get User Details
   const { rows: userRows } = await query(
     `SELECT id, email, name, role, room_id FROM users WHERE email = $1 AND role IN ('faculty', 'manager')`,
     [email]
@@ -66,6 +73,7 @@ const verifyFacultyOTP = async (email, code) => {
 
   const user = userRows[0];
 
+  // 4. Sign JWT Payload
   const token = jwt.sign(
     {
       id: user.id,
