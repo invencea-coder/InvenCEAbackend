@@ -4,13 +4,16 @@ const logger = require('../utils/logger');
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
-  // ✅ THE FIX: Automatically apply SSL if using Neon, disable if local
-  ssl: process.env.DATABASE_URL?.includes('neon.tech') 
-    ? { rejectUnauthorized: false } 
-    : false,
+  
+  // UPDATED SSL LOGIC: 
+  // If we are NOT on localhost, we assume SSL is required (Render, Neon, Supabase, etc.)
+  ssl: process.env.DATABASE_URL?.includes('localhost') || process.env.DATABASE_URL?.includes('127.0.0.1')
+    ? false 
+    : { rejectUnauthorized: false },
+
   max: 20,
   idleTimeoutMillis: 30000,
-  connectionTimeoutMillis: 2000,
+  connectionTimeoutMillis: 5000, // Increased to 5s to give Render a bit more breathing room
 });
 
 pool.on('error', (err) => {
