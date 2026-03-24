@@ -87,7 +87,7 @@ const verifyFacultyOTP = async (email, code) => {
 };
 
 // ─── Student Auth ─────────────────────────────────────────────────────────────
-const studentLogin = async (full_name, student_id, pin) => {
+const studentLogin = async (student_id, pin) => { // Removed full_name parameter here
   const { rows } = await query(
     `SELECT id, full_name, student_id, department, pin_hash FROM students WHERE student_id = $1`,
     [student_id]
@@ -100,12 +100,9 @@ const studentLogin = async (full_name, student_id, pin) => {
 
   const student = rows[0];
 
-  // 2. Name check
-  if (student.full_name.toLowerCase() !== full_name.toLowerCase()) {
-    throw Object.assign(new Error('Name does not match student ID'), { status: 401 });
-  }
+  // REMOVED THE NAME CHECK ENTIRELY
 
-  // 3. PIN Check
+  // 2. PIN Check
   if (!student.pin_hash) {
       throw Object.assign(new Error('Your account requires a PIN setup. Please contact the System Manager.'), { status: 401 });
   }
@@ -114,7 +111,7 @@ const studentLogin = async (full_name, student_id, pin) => {
       throw Object.assign(new Error('Invalid 4-Digit PIN'), { status: 401 });
   }
 
-  // 4. Issue Token
+  // 3. Issue Token
   const token = jwt.sign(
     { id: student.id, role: 'student', name: student.full_name, student_id: student.student_id },
     process.env.JWT_SECRET,
