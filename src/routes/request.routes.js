@@ -84,6 +84,7 @@ router.post(
 
 router.get('/', ctrl.listRequests);
 router.get('/:id', ctrl.getRequest);
+router.get('/calendar', authMiddleware.protect, ctrl.getCalendarEvents);
 
 // Admin-only actions
 router.put('/:id/approve', roleMiddleware('admin'), ctrl.approveRequest);

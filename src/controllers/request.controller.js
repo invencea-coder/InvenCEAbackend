@@ -205,6 +205,66 @@ const returnRequest = async (req, res, next) => {
   }
 };
 
+/**
+ * Get Calendar Events
+ * Fetches scheduled requests for a specific room. 
+ * Masks names if the user is a student.
+ */
+const getCalendarEvents = async (req, res, next) => {
+  try {
+    const { room_id } = req.query;
+    if (!room_id) {
+      return badRequest(res, 'room_id is required to view the calendar');
+    }
+
+    // Grab all active requests for this room that have a schedule
+    const { rows } = await query(
+      `SELECT 
+        r.id, 
+        r.purpose, 
+        r.scheduled_time, 
+        r.status,
+        u.name as faculty_name,
+        s.full_name as student_name
+       FROM requests r
+       LEFT JOIN users u ON r.user_id = u.id AND r.user_type = 'faculty'
+       LEFT JOIN students s ON r.user_id = s.id AND r.user_type = 'student'
+       WHERE r.room_id = $1 
+         AND r.status IN ('PENDING', 'APPROVED', 'ISSUED')
+         AND r.scheduled_time IS NOT NULL`,
+      [room_id]
+    );
+
+    // Format the events for the frontend calendar
+    const events = rows.map(row => {
+      // Data Privacy: Mask the name if the user asking is a student
+      const isStudentViewer = req.user.role === 'student';
+      let title = isStudentViewer ? 'Reserved' : (row.faculty_name || row.student_name || 'User');
+      
+      // If admin/faculty, show the purpose too
+      if (!isStudentViewer) {
+        title = `${title} - ${row.purpose}`;
+      }
+
+      // We assume a standard 2-hour block if an end time isn't explicitly set in your DB yet
+      const startDate = new Date(row.scheduled_time);
+      const endDate = new Date(startDate.getTime() + (2 * 60 * 60 * 1000)); 
+
+      return {
+        id: row.id,
+        title: title,
+        start: startDate,
+        end: endDate,
+        status: row.status
+      };
+    });
+
+    return success(res, events, 'Calendar events retrieved');
+  } catch (err) {
+    next(err);
+  }
+};
+
 module.exports = {
   createRequest,
   getRequest,
@@ -215,4 +275,5 @@ module.exports = {
   issueRequest,
   returnItemByBarcode,
   returnRequest,
+  getCalendarEvents,
 };
