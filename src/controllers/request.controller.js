@@ -10,7 +10,6 @@ const createRequest = async (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) return badRequest(res, 'Validation failed', errors.array());
 
-    // 🚨 ADDED: Destructure return_deadline from the frontend
     const { room_id, purpose, items, scheduled_time, pickup_datetime, pickup_start, pickup_end, return_deadline, borrower_id } = req.body;
 
     const requester_id = (req.user.role === 'admin' && borrower_id) ? borrower_id : req.user.id;
@@ -27,7 +26,7 @@ const createRequest = async (req, res, next) => {
       pickup_datetime,
       pickup_start,
       pickup_end,
-      return_deadline, // 🚨 Passed to service
+      return_deadline,
     });
 
     broadcast('new-request', { id: data.id, room_id: data.room_id, requester_type });
@@ -42,9 +41,16 @@ const createRequest = async (req, res, next) => {
 const getRequest = async (req, res, next) => {
   try {
     const data = await requestService.getRequest(req.params.id);
-    if (String(data.room_id) !== String(req.user.room_id)) {
+    
+    // Admins can only view requests for their assigned room
+    if (req.user.role === 'admin' && String(data.room_id) !== String(req.user.room_id)) {
       throw Object.assign(new Error('Forbidden: Access restricted to your room'), { status: 403 });
     }
+    // Students and Faculty can only view their own requests
+    if (['student', 'faculty'].includes(req.user.role) && String(data.requester_id) !== String(req.user.id)) {
+      throw Object.assign(new Error('Forbidden: Access restricted to your own requests'), { status: 403 });
+    }
+
     return success(res, data);
   } catch (e) { next(e); }
 };
@@ -52,23 +58,35 @@ const getRequest = async (req, res, next) => {
 const getRequestByQR = async (req, res, next) => {
   try {
     const data = await requestService.getRequestByQR(req.params.code);
-    if (String(data.room_id) !== String(req.user.room_id)) {
+    
+    // Admins can only scan requests for their assigned room
+    if (req.user.role === 'admin' && String(data.room_id) !== String(req.user.room_id)) {
       throw Object.assign(new Error('Forbidden: Access restricted to your room'), { status: 403 });
     }
+    // Students and Faculty can only view their own QR codes
+    if (['student', 'faculty'].includes(req.user.role) && String(data.requester_id) !== String(req.user.id)) {
+      throw Object.assign(new Error('Forbidden: Access restricted to your own requests'), { status: 403 });
+    }
+
     return success(res, data);
   } catch (e) { next(e); }
 };
 
 const listRequests = async (req, res, next) => {
   try {
-    const { status, requester_type, requester_id } = req.query;
-    const filters = { status, requester_type };
+    const { status, requester_type, requester_id, room_id } = req.query;
+    const filters = { status };
 
-    if (req.user.role === 'student') {
-      filters.requester_id = req.user.id;
-    } else {
+    if (req.user.role === 'admin') {
+      // Admins are locked to their specific room
       filters.room_id = req.user.room_id;
-      filters.requester_id = requester_id; 
+      if (requester_id) filters.requester_id = requester_id;
+      if (requester_type) filters.requester_type = requester_type;
+    } else {
+      // Students and Faculty only see their own requests
+      filters.requester_id = req.user.id;
+      // Allow them to filter their own history by room if requested
+      if (room_id) filters.room_id = room_id;
     }
 
     const data = await requestService.listRequests(filters);
@@ -78,6 +96,8 @@ const listRequests = async (req, res, next) => {
 
 const approveRequest = async (req, res, next) => {
   try {
+    if (req.user.role !== 'admin') throw Object.assign(new Error('Forbidden'), { status: 403 });
+    
     const requestRow = await requestService.getRequest(req.params.id);
     if (requestRow.room_id && String(requestRow.room_id) !== String(req.user.room_id)) {
       return res.status(403).json({ message: 'Forbidden: Access restricted to your room' });
@@ -94,6 +114,8 @@ const approveRequest = async (req, res, next) => {
 
 const rejectRequest = async (req, res, next) => {
   try {
+    if (req.user.role !== 'admin') throw Object.assign(new Error('Forbidden'), { status: 403 });
+
     const requestRow = await requestService.getRequest(req.params.id);
     if (String(requestRow.room_id) !== String(req.user.room_id)) {
       throw Object.assign(new Error('Forbidden'), { status: 403 });
@@ -107,6 +129,8 @@ const rejectRequest = async (req, res, next) => {
 
 const issueRequest = async (req, res, next) => {
   try {
+    if (req.user.role !== 'admin') throw Object.assign(new Error('Forbidden'), { status: 403 });
+
     const { items, return_deadline } = req.body;
     const data = await requestService.issueRequest(req.params.id, items, return_deadline);
     return success(res, data, 'Request issued successfully');
@@ -115,6 +139,8 @@ const issueRequest = async (req, res, next) => {
 
 const returnItemByBarcode = async (req, res, next) => {
   try {
+    if (req.user.role !== 'admin') throw Object.assign(new Error('Forbidden'), { status: 403 });
+
     const { barcode, condition, qtyReturned, requestId } = req.body;
     if (!barcode) return badRequest(res, "Barcode is required");
 
@@ -129,6 +155,8 @@ const returnItemByBarcode = async (req, res, next) => {
 
 const returnRequest = async (req, res, next) => {
   try {
+    if (req.user.role !== 'admin') throw Object.assign(new Error('Forbidden'), { status: 403 });
+
     const requestRow = await requestService.getRequest(req.params.id);
     if (String(requestRow.room_id) !== String(req.user.room_id)) {
       throw Object.assign(new Error('Forbidden: You may only operate on requests in your room'), { status: 403 });
@@ -145,12 +173,16 @@ const getCalendarEvents = async (req, res, next) => {
     let { room_id } = req.query;
     const db = require('../config/db');
 
-    if (req.user && req.user.role !== 'student') room_id = req.user.room_id;
+    // 🚨 FIX: Only force the room_id override if the user is explicitly an ADMIN.
+    // Faculty and Students are allowed to pass `room_id` in the query to view any room's calendar.
+    if (req.user && req.user.role === 'admin') {
+       room_id = req.user.room_id;
+    }
+    
     if (!room_id || room_id === 'null' || room_id === 'undefined') {
       return res.status(400).json({ success: false, message: 'room_id is required' });
     }
 
-    // 🚨 FIXED: Now perfectly pulls the user-defined return_deadline for the calendar!
     const { rows } = await db.query(
       `SELECT
          r.id, r.status, r.purpose, r.pickup_start, r.pickup_end, r.pickup_datetime,
