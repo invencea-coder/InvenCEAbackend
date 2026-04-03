@@ -32,7 +32,7 @@ const isWindowOpen = (request) => {
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
-// 0. Auto-Cleanup (🚨 FIXED: Releases ghost reservations automatically)
+// 0. Auto-Cleanup (🚨 FIXED: Strict Stock Boundaries)
 // ─────────────────────────────────────────────────────────────────────────────
 const autoVoidExpiredRequests = async () => {
   return withTransaction(async (client) => {
@@ -54,19 +54,19 @@ const autoVoidExpiredRequests = async () => {
     for (const req of expired) {
       const id = req.id;
       
-      // 1. Free physical items back to the shelf
       const { rows: resUnits } = await client.query(`SELECT inventory_item_id FROM request_items WHERE request_id = $1 AND status = 'RESERVED' AND inventory_item_id IS NOT NULL`, [id]);
       for (const u of resUnits) await client.query(`UPDATE inventory_items SET status = 'available' WHERE id = $1`, [u.inventory_item_id]);
       
-      // 2. Free batch stock quantities
-      const { rows: resStocks } = await client.query(`SELECT stock_id, qty_requested FROM request_items WHERE request_id = $1 AND status = 'RESERVED' AND stock_id IS NOT NULL`, [id]);
-      for (const s of resStocks) await client.query(`UPDATE inventory_type_stocks SET qty_available = qty_available + $1 WHERE id = $2`, [s.qty_requested || 1, s.stock_id]);
+      const { rows: resStocks } = await client.query(`SELECT stock_id, qty_requested, quantity FROM request_items WHERE request_id = $1 AND status = 'RESERVED' AND stock_id IS NOT NULL`, [id]);
+      for (const s of resStocks) {
+        const q = s.qty_requested || s.quantity || 1;
+        // ⚡ GUARANTEED CEILING: Never exceed qty_total
+        await client.query(`UPDATE inventory_type_stocks SET qty_available = LEAST(qty_total, qty_available + $1) WHERE id = $2`, [q, s.stock_id]);
+      }
 
-      // 3. Free consumables
       const { rows: resCons } = await client.query(`SELECT consumable_id, quantity FROM request_items WHERE request_id = $1 AND status = 'RESERVED' AND consumable_id IS NOT NULL`, [id]);
       for (const c of resCons) await client.query(`UPDATE inventory_consumables SET quantity_available = quantity_available + $1 WHERE id = $2`, [c.quantity, c.consumable_id]);
       
-      // 4. Update Statuses to explicitly EXPIRED
       await client.query(`UPDATE request_items SET status = 'CANCELLED' WHERE request_id = $1`, [id]);
       await client.query(`UPDATE requests SET status = 'EXPIRED' WHERE id = $1`, [id]);
     }
@@ -75,7 +75,7 @@ const autoVoidExpiredRequests = async () => {
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
-// 1. createRequest
+// 1. createRequest (🚨 FIXED: Explicitly sets quantity for UI rendering)
 // ─────────────────────────────────────────────────────────────────────────────
 const createRequest = async ({ requester_type, requester_id, requester_email, room_id, purpose, items, scheduled_time, pickup_datetime, pickup_start, pickup_end }) => {
   return withTransaction(async (client) => {
@@ -103,9 +103,11 @@ const createRequest = async ({ requester_type, requester_id, requester_email, ro
     if (Array.isArray(items)) {
       for (const item of items) {
         if (item.stock_id) {
+          const q = item.qty_requested || item.quantity || 1;
+          // ⚡ Insert into BOTH quantity and qty_requested so DB Default doesn't overwrite it!
           await client.query(
-            `INSERT INTO request_items (request_id, inventory_type_id, stock_id, qty_requested, assigned_to) VALUES ($1, $2, $3, $4, $5)`,
-            [request.id, item.inventory_type_id, item.stock_id, item.qty_requested || item.quantity || 1, item.assigned_to || 'Requester']
+            `INSERT INTO request_items (request_id, inventory_type_id, stock_id, qty_requested, quantity, assigned_to) VALUES ($1, $2, $3, $4, $5, $6)`,
+            [request.id, item.inventory_type_id, item.stock_id, q, q, item.assigned_to || 'Requester']
           );
         } else {
           await client.query(
@@ -209,7 +211,6 @@ const getRequestByQR = async (qrCode) => {
 // ─────────────────────────────────────────────────────────────────────────────
 const listRequests = async ({ room_id, status, requester_type, requester_id } = {}) => {
   
-  // ⚡ Run silent cleanup before fetching so the list is ALWAYS accurate!
   try { await autoVoidExpiredRequests(); } catch (e) { console.error('Auto-void error:', e); }
 
   const conditions = [], values = [];
@@ -355,7 +356,7 @@ const approveRequest = async (id, email) => {
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
-// 6. rejectRequest 
+// 6. rejectRequest (🚨 FIXED: Strict Stock Boundaries)
 // ─────────────────────────────────────────────────────────────────────────────
 const rejectRequest = async (id, email) => {
   return withTransaction(async (client) => {
@@ -364,13 +365,15 @@ const rejectRequest = async (id, email) => {
     );
     if (!reqs.length) throw Object.assign(new Error('Request not found or already processed'), { status: 400 });
     
-    // If rejecting a request that was already approved (reserved), we must free the inventory!
     if (reqs[0].status === 'APPROVED') {
        const { rows: units } = await client.query(`SELECT inventory_item_id FROM request_items WHERE request_id = $1 AND inventory_item_id IS NOT NULL AND status = 'RESERVED'`, [id]);
        for (const u of units) { await client.query(`UPDATE inventory_items SET status = 'available' WHERE id = $1`, [u.inventory_item_id]); }
        
-       const { rows: stocks } = await client.query(`SELECT stock_id, qty_requested FROM request_items WHERE request_id = $1 AND stock_id IS NOT NULL AND status = 'RESERVED'`, [id]);
-       for (const s of stocks) { await client.query(`UPDATE inventory_type_stocks SET qty_available = qty_available + $1 WHERE id = $2`, [s.qty_requested || 1, s.stock_id]); }
+       const { rows: stocks } = await client.query(`SELECT stock_id, qty_requested, quantity FROM request_items WHERE request_id = $1 AND stock_id IS NOT NULL AND status = 'RESERVED'`, [id]);
+       for (const s of stocks) { 
+         const q = s.qty_requested || s.quantity || 1;
+         await client.query(`UPDATE inventory_type_stocks SET qty_available = LEAST(qty_total, qty_available + $1) WHERE id = $2`, [q, s.stock_id]); 
+       }
        
        const { rows: cons } = await client.query(`SELECT consumable_id, quantity FROM request_items WHERE request_id = $1 AND consumable_id IS NOT NULL AND status = 'RESERVED'`, [id]);
        for (const c of cons) { await client.query(`UPDATE inventory_consumables SET quantity_available = quantity_available + $1 WHERE id = $2`, [c.quantity, c.consumable_id]); }
@@ -385,7 +388,7 @@ const rejectRequest = async (id, email) => {
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
-// 7. cancelRequest (Explicit user cancellation)
+// 7. cancelRequest (🚨 FIXED: Strict Stock Boundaries)
 // ─────────────────────────────────────────────────────────────────────────────
 const cancelRequest = async (id) => {
   return withTransaction(async (client) => {
@@ -396,8 +399,11 @@ const cancelRequest = async (id) => {
        const { rows: units } = await client.query(`SELECT inventory_item_id FROM request_items WHERE request_id = $1 AND inventory_item_id IS NOT NULL AND status = 'RESERVED'`, [id]);
        for (const u of units) await client.query(`UPDATE inventory_items SET status = 'available' WHERE id = $1`, [u.inventory_item_id]);
        
-       const { rows: stocks } = await client.query(`SELECT stock_id, qty_requested FROM request_items WHERE request_id = $1 AND stock_id IS NOT NULL AND status = 'RESERVED'`, [id]);
-       for (const s of stocks) await client.query(`UPDATE inventory_type_stocks SET qty_available = qty_available + $1 WHERE id = $2`, [s.qty_requested || 1, s.stock_id]);
+       const { rows: stocks } = await client.query(`SELECT stock_id, qty_requested, quantity FROM request_items WHERE request_id = $1 AND stock_id IS NOT NULL AND status = 'RESERVED'`, [id]);
+       for (const s of stocks) { 
+         const q = s.qty_requested || s.quantity || 1;
+         await client.query(`UPDATE inventory_type_stocks SET qty_available = LEAST(qty_total, qty_available + $1) WHERE id = $2`, [q, s.stock_id]); 
+       }
        
        const { rows: cons } = await client.query(`SELECT consumable_id, quantity FROM request_items WHERE request_id = $1 AND consumable_id IS NOT NULL AND status = 'RESERVED'`, [id]);
        for (const c of cons) await client.query(`UPDATE inventory_consumables SET quantity_available = quantity_available + $1 WHERE id = $2`, [c.quantity, c.consumable_id]);
@@ -425,26 +431,22 @@ const issueRequest = async (id, itemsToIssue = [], returnDeadline = null) => {
       if (!isWindowOpen(request)) throw Object.assign(new Error(`Reservation window is not open.`), { status: 403 });
     }
 
-    // 1. Free Reserved Units
     const { rows: resUnits } = await client.query(`SELECT inventory_item_id FROM request_items WHERE request_id = $1 AND status = 'RESERVED' AND inventory_item_id IS NOT NULL`, [id]);
     for (const u of resUnits) {
       await client.query(`UPDATE inventory_items SET status = 'available' WHERE id = $1`, [u.inventory_item_id]);
     }
-    // 2. Free Reserved Stocks
-    const { rows: resStocks } = await client.query(`SELECT stock_id, qty_requested FROM request_items WHERE request_id = $1 AND status = 'RESERVED' AND stock_id IS NOT NULL`, [id]);
+    const { rows: resStocks } = await client.query(`SELECT stock_id, qty_requested, quantity FROM request_items WHERE request_id = $1 AND status = 'RESERVED' AND stock_id IS NOT NULL`, [id]);
     for (const s of resStocks) {
-      await client.query(`UPDATE inventory_type_stocks SET qty_available = qty_available + $1 WHERE id = $2`, [s.qty_requested || 1, s.stock_id]);
+      const q = s.qty_requested || s.quantity || 1;
+      await client.query(`UPDATE inventory_type_stocks SET qty_available = LEAST(qty_total, qty_available + $1) WHERE id = $2`, [q, s.stock_id]);
     }
-    // 3. Free Reserved Consumables
     const { rows: resCons } = await client.query(`SELECT consumable_id, quantity FROM request_items WHERE request_id = $1 AND status = 'RESERVED' AND consumable_id IS NOT NULL`, [id]);
     for (const c of resCons) {
       await client.query(`UPDATE inventory_consumables SET quantity_available = quantity_available + $1 WHERE id = $2`, [c.quantity, c.consumable_id]);
     }
-    // 4. Cancel all old placeholder request items
     await client.query(`UPDATE request_items SET status = 'CANCELLED' WHERE request_id = $1 AND status IN ('RESERVED', 'PENDING')`, [id]);
 
 
-    // ⚡ NOW ISSUE EXACTLY WHAT WAS SCANNED ⚡
     for (const item of itemsToIssue) {
       if (item.quantity <= 0) continue;
       const assignedTo = item.assigned_to || 'Requester';
@@ -456,7 +458,7 @@ const issueRequest = async (id, itemsToIssue = [], returnDeadline = null) => {
         if (!stock.length || stock[0].qty_available < qtyToIssue) throw Object.assign(new Error(`Insufficient quantity in stock.`), { status: 409 });
         
         await client.query(`UPDATE inventory_type_stocks SET qty_available = qty_available - $1 WHERE id = $2`, [qtyToIssue, item.stock_id]);
-        await client.query(`INSERT INTO request_items (request_id, inventory_type_id, stock_id, qty_requested, status, assigned_to) VALUES ($1, $2, $3, $4, 'ISSUED', $5)`, [id, item.inventory_type_id, item.stock_id, qtyToIssue, assignedTo]);
+        await client.query(`INSERT INTO request_items (request_id, inventory_type_id, stock_id, qty_requested, quantity, status, assigned_to) VALUES ($1, $2, $3, $4, $5, 'ISSUED', $6)`, [id, item.inventory_type_id, item.stock_id, qtyToIssue, qtyToIssue, assignedTo]);
         continue;
       }
 
