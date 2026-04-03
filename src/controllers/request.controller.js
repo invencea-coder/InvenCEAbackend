@@ -10,7 +10,8 @@ const createRequest = async (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) return badRequest(res, 'Validation failed', errors.array());
 
-    const { room_id, purpose, items, scheduled_time, pickup_datetime, pickup_start, pickup_end, borrower_id } = req.body;
+    // 🚨 ADDED: Destructure return_deadline from the frontend
+    const { room_id, purpose, items, scheduled_time, pickup_datetime, pickup_start, pickup_end, return_deadline, borrower_id } = req.body;
 
     const requester_id = (req.user.role === 'admin' && borrower_id) ? borrower_id : req.user.id;
     const requester_type = (req.user.role === 'admin' && borrower_id) ? 'student' : req.user.role;
@@ -26,6 +27,7 @@ const createRequest = async (req, res, next) => {
       pickup_datetime,
       pickup_start,
       pickup_end,
+      return_deadline, // 🚨 Passed to service
     });
 
     broadcast('new-request', { id: data.id, room_id: data.room_id, requester_type });
@@ -113,7 +115,6 @@ const issueRequest = async (req, res, next) => {
 
 const returnItemByBarcode = async (req, res, next) => {
   try {
-    // FIX: Extract requestId to explicitly credit the exact student who is returning it!
     const { barcode, condition, qtyReturned, requestId } = req.body;
     if (!barcode) return badRequest(res, "Barcode is required");
 
@@ -149,6 +150,7 @@ const getCalendarEvents = async (req, res, next) => {
       return res.status(400).json({ success: false, message: 'room_id is required' });
     }
 
+    // 🚨 FIXED: Now perfectly pulls the user-defined return_deadline for the calendar!
     const { rows } = await db.query(
       `SELECT
          r.id, r.status, r.purpose, r.pickup_start, r.pickup_end, r.pickup_datetime,
@@ -163,7 +165,7 @@ const getCalendarEvents = async (req, res, next) => {
        LEFT JOIN students s ON (s.id::text = r.requester_id::text OR s.student_id::text = r.requester_id::text) AND r.requester_type = 'student'
        LEFT JOIN request_items ri ON ri.request_id = r.id AND ri.status NOT IN ('CANCELLED', 'RETURNED')
        LEFT JOIN inventory_types it ON it.id = ri.inventory_type_id
-       WHERE r.room_id = $1 AND r.status IN ('PENDING', 'APPROVED', 'ISSUED', 'PARTIALLY RETURNED')
+       WHERE r.room_id = $1 AND r.status IN ('PENDING', 'PENDING APPROVAL', 'APPROVED', 'ISSUED', 'PARTIALLY RETURNED')
          AND (r.pickup_start IS NOT NULL OR r.pickup_datetime IS NOT NULL OR r.issued_time IS NOT NULL OR r.scheduled_time IS NOT NULL)
        GROUP BY r.id, rm.code, u.name, s.full_name
        ORDER BY COALESCE(r.pickup_start, r.pickup_datetime, r.issued_time, r.scheduled_time) ASC`,

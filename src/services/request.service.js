@@ -32,7 +32,7 @@ const isWindowOpen = (request) => {
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
-// 0. Auto-Cleanup (🚨 FIXED: Strict Stock Boundaries)
+// 0. Auto-Cleanup (Strict Stock Boundaries & Robust Expiration)
 // ─────────────────────────────────────────────────────────────────────────────
 const autoVoidExpiredRequests = async () => {
   return withTransaction(async (client) => {
@@ -45,6 +45,8 @@ const autoVoidExpiredRequests = async () => {
         (pickup_end IS NOT NULL AND pickup_end < NOW())
         OR
         (pickup_start IS NOT NULL AND pickup_end IS NULL AND pickup_start + interval '1 day' < NOW())
+        OR
+        (return_deadline IS NOT NULL AND return_deadline < NOW())
         OR
         (expires_at IS NOT NULL AND expires_at < NOW())
       )
@@ -60,7 +62,6 @@ const autoVoidExpiredRequests = async () => {
       const { rows: resStocks } = await client.query(`SELECT stock_id, qty_requested, quantity FROM request_items WHERE request_id = $1 AND status = 'RESERVED' AND stock_id IS NOT NULL`, [id]);
       for (const s of resStocks) {
         const q = s.qty_requested || s.quantity || 1;
-        // ⚡ GUARANTEED CEILING: Never exceed qty_total
         await client.query(`UPDATE inventory_type_stocks SET qty_available = LEAST(qty_total, qty_available + $1) WHERE id = $2`, [q, s.stock_id]);
       }
 
@@ -75,9 +76,9 @@ const autoVoidExpiredRequests = async () => {
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
-// 1. createRequest (🚨 FIXED: Explicitly sets quantity for UI rendering)
+// 1. createRequest (Injects User-Defined return_deadline)
 // ─────────────────────────────────────────────────────────────────────────────
-const createRequest = async ({ requester_type, requester_id, requester_email, room_id, purpose, items, scheduled_time, pickup_datetime, pickup_start, pickup_end }) => {
+const createRequest = async ({ requester_type, requester_id, requester_email, room_id, purpose, items, scheduled_time, pickup_datetime, pickup_start, pickup_end, return_deadline }) => {
   return withTransaction(async (client) => {
     let expiresAt = null;
 
@@ -94,7 +95,7 @@ const createRequest = async ({ requester_type, requester_id, requester_email, ro
         (requester_type, requester_id, room_id, purpose, qr_code, qr_token, 
          scheduled_time, return_deadline, expires_at, status, pickup_datetime, pickup_start, pickup_end)
        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13) RETURNING *`,
-      [requester_type, requester_id, room_id || null, purpose || null, groupQr, groupQr, scheduled_time || null, null, expiresAt, initialStatus, pickup_datetime || null, pickup_start || null, pickup_end || null]
+      [requester_type, requester_id, room_id || null, purpose || null, groupQr, groupQr, scheduled_time || null, return_deadline || null, expiresAt, initialStatus, pickup_datetime || null, pickup_start || null, pickup_end || null]
     );
 
     const request = rows[0];
@@ -104,7 +105,6 @@ const createRequest = async ({ requester_type, requester_id, requester_email, ro
       for (const item of items) {
         if (item.stock_id) {
           const q = item.qty_requested || item.quantity || 1;
-          // ⚡ Insert into BOTH quantity and qty_requested so DB Default doesn't overwrite it!
           await client.query(
             `INSERT INTO request_items (request_id, inventory_type_id, stock_id, qty_requested, quantity, assigned_to) VALUES ($1, $2, $3, $4, $5, $6)`,
             [request.id, item.inventory_type_id, item.stock_id, q, q, item.assigned_to || 'Requester']
@@ -210,7 +210,6 @@ const getRequestByQR = async (qrCode) => {
 // 4. listRequests
 // ─────────────────────────────────────────────────────────────────────────────
 const listRequests = async ({ room_id, status, requester_type, requester_id } = {}) => {
-  
   try { await autoVoidExpiredRequests(); } catch (e) { console.error('Auto-void error:', e); }
 
   const conditions = [], values = [];
@@ -356,7 +355,7 @@ const approveRequest = async (id, email) => {
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
-// 6. rejectRequest (🚨 FIXED: Strict Stock Boundaries)
+// 6. rejectRequest 
 // ─────────────────────────────────────────────────────────────────────────────
 const rejectRequest = async (id, email) => {
   return withTransaction(async (client) => {
@@ -388,12 +387,13 @@ const rejectRequest = async (id, email) => {
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
-// 7. cancelRequest (🚨 FIXED: Strict Stock Boundaries)
+// 7. cancelRequest (🚨 FIXED: Strict Safeguards Against Double-Cancellation)
 // ─────────────────────────────────────────────────────────────────────────────
 const cancelRequest = async (id) => {
   return withTransaction(async (client) => {
-    const { rows: reqRows } = await client.query(`SELECT status FROM requests WHERE id = $1 FOR UPDATE`, [id]);
-    if (!reqRows.length) throw Object.assign(new Error('Request not found'), { status: 404 });
+    // Prevent cancelling an ISSUED or RETURNED request
+    const { rows: reqRows } = await client.query(`SELECT status FROM requests WHERE id = $1 AND status IN ('PENDING', 'PENDING APPROVAL', 'APPROVED') FOR UPDATE`, [id]);
+    if (!reqRows.length) throw Object.assign(new Error('Request cannot be cancelled. It may be already issued, cancelled, or doesn\'t exist.'), { status: 400 });
     
     if (reqRows[0].status === 'APPROVED') {
        const { rows: units } = await client.query(`SELECT inventory_item_id FROM request_items WHERE request_id = $1 AND inventory_item_id IS NOT NULL AND status = 'RESERVED'`, [id]);
@@ -660,9 +660,6 @@ const returnRequest = async (id) => {
   });
 };
 
-// ─────────────────────────────────────────────────────────────────────────────
-// Exports
-// ─────────────────────────────────────────────────────────────────────────────
 module.exports = {
   createRequest,
   getRequest,
