@@ -67,7 +67,7 @@ const autoVoidExpiredRequests = async () => {
       for (const c of resCons) await client.query(`UPDATE inventory_consumables SET quantity_available = quantity_available + $1 WHERE id = $2`, [c.quantity, c.consumable_id]);
       
       // 4. Update Statuses to explicitly EXPIRED
-      await client.query(`UPDATE request_items SET status = 'EXPIRED' WHERE request_id = $1`, [id]);
+      await client.query(`UPDATE request_items SET status = 'CANCELLED' WHERE request_id = $1`, [id]);
       await client.query(`UPDATE requests SET status = 'EXPIRED' WHERE id = $1`, [id]);
     }
     return expired.length;
