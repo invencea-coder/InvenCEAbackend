@@ -32,6 +32,49 @@ const isWindowOpen = (request) => {
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
+// 0. Auto-Cleanup (🚨 FIXED: Releases ghost reservations automatically)
+// ─────────────────────────────────────────────────────────────────────────────
+const autoVoidExpiredRequests = async () => {
+  return withTransaction(async (client) => {
+    const { rows: expired } = await client.query(`
+      SELECT id FROM requests 
+      WHERE status IN ('PENDING', 'PENDING APPROVAL', 'APPROVED')
+      AND (
+        (pickup_datetime IS NOT NULL AND pickup_datetime + interval '15 minutes' < NOW())
+        OR
+        (pickup_end IS NOT NULL AND pickup_end < NOW())
+        OR
+        (pickup_start IS NOT NULL AND pickup_end IS NULL AND pickup_start + interval '1 day' < NOW())
+        OR
+        (expires_at IS NOT NULL AND expires_at < NOW())
+      )
+      FOR UPDATE SKIP LOCKED
+    `);
+
+    for (const req of expired) {
+      const id = req.id;
+      
+      // 1. Free physical items back to the shelf
+      const { rows: resUnits } = await client.query(`SELECT inventory_item_id FROM request_items WHERE request_id = $1 AND status = 'RESERVED' AND inventory_item_id IS NOT NULL`, [id]);
+      for (const u of resUnits) await client.query(`UPDATE inventory_items SET status = 'available' WHERE id = $1`, [u.inventory_item_id]);
+      
+      // 2. Free batch stock quantities
+      const { rows: resStocks } = await client.query(`SELECT stock_id, qty_requested FROM request_items WHERE request_id = $1 AND status = 'RESERVED' AND stock_id IS NOT NULL`, [id]);
+      for (const s of resStocks) await client.query(`UPDATE inventory_type_stocks SET qty_available = qty_available + $1 WHERE id = $2`, [s.qty_requested || 1, s.stock_id]);
+
+      // 3. Free consumables
+      const { rows: resCons } = await client.query(`SELECT consumable_id, quantity FROM request_items WHERE request_id = $1 AND status = 'RESERVED' AND consumable_id IS NOT NULL`, [id]);
+      for (const c of resCons) await client.query(`UPDATE inventory_consumables SET quantity_available = quantity_available + $1 WHERE id = $2`, [c.quantity, c.consumable_id]);
+      
+      // 4. Update Statuses to explicitly EXPIRED
+      await client.query(`UPDATE request_items SET status = 'EXPIRED' WHERE request_id = $1`, [id]);
+      await client.query(`UPDATE requests SET status = 'EXPIRED' WHERE id = $1`, [id]);
+    }
+    return expired.length;
+  });
+};
+
+// ─────────────────────────────────────────────────────────────────────────────
 // 1. createRequest
 // ─────────────────────────────────────────────────────────────────────────────
 const createRequest = async ({ requester_type, requester_id, requester_email, room_id, purpose, items, scheduled_time, pickup_datetime, pickup_start, pickup_end }) => {
@@ -165,6 +208,10 @@ const getRequestByQR = async (qrCode) => {
 // 4. listRequests
 // ─────────────────────────────────────────────────────────────────────────────
 const listRequests = async ({ room_id, status, requester_type, requester_id } = {}) => {
+  
+  // ⚡ Run silent cleanup before fetching so the list is ALWAYS accurate!
+  try { await autoVoidExpiredRequests(); } catch (e) { console.error('Auto-void error:', e); }
+
   const conditions = [], values = [];
   let i = 1;
 
@@ -308,7 +355,7 @@ const approveRequest = async (id, email) => {
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
-// 6. rejectRequest (🚨 FIXED: Now cleans up inventory if request was APPROVED)
+// 6. rejectRequest 
 // ─────────────────────────────────────────────────────────────────────────────
 const rejectRequest = async (id, email) => {
   return withTransaction(async (client) => {
@@ -338,7 +385,35 @@ const rejectRequest = async (id, email) => {
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
-// 7. issueRequest (🚨 FIXED: Completely Bulletproof Atomic Reconstruction)
+// 7. cancelRequest (Explicit user cancellation)
+// ─────────────────────────────────────────────────────────────────────────────
+const cancelRequest = async (id) => {
+  return withTransaction(async (client) => {
+    const { rows: reqRows } = await client.query(`SELECT status FROM requests WHERE id = $1 FOR UPDATE`, [id]);
+    if (!reqRows.length) throw Object.assign(new Error('Request not found'), { status: 404 });
+    
+    if (reqRows[0].status === 'APPROVED') {
+       const { rows: units } = await client.query(`SELECT inventory_item_id FROM request_items WHERE request_id = $1 AND inventory_item_id IS NOT NULL AND status = 'RESERVED'`, [id]);
+       for (const u of units) await client.query(`UPDATE inventory_items SET status = 'available' WHERE id = $1`, [u.inventory_item_id]);
+       
+       const { rows: stocks } = await client.query(`SELECT stock_id, qty_requested FROM request_items WHERE request_id = $1 AND stock_id IS NOT NULL AND status = 'RESERVED'`, [id]);
+       for (const s of stocks) await client.query(`UPDATE inventory_type_stocks SET qty_available = qty_available + $1 WHERE id = $2`, [s.qty_requested || 1, s.stock_id]);
+       
+       const { rows: cons } = await client.query(`SELECT consumable_id, quantity FROM request_items WHERE request_id = $1 AND consumable_id IS NOT NULL AND status = 'RESERVED'`, [id]);
+       for (const c of cons) await client.query(`UPDATE inventory_consumables SET quantity_available = quantity_available + $1 WHERE id = $2`, [c.quantity, c.consumable_id]);
+       
+       await client.query(`UPDATE request_items SET status = 'CANCELLED' WHERE request_id = $1`, [id]);
+    } else {
+       await client.query(`UPDATE request_items SET status = 'CANCELLED' WHERE request_id = $1`, [id]);
+    }
+    
+    const { rows } = await client.query(`UPDATE requests SET status = 'CANCELLED' WHERE id = $1 RETURNING *`, [id]);
+    return rows[0];
+  });
+};
+
+// ─────────────────────────────────────────────────────────────────────────────
+// 8. issueRequest 
 // ─────────────────────────────────────────────────────────────────────────────
 const issueRequest = async (id, itemsToIssue = [], returnDeadline = null) => {
   return withTransaction(async (client) => {
@@ -350,10 +425,6 @@ const issueRequest = async (id, itemsToIssue = [], returnDeadline = null) => {
       if (!isWindowOpen(request)) throw Object.assign(new Error(`Reservation window is not open.`), { status: 403 });
     }
 
-    // ⚡ BULLETPROOF CLEANUP FIRST ⚡
-    // We safely revert ALL prior reservations for this request back to the shelf inside this transaction. 
-    // Then, we check out exactly what the Admin scanned in the UI. This prevents ANY orphaned items.
-    
     // 1. Free Reserved Units
     const { rows: resUnits } = await client.query(`SELECT inventory_item_id FROM request_items WHERE request_id = $1 AND status = 'RESERVED' AND inventory_item_id IS NOT NULL`, [id]);
     for (const u of resUnits) {
@@ -403,12 +474,10 @@ const issueRequest = async (id, itemsToIssue = [], returnDeadline = null) => {
       for (let n = 0; n < item.quantity; n++) {
         let physicalItemId;
         if (item.inventory_item_id) {
-          // They scanned a specific barcode
           const { rows: specificItem } = await client.query(`SELECT id FROM inventory_items WHERE id = $1 AND status = 'available' FOR UPDATE`, [item.inventory_item_id]);
           if (!specificItem.length) throw Object.assign(new Error(`Scanned item is currently unavailable.`), { status: 409 });
           physicalItemId = specificItem[0].id;
         } else {
-          // They didn't scan a barcode, auto-grab an available one
           const avail = await client.query(`SELECT id FROM inventory_items WHERE inventory_type_id = $1 AND status = 'available' FOR UPDATE SKIP LOCKED LIMIT 1`, [item.inventory_type_id]);
           if (!avail.rows.length) throw Object.assign(new Error(`Insufficient quantity in stock.`), { status: 409 });
           physicalItemId = avail.rows[0].id;
@@ -431,7 +500,7 @@ const issueRequest = async (id, itemsToIssue = [], returnDeadline = null) => {
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
-// 8. returnItemByBarcode
+// 9. returnItemByBarcode
 // ─────────────────────────────────────────────────────────────────────────────
 const returnItemByBarcode = async (barcode, condition = 'Good', callerRoomId = null, qtyReturned = null, explicitRequestId = null) => {
   return withTransaction(async (client) => {
@@ -549,7 +618,7 @@ const returnItemByBarcode = async (barcode, condition = 'Good', callerRoomId = n
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
-// 9. returnRequest (bulk)
+// 10. returnRequest (bulk)
 // ─────────────────────────────────────────────────────────────────────────────
 const returnRequest = async (id) => {
   return withTransaction(async (client) => {
@@ -599,6 +668,7 @@ module.exports = {
   listRequests,
   approveRequest,
   rejectRequest,
+  cancelRequest,
   issueRequest,
   returnItemByBarcode,
   returnRequest,

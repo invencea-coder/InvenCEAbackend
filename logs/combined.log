@@ -27714,3 +27714,387 @@
 2026-04-03 01:18:24 [info]: Socket disconnected: wTuLaaDoGOVfB39rAABK
 2026-04-03 01:18:24 [info]: Socket disconnected: gB0I7U1TgjehivL6AABG
 2026-04-03 01:18:27 [info]: InvenCEA backend running on port 4000 [development]
+2026-04-03 11:12:32 [info]: InvenCEA backend running on port 4000 [development]
+2026-04-03 11:12:33 [info]: Socket connected: 57sryED4ufZnRhG6AAAB
+2026-04-03 11:12:33 [debug]: Socket 57sryED4ufZnRhG6AAAB joined room user:5
+2026-04-03 11:12:39 [info]: Socket connected: JDIeOmyjt2vaLF1zAAAD
+2026-04-03 11:12:39 [debug]: Socket JDIeOmyjt2vaLF1zAAAD joined room user:6
+2026-04-03 11:12:50 [debug]: New DB client connected
+2026-04-03 11:12:50 [warn]: BREVO_API_KEY not set — skipping email
+2026-04-03 11:12:50 [info]: OTP sent to romeosangaspar94@gmail.com
+2026-04-03 11:12:50 [http]: 127.0.0.1 - - [03/Apr/2026:03:12:50 +0000] "POST /api/v1/auth/faculty/send-otp HTTP/1.1" 200 76 "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36 Avast/145.0.34271.162"
+2026-04-03 11:13:34 [debug]: New DB client connected
+2026-04-03 11:14:26 [info]: Socket disconnected: 57sryED4ufZnRhG6AAAB
+2026-04-03 11:14:27 [info]: Socket disconnected: JDIeOmyjt2vaLF1zAAAD
+2026-04-03 11:14:33 [debug]: New DB client connected
+2026-04-03 11:15:32 [info]: Socket connected: b-ufYVqSG8pXSmxzAAAF
+2026-04-03 11:15:32 [debug]: Socket b-ufYVqSG8pXSmxzAAAF joined room user:5
+2026-04-03 11:15:33 [debug]: New DB client connected
+2026-04-03 11:16:33 [debug]: New DB client connected
+2026-04-03 11:17:33 [debug]: New DB client connected
+2026-04-03 11:17:34 [info]: Socket connected: BSVhRF7CC-pVjsPDAAAH
+2026-04-03 11:17:34 [debug]: Socket BSVhRF7CC-pVjsPDAAAH joined room user:3691
+2026-04-03 11:18:33 [debug]: New DB client connected
+2026-04-03 11:19:33 [debug]: New DB client connected
+2026-04-03 11:19:37 [info]: Socket disconnected: BSVhRF7CC-pVjsPDAAAH
+2026-04-03 11:19:38 [info]: Socket disconnected: b-ufYVqSG8pXSmxzAAAF
+2026-04-03 11:20:33 [debug]: New DB client connected
+2026-04-03 11:21:07 [info]: Socket connected: 5_W8IdifNxz5_gAxAAAJ
+2026-04-03 11:21:07 [debug]: Socket 5_W8IdifNxz5_gAxAAAJ joined room user:5
+2026-04-03 11:21:33 [debug]: New DB client connected
+2026-04-03 11:22:33 [debug]: New DB client connected
+2026-04-03 11:22:34 [info]: Socket connected: H8ytt5uM8Z5JCQe9AAAL
+2026-04-03 11:22:34 [debug]: Socket H8ytt5uM8Z5JCQe9AAAL joined room user:3691
+2026-04-03 11:23:34 [debug]: New DB client connected
+2026-04-03 11:24:33 [debug]: New DB client connected
+2026-04-03 11:24:45 [info]: Socket disconnected: H8ytt5uM8Z5JCQe9AAAL
+2026-04-03 11:24:46 [info]: Socket disconnected: 5_W8IdifNxz5_gAxAAAJ
+2026-04-03 11:25:09 [info]: Socket connected: NnvJpvMdSPnh8VVQAAAN
+2026-04-03 11:25:09 [debug]: Socket NnvJpvMdSPnh8VVQAAAN joined room user:5
+2026-04-03 11:25:33 [debug]: New DB client connected
+2026-04-03 11:25:38 [info]: Socket connected: l6Um7-7eg4nmMlcyAAAP
+2026-04-03 11:25:38 [debug]: Socket l6Um7-7eg4nmMlcyAAAP joined room user:3691
+2026-04-03 11:26:33 [debug]: New DB client connected
+2026-04-03 11:27:33 [debug]: New DB client connected
+2026-04-03 11:28:33 [debug]: New DB client connected
+2026-04-03 11:29:33 [debug]: New DB client connected
+2026-04-03 11:30:33 [debug]: New DB client connected
+2026-04-03 11:31:33 [debug]: New DB client connected
+2026-04-03 11:32:33 [debug]: New DB client connected
+2026-04-03 11:33:33 [debug]: New DB client connected
+2026-04-03 11:34:34 [debug]: New DB client connected
+2026-04-03 11:35:33 [debug]: New DB client connected
+2026-04-03 11:36:33 [debug]: New DB client connected
+2026-04-03 11:37:33 [debug]: New DB client connected
+2026-04-03 11:38:22 [info]: Socket disconnected: l6Um7-7eg4nmMlcyAAAP
+2026-04-03 11:38:23 [info]: Socket connected: Kn7g0HA-iLcGz768AAAR
+2026-04-03 11:38:23 [debug]: Socket Kn7g0HA-iLcGz768AAAR joined room user:3691
+2026-04-03 11:38:33 [debug]: New DB client connected
+2026-04-03 11:38:35 [info]: Socket disconnected: NnvJpvMdSPnh8VVQAAAN
+2026-04-03 11:38:36 [info]: Socket connected: _5KLLF9f7LluyeBEAAAT
+2026-04-03 11:38:36 [debug]: Socket _5KLLF9f7LluyeBEAAAT joined room user:5
+2026-04-03 11:39:33 [debug]: New DB client connected
+2026-04-03 11:40:33 [debug]: New DB client connected
+2026-04-03 11:41:33 [debug]: New DB client connected
+2026-04-03 11:42:33 [debug]: New DB client connected
+2026-04-03 11:43:33 [debug]: New DB client connected
+2026-04-03 11:44:33 [debug]: New DB client connected
+2026-04-03 11:45:33 [debug]: New DB client connected
+2026-04-03 11:46:33 [debug]: New DB client connected
+2026-04-03 11:47:33 [debug]: New DB client connected
+2026-04-03 11:48:33 [debug]: New DB client connected
+2026-04-03 11:49:33 [debug]: New DB client connected
+2026-04-03 11:50:33 [debug]: New DB client connected
+2026-04-03 11:51:33 [debug]: New DB client connected
+2026-04-03 11:52:33 [debug]: New DB client connected
+2026-04-03 11:53:33 [debug]: New DB client connected
+2026-04-03 11:54:33 [debug]: New DB client connected
+2026-04-03 11:55:33 [debug]: New DB client connected
+2026-04-03 11:56:33 [debug]: New DB client connected
+2026-04-03 11:57:33 [debug]: New DB client connected
+2026-04-03 11:58:33 [debug]: New DB client connected
+2026-04-03 11:58:44 [info]: Socket disconnected: Kn7g0HA-iLcGz768AAAR
+2026-04-03 11:58:46 [info]: Socket connected: nL-BDmaz2bdERl4bAAAV
+2026-04-03 11:58:46 [debug]: Socket nL-BDmaz2bdERl4bAAAV joined room user:3691
+2026-04-03 11:59:22 [info]: Socket disconnected: _5KLLF9f7LluyeBEAAAT
+2026-04-03 11:59:33 [debug]: New DB client connected
+2026-04-03 12:00:11 [info]: Socket connected: C0rjFX7_Amm2XHnKAAAX
+2026-04-03 12:00:11 [debug]: Socket C0rjFX7_Amm2XHnKAAAX joined room user:5
+2026-04-03 12:00:33 [debug]: New DB client connected
+2026-04-03 12:01:33 [debug]: New DB client connected
+2026-04-03 12:02:33 [debug]: New DB client connected
+2026-04-03 12:03:33 [debug]: New DB client connected
+2026-04-03 12:04:33 [debug]: New DB client connected
+2026-04-03 12:05:33 [debug]: New DB client connected
+2026-04-03 12:06:33 [debug]: New DB client connected
+2026-04-03 12:07:33 [debug]: New DB client connected
+2026-04-03 12:08:33 [debug]: New DB client connected
+2026-04-03 12:09:33 [debug]: New DB client connected
+2026-04-03 12:10:33 [debug]: New DB client connected
+2026-04-03 12:11:33 [debug]: New DB client connected
+2026-04-03 12:12:33 [debug]: New DB client connected
+2026-04-03 12:13:33 [debug]: New DB client connected
+2026-04-03 12:14:33 [debug]: New DB client connected
+2026-04-03 12:15:33 [debug]: New DB client connected
+2026-04-03 12:16:33 [debug]: New DB client connected
+2026-04-03 12:17:33 [debug]: New DB client connected
+2026-04-03 12:18:13 [info]: Socket connected: pNeW_J1IOsAMVKOBAAAZ
+2026-04-03 12:18:13 [debug]: Socket pNeW_J1IOsAMVKOBAAAZ joined room user:6
+2026-04-03 12:18:33 [debug]: New DB client connected
+2026-04-03 12:19:33 [debug]: New DB client connected
+2026-04-03 12:20:33 [debug]: New DB client connected
+2026-04-03 12:21:33 [debug]: New DB client connected
+2026-04-03 12:22:33 [debug]: New DB client connected
+2026-04-03 12:23:33 [debug]: New DB client connected
+2026-04-03 12:24:33 [debug]: New DB client connected
+2026-04-03 12:25:33 [debug]: New DB client connected
+2026-04-03 12:26:34 [debug]: New DB client connected
+2026-04-03 12:27:33 [debug]: New DB client connected
+2026-04-03 12:28:33 [debug]: New DB client connected
+2026-04-03 12:29:33 [debug]: New DB client connected
+2026-04-03 12:30:34 [debug]: New DB client connected
+2026-04-03 12:31:33 [debug]: New DB client connected
+2026-04-03 12:32:33 [debug]: New DB client connected
+2026-04-03 12:33:33 [debug]: New DB client connected
+2026-04-03 12:34:33 [debug]: New DB client connected
+2026-04-03 12:35:33 [debug]: New DB client connected
+2026-04-03 12:36:33 [debug]: New DB client connected
+2026-04-03 12:37:33 [debug]: New DB client connected
+2026-04-03 12:38:34 [debug]: New DB client connected
+2026-04-03 12:39:33 [debug]: New DB client connected
+2026-04-03 12:40:33 [debug]: New DB client connected
+2026-04-03 12:41:33 [debug]: New DB client connected
+2026-04-03 12:42:33 [debug]: New DB client connected
+2026-04-03 12:43:33 [debug]: New DB client connected
+2026-04-03 12:44:33 [debug]: New DB client connected
+2026-04-03 12:45:33 [debug]: New DB client connected
+2026-04-03 12:46:33 [debug]: New DB client connected
+2026-04-03 12:47:33 [debug]: New DB client connected
+2026-04-03 12:48:33 [debug]: New DB client connected
+2026-04-03 12:49:33 [debug]: New DB client connected
+2026-04-03 12:50:33 [debug]: New DB client connected
+2026-04-03 12:51:33 [debug]: New DB client connected
+2026-04-03 12:52:33 [debug]: New DB client connected
+2026-04-03 12:53:33 [debug]: New DB client connected
+2026-04-03 12:54:33 [debug]: New DB client connected
+2026-04-03 12:55:33 [debug]: New DB client connected
+2026-04-03 12:56:33 [debug]: New DB client connected
+2026-04-03 12:57:33 [debug]: New DB client connected
+2026-04-03 12:58:33 [debug]: New DB client connected
+2026-04-03 12:59:33 [debug]: New DB client connected
+2026-04-03 13:00:33 [debug]: New DB client connected
+2026-04-03 13:01:33 [debug]: New DB client connected
+2026-04-03 13:02:33 [debug]: New DB client connected
+2026-04-03 13:03:33 [debug]: New DB client connected
+2026-04-03 13:04:33 [debug]: New DB client connected
+2026-04-03 13:05:33 [debug]: New DB client connected
+2026-04-03 13:06:33 [debug]: New DB client connected
+2026-04-03 13:07:33 [debug]: New DB client connected
+2026-04-03 13:08:33 [debug]: New DB client connected
+2026-04-03 13:09:33 [debug]: New DB client connected
+2026-04-03 13:10:33 [debug]: New DB client connected
+2026-04-03 13:11:33 [debug]: New DB client connected
+2026-04-03 13:12:33 [debug]: New DB client connected
+2026-04-03 13:13:33 [debug]: New DB client connected
+2026-04-03 13:14:33 [debug]: New DB client connected
+2026-04-03 13:15:33 [debug]: New DB client connected
+2026-04-03 13:16:33 [debug]: New DB client connected
+2026-04-03 13:17:33 [debug]: New DB client connected
+2026-04-03 13:18:34 [debug]: New DB client connected
+2026-04-03 13:19:33 [debug]: New DB client connected
+2026-04-03 13:20:33 [debug]: New DB client connected
+2026-04-03 13:21:34 [debug]: New DB client connected
+2026-04-03 13:22:33 [debug]: New DB client connected
+2026-04-03 13:23:34 [debug]: New DB client connected
+2026-04-03 13:24:33 [debug]: New DB client connected
+2026-04-03 13:25:34 [debug]: New DB client connected
+2026-04-03 13:26:34 [debug]: New DB client connected
+2026-04-03 13:27:34 [debug]: New DB client connected
+2026-04-03 13:28:33 [debug]: New DB client connected
+2026-04-03 13:29:33 [debug]: New DB client connected
+2026-04-03 13:30:34 [debug]: New DB client connected
+2026-04-03 13:31:34 [debug]: New DB client connected
+2026-04-03 13:32:34 [debug]: New DB client connected
+2026-04-03 13:33:34 [debug]: New DB client connected
+2026-04-03 13:34:34 [debug]: New DB client connected
+2026-04-03 13:35:34 [debug]: New DB client connected
+2026-04-03 13:36:34 [debug]: New DB client connected
+2026-04-03 13:37:34 [debug]: New DB client connected
+2026-04-03 13:38:34 [debug]: New DB client connected
+2026-04-03 13:39:34 [debug]: New DB client connected
+2026-04-03 13:40:34 [debug]: New DB client connected
+2026-04-03 13:41:34 [debug]: New DB client connected
+2026-04-03 13:42:34 [debug]: New DB client connected
+2026-04-03 13:43:34 [debug]: New DB client connected
+2026-04-03 13:44:34 [debug]: New DB client connected
+2026-04-03 13:45:34 [debug]: New DB client connected
+2026-04-03 13:46:34 [debug]: New DB client connected
+2026-04-03 13:47:34 [debug]: New DB client connected
+2026-04-03 13:48:34 [debug]: New DB client connected
+2026-04-03 13:49:34 [debug]: New DB client connected
+2026-04-03 13:50:34 [debug]: New DB client connected
+2026-04-03 13:51:34 [debug]: New DB client connected
+2026-04-03 13:52:34 [debug]: New DB client connected
+2026-04-03 13:53:34 [debug]: New DB client connected
+2026-04-03 13:54:34 [debug]: New DB client connected
+2026-04-03 13:55:34 [debug]: New DB client connected
+2026-04-03 13:56:34 [debug]: New DB client connected
+2026-04-03 13:57:34 [debug]: New DB client connected
+2026-04-03 13:58:34 [debug]: New DB client connected
+2026-04-03 13:59:34 [debug]: New DB client connected
+2026-04-03 14:00:34 [debug]: New DB client connected
+2026-04-03 14:01:34 [debug]: New DB client connected
+2026-04-03 14:02:34 [debug]: New DB client connected
+2026-04-03 14:03:34 [debug]: New DB client connected
+2026-04-03 14:04:34 [debug]: New DB client connected
+2026-04-03 14:05:34 [debug]: New DB client connected
+2026-04-03 14:06:34 [debug]: New DB client connected
+2026-04-03 14:07:34 [debug]: New DB client connected
+2026-04-03 14:08:34 [debug]: New DB client connected
+2026-04-03 14:09:34 [debug]: New DB client connected
+2026-04-03 14:10:34 [debug]: New DB client connected
+2026-04-03 14:11:34 [debug]: New DB client connected
+2026-04-03 14:12:34 [debug]: New DB client connected
+2026-04-03 14:13:34 [debug]: New DB client connected
+2026-04-03 14:14:34 [debug]: New DB client connected
+2026-04-03 14:15:34 [debug]: New DB client connected
+2026-04-03 14:16:34 [debug]: New DB client connected
+2026-04-03 14:17:34 [debug]: New DB client connected
+2026-04-03 14:18:34 [debug]: New DB client connected
+2026-04-03 14:19:34 [debug]: New DB client connected
+2026-04-03 14:20:34 [debug]: New DB client connected
+2026-04-03 14:21:34 [debug]: New DB client connected
+2026-04-03 14:22:34 [debug]: New DB client connected
+2026-04-03 14:23:34 [debug]: New DB client connected
+2026-04-03 14:24:35 [debug]: New DB client connected
+2026-04-03 14:25:34 [debug]: New DB client connected
+2026-04-03 14:26:34 [debug]: New DB client connected
+2026-04-03 14:27:34 [debug]: New DB client connected
+2026-04-03 14:28:34 [debug]: New DB client connected
+2026-04-03 14:29:34 [debug]: New DB client connected
+2026-04-03 14:30:34 [debug]: New DB client connected
+2026-04-03 14:31:34 [debug]: New DB client connected
+2026-04-03 14:32:34 [debug]: New DB client connected
+2026-04-03 14:33:34 [debug]: New DB client connected
+2026-04-03 14:34:34 [debug]: New DB client connected
+2026-04-03 14:35:34 [debug]: New DB client connected
+2026-04-03 14:36:34 [debug]: New DB client connected
+2026-04-03 14:37:34 [debug]: New DB client connected
+2026-04-03 14:38:34 [debug]: New DB client connected
+2026-04-03 14:39:34 [debug]: New DB client connected
+2026-04-03 14:40:34 [debug]: New DB client connected
+2026-04-03 14:41:34 [debug]: New DB client connected
+2026-04-03 14:42:34 [debug]: New DB client connected
+2026-04-03 14:43:34 [debug]: New DB client connected
+2026-04-03 14:44:34 [debug]: New DB client connected
+2026-04-03 14:45:34 [debug]: New DB client connected
+2026-04-03 14:46:34 [debug]: New DB client connected
+2026-04-03 14:47:34 [debug]: New DB client connected
+2026-04-03 14:48:34 [debug]: New DB client connected
+2026-04-03 14:49:34 [debug]: New DB client connected
+2026-04-03 14:50:34 [debug]: New DB client connected
+2026-04-03 14:51:34 [debug]: New DB client connected
+2026-04-03 14:52:34 [debug]: New DB client connected
+2026-04-03 14:53:34 [debug]: New DB client connected
+2026-04-03 14:54:34 [debug]: New DB client connected
+2026-04-03 14:55:34 [debug]: New DB client connected
+2026-04-03 14:56:34 [debug]: New DB client connected
+2026-04-03 14:57:34 [debug]: New DB client connected
+2026-04-03 14:58:34 [debug]: New DB client connected
+2026-04-03 14:59:34 [debug]: New DB client connected
+2026-04-03 15:00:34 [debug]: New DB client connected
+2026-04-03 15:01:34 [debug]: New DB client connected
+2026-04-03 15:02:34 [debug]: New DB client connected
+2026-04-03 15:03:34 [debug]: New DB client connected
+2026-04-03 15:04:34 [debug]: New DB client connected
+2026-04-03 15:05:34 [debug]: New DB client connected
+2026-04-03 15:06:34 [debug]: New DB client connected
+2026-04-03 15:07:34 [debug]: New DB client connected
+2026-04-03 15:08:34 [debug]: New DB client connected
+2026-04-03 15:09:34 [debug]: New DB client connected
+2026-04-03 15:10:34 [debug]: New DB client connected
+2026-04-03 15:11:34 [debug]: New DB client connected
+2026-04-03 15:12:34 [debug]: New DB client connected
+2026-04-03 15:13:34 [debug]: New DB client connected
+2026-04-03 15:14:34 [debug]: New DB client connected
+2026-04-03 15:15:34 [debug]: New DB client connected
+2026-04-03 15:16:34 [debug]: New DB client connected
+2026-04-03 15:17:34 [debug]: New DB client connected
+2026-04-03 15:18:34 [debug]: New DB client connected
+2026-04-03 15:19:34 [debug]: New DB client connected
+2026-04-03 15:20:34 [debug]: New DB client connected
+2026-04-03 15:21:34 [debug]: New DB client connected
+2026-04-03 15:22:34 [debug]: New DB client connected
+2026-04-03 15:23:34 [debug]: New DB client connected
+2026-04-03 15:24:34 [debug]: New DB client connected
+2026-04-03 15:25:34 [debug]: New DB client connected
+2026-04-03 15:26:34 [debug]: New DB client connected
+2026-04-03 15:27:34 [debug]: New DB client connected
+2026-04-03 15:28:34 [debug]: New DB client connected
+2026-04-03 15:29:34 [debug]: New DB client connected
+2026-04-03 15:30:34 [debug]: New DB client connected
+2026-04-03 15:31:34 [debug]: New DB client connected
+2026-04-03 15:32:34 [debug]: New DB client connected
+2026-04-03 15:33:34 [debug]: New DB client connected
+2026-04-03 15:34:34 [debug]: New DB client connected
+2026-04-03 15:35:34 [debug]: New DB client connected
+2026-04-03 15:36:34 [debug]: New DB client connected
+2026-04-03 15:37:34 [debug]: New DB client connected
+2026-04-03 15:38:34 [debug]: New DB client connected
+2026-04-03 15:39:34 [debug]: New DB client connected
+2026-04-03 15:40:34 [debug]: New DB client connected
+2026-04-03 15:41:34 [debug]: New DB client connected
+2026-04-03 15:42:34 [debug]: New DB client connected
+2026-04-03 15:43:34 [debug]: New DB client connected
+2026-04-03 15:44:34 [debug]: New DB client connected
+2026-04-03 15:45:34 [debug]: New DB client connected
+2026-04-03 15:46:34 [debug]: New DB client connected
+2026-04-03 15:47:34 [debug]: New DB client connected
+2026-04-03 15:48:35 [debug]: New DB client connected
+2026-04-03 15:49:34 [debug]: New DB client connected
+2026-04-03 15:50:34 [debug]: New DB client connected
+2026-04-03 15:51:34 [debug]: New DB client connected
+2026-04-03 15:52:34 [debug]: New DB client connected
+2026-04-03 15:53:35 [debug]: New DB client connected
+2026-04-03 15:54:35 [debug]: New DB client connected
+2026-04-03 15:55:34 [debug]: New DB client connected
+2026-04-03 15:56:34 [debug]: New DB client connected
+2026-04-03 15:57:34 [debug]: New DB client connected
+2026-04-03 15:58:35 [debug]: New DB client connected
+2026-04-03 15:59:34 [debug]: New DB client connected
+2026-04-03 16:00:34 [debug]: New DB client connected
+2026-04-03 16:01:35 [debug]: New DB client connected
+2026-04-03 16:02:35 [debug]: New DB client connected
+2026-04-03 16:03:35 [debug]: New DB client connected
+2026-04-03 16:04:35 [debug]: New DB client connected
+2026-04-03 16:05:35 [debug]: New DB client connected
+2026-04-03 16:06:35 [debug]: New DB client connected
+2026-04-03 16:07:35 [debug]: New DB client connected
+2026-04-03 16:08:35 [debug]: New DB client connected
+2026-04-03 16:09:35 [debug]: New DB client connected
+2026-04-03 16:10:35 [debug]: New DB client connected
+2026-04-03 16:11:35 [debug]: New DB client connected
+2026-04-03 16:12:35 [debug]: New DB client connected
+2026-04-03 16:13:35 [debug]: New DB client connected
+2026-04-03 16:14:35 [debug]: New DB client connected
+2026-04-03 16:15:35 [debug]: New DB client connected
+2026-04-03 16:16:35 [debug]: New DB client connected
+2026-04-03 16:17:35 [debug]: New DB client connected
+2026-04-03 16:18:35 [debug]: New DB client connected
+2026-04-03 16:19:35 [debug]: New DB client connected
+2026-04-03 16:20:35 [debug]: New DB client connected
+2026-04-03 16:21:35 [debug]: New DB client connected
+2026-04-03 16:22:35 [debug]: New DB client connected
+2026-04-03 16:23:35 [debug]: New DB client connected
+2026-04-03 16:24:35 [debug]: New DB client connected
+2026-04-03 16:25:35 [debug]: New DB client connected
+2026-04-03 16:26:35 [debug]: New DB client connected
+2026-04-03 16:27:35 [debug]: New DB client connected
+2026-04-03 16:28:35 [debug]: New DB client connected
+2026-04-03 16:29:35 [debug]: New DB client connected
+2026-04-03 16:30:35 [debug]: New DB client connected
+2026-04-03 16:31:35 [debug]: New DB client connected
+2026-04-03 16:32:35 [debug]: New DB client connected
+2026-04-03 16:32:59 [info]: Socket disconnected: pNeW_J1IOsAMVKOBAAAZ
+2026-04-03 16:33:01 [info]: Socket connected: 5PYIU0OiEWSr37gxAAAb
+2026-04-03 16:33:01 [debug]: Socket 5PYIU0OiEWSr37gxAAAb joined room user:4
+2026-04-03 16:33:14 [info]: Socket disconnected: C0rjFX7_Amm2XHnKAAAX
+2026-04-03 16:33:15 [info]: Socket connected: 3X06Sn0zmiDGlkopAAAd
+2026-04-03 16:33:15 [debug]: Socket 3X06Sn0zmiDGlkopAAAd joined room user:5
+2026-04-03 16:33:35 [debug]: New DB client connected
+2026-04-03 16:34:35 [debug]: New DB client connected
+2026-04-03 16:35:35 [debug]: New DB client connected
+2026-04-03 16:36:35 [debug]: New DB client connected
+2026-04-03 16:37:35 [debug]: New DB client connected
+2026-04-03 16:38:35 [debug]: New DB client connected
+2026-04-03 16:38:53 [info]: Socket disconnected: 5PYIU0OiEWSr37gxAAAb
+2026-04-03 16:38:54 [info]: Socket connected: tuvgtYCpukJH-JXuAAAf
+2026-04-03 16:38:54 [debug]: Socket tuvgtYCpukJH-JXuAAAf joined room user:4
+2026-04-03 16:39:35 [debug]: New DB client connected
+2026-04-03 16:40:28 [info]: InvenCEA backend running on port 4000 [development]
+2026-04-03 16:40:29 [info]: Socket connected: zdKYn4HgntWL5H7mAAAB
+2026-04-03 16:40:29 [debug]: Socket zdKYn4HgntWL5H7mAAAB joined room user:5
+2026-04-03 16:40:29 [info]: Socket connected: RjiQMXKsKO_cyxwAAAAD
+2026-04-03 16:40:29 [debug]: Socket RjiQMXKsKO_cyxwAAAAD joined room user:4
+2026-04-03 16:40:29 [info]: Socket connected: Io63ua-D6X7cgZdwAAAF
+2026-04-03 16:40:29 [debug]: Socket Io63ua-D6X7cgZdwAAAF joined room user:3691
