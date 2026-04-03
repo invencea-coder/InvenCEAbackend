@@ -1,11 +1,8 @@
 // seedThesisArchive.js
-// Seeds all thesis/research output entries into the Thesis Archive (room_id = 3)
-// Run from backend root: node seedThesisArchive.js
-
 require('dotenv').config({ path: require('path').join(__dirname, '.env') });
 const { query, withTransaction } = require('./src/config/db');
 
-const ROOM_ID = 3; // Thesis Archive (CPEIS / Room 3)
+const ROOM_ID = 3; // Thesis Archive
 
 const theses = [
   { barcode:"3534484892", title:"Level of Awareness in Traffic Signages of Drivers in Virac, Catanduanes", authors:"Abrasaldo, Kristel Charisse; Sarmiento, Elya Nnah; Mario, Marie Denn; Binas, Carla Mae; Magdaraog, Neil Jonas", year:"2017", adviser:"Engr. Karen A. Bañas", code:"CEA-RDS-RO-2017-0001", copies:3 },
@@ -126,16 +123,14 @@ const theses = [
   { barcode:"6504521374", title:"Water Resource Management: Designing and Modelling of Rainwater Harvesting System in Imperial Subdivision Homes (SIV), Virac, Catanduanes", authors:"Tating, Maharir Anwar P.; Togueno, Russelle Y.", year:"2025", adviser:"Engr. Jerilee G. Tadoy", code:"CEA-RDS-CE-2025-0019", copies:2 },
 ];
 
-
 async function seed() {
   let inserted = 0, skipped = 0;
 
   await withTransaction(async (client) => {
-    console.log(`Seeding ${theses.length} thesis entries into room_id=${ROOM_ID}...\n`);
+    console.log(`Seeding ${theses.length} thesis entries into room_id=${ROOM_ID}...`);
 
     for (const t of theses) {
-      // 1. Find or create inventory_type by title
-      //    (inventory_types.name has no UNIQUE constraint so ON CONFLICT won't work)
+      // Look for the specific THESIS TITLE
       const existing = await client.query(
         `SELECT id FROM inventory_types WHERE name = $1 LIMIT 1`, [t.title]
       );
@@ -143,15 +138,14 @@ async function seed() {
       let typeId;
       if (existing.rows.length > 0) {
         typeId = existing.rows[0].id;
-        // Update metadata in case authors/adviser changed
         await client.query(
-          `UPDATE inventory_types SET metadata = $1 WHERE id = $2`,
+          `UPDATE inventory_types SET metadata = $1, inventory_mode = 'unit' WHERE id = $2`,
           [JSON.stringify({ authors: t.authors, year: t.year, adviser: t.adviser, code: t.code }), typeId]
         );
       } else {
         const inserted = await client.query(
-          `INSERT INTO inventory_types (sku, name, category, type, metadata)
-           VALUES ($1, $2, 'Thesis / Research Output', 'borrowable', $3)
+          `INSERT INTO inventory_types (sku, name, category, type, inventory_mode, metadata)
+           VALUES ($1, $2, 'Thesis / Research Output', 'borrowable', 'unit', $3)
            RETURNING id`,
           [
             t.barcode,
@@ -162,44 +156,30 @@ async function seed() {
         typeId = inserted.rows[0].id;
       }
 
-      // 2. Skip if barcode already exists (idempotent)
-      const exists = await client.query(
-        `SELECT id FROM inventory_items WHERE barcode = $1`, [t.barcode]
-      );
-      if (exists.rows.length > 0) {
-        console.log(`  SKIP (barcode exists): ${t.barcode}  ${t.code}`);
-        skipped++;
-        continue;
-      }
-
-      // 3. Insert one physical item per copy
-      //    copies=0 means out of stock — insert 1 item and mark unavailable
       const numCopies = t.copies > 0 ? t.copies : 1;
       const status    = t.copies > 0 ? 'available' : 'archived';
 
       for (let i = 0; i < numCopies; i++) {
-        // For multiple copies, append -2, -3, etc. to the barcode
         const itemBarcode = i === 0 ? t.barcode : `${t.barcode}-${i + 1}`;
         await client.query(
           `INSERT INTO inventory_items
              (inventory_type_id, barcode, location_room_id, status, metadata)
-           VALUES ($1, $2, $3, $4, $5)
+           VALUES ($1, $2, $3, $4, '{}'::jsonb)
            ON CONFLICT (barcode) DO NOTHING`,
           [
             typeId,
             itemBarcode,
             ROOM_ID,
-            status,
-            JSON.stringify({ code: t.code, year: t.year })
+            status
           ]
         );
       }
 
-      console.log(`  OK [${t.copies} cop.]: ${t.barcode}  ${t.code}  ${t.title.substring(0,60)}...`);
+      console.log(`  OK: ${t.barcode}  ${t.title.substring(0,60)}...`);
       inserted++;
     }
 
-    console.log(`\nDone. Inserted: ${inserted}  Skipped: ${skipped}`);
+    console.log(`\nDone. Processed: ${inserted}`);
   });
 
   process.exit(0);

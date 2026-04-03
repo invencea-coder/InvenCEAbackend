@@ -1,4 +1,4 @@
-// server.js
+// src/app.js
 const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
@@ -40,7 +40,12 @@ app.options('*', cors());
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan('combined', { stream: { write: (msg) => logger.http(msg.trim()) } }));
-app.use('/api/', rateLimiter);
+
+// 🚨 FIX: Bypass the global rate limiter during development to prevent 429 errors 
+// when changing pages simultaneously. It will automatically turn back on in production.
+if (process.env.NODE_ENV !== 'development') {
+  app.use('/api/', rateLimiter);
+}
 
 app.use('/api/v1/manager', managerRoutes);
 app.use('/api/v1', routes);

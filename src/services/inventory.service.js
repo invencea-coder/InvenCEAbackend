@@ -64,7 +64,7 @@ const addConsumable = async ({ inventory_type_id, barcode, quantity_total, locat
 };
 
 const updateConsumable = async (id, fields) => {
-  const allowed = ['barcode', 'quantity_total', 'quantity_available', 'location_room_id'];
+  const allowed = ['barcode', 'quantity_total', 'quantity_available', 'location_room_id', 'status', 'metadata'];
   const updates = [], values = [];
   let i = 1;
   for (const key of allowed) {
@@ -80,8 +80,6 @@ const updateConsumable = async (id, fields) => {
 };
 
 // ─── Quantity-mode: Stock Entries ─────────────────────────────────────────────
-// Used by CE/Archi: one barcode represents multiple units.
-// qty_available is the live count; qty_total is the original stock ceiling.
 
 const addStockEntry = async ({ inventory_type_id, barcode, qty_total, room_id }) => {
   if (!room_id) throw new Error('Room is required for stock entries');
@@ -95,7 +93,7 @@ const addStockEntry = async ({ inventory_type_id, barcode, qty_total, room_id })
 };
 
 const updateStockEntry = async (id, fields) => {
-  const allowed = ['barcode', 'qty_total', 'qty_available'];
+  const allowed = ['barcode', 'qty_total', 'qty_available', 'status', 'metadata'];
   const updates = [], values = [];
   let i = 1;
   for (const key of allowed) {
@@ -126,7 +124,6 @@ const listAll = async (roomId = null) => {
   const consRoomFilter = roomId ? `WHERE ic.location_room_id = $1` : '';
   const stockRoomFilter = roomId ? `WHERE its.room_id = $1` : '';
 
-  // ── Unit-mode borrowable items (inventory_mode = 'unit') ──────────────────
   const unitQuery = `
     SELECT
       ii.id,
@@ -154,7 +151,6 @@ const listAll = async (roomId = null) => {
     ORDER BY it.name, ii.barcode
   `;
 
-  // ── Consumable items ──────────────────────────────────────────────────────
   const consumableQuery = `
     SELECT
       ic.id,
@@ -166,11 +162,11 @@ const listAll = async (roomId = null) => {
       it.type,
       it.inventory_mode,
       ic.barcode,
-      NULL                  AS status,
+      ic.status,            -- Now mapped to DB status
       ic.location_room_id,
       r.code                AS room_code,
       it.metadata           AS type_metadata,
-      NULL::jsonb           AS item_metadata,
+      ic.metadata           AS item_metadata, -- Now mapped to DB metadata
       ic.quantity_total     AS qty_total,
       ic.quantity_available AS qty_available,
       NULL::INTEGER         AS stock_id
@@ -181,9 +177,6 @@ const listAll = async (roomId = null) => {
     ORDER BY it.name
   `;
 
-  // ── Quantity-mode stock entries (inventory_mode = 'quantity') ─────────────
-  // These look like borrowables to the frontend but track qty instead of
-  // individual unit status. The 'status' column is synthesised from availability.
   const quantityQuery = `
     SELECT
       its.id,
@@ -195,11 +188,11 @@ const listAll = async (roomId = null) => {
       it.type,
       it.inventory_mode,
       its.barcode,
-      CASE WHEN its.qty_available > 0 THEN 'available' ELSE 'out_of_stock' END AS status,
+      its.status,           -- Now mapped to DB status
       its.room_id           AS location_room_id,
       r.code                AS room_code,
       it.metadata           AS type_metadata,
-      NULL::jsonb           AS item_metadata,
+      its.metadata          AS item_metadata, -- Now mapped to DB metadata
       its.qty_total,
       its.qty_available,
       its.id                AS stock_id
@@ -218,9 +211,9 @@ const listAll = async (roomId = null) => {
   ]);
 
   return {
-    items: unitRes.rows,          // unit-mode borrowables (ECE/CpE)
+    items: unitRes.rows,
     consumables: consumableRes.rows,
-    quantityItems: quantityRes.rows,  // quantity-mode stock entries (CE/Archi)
+    quantityItems: quantityRes.rows,
   };
 };
 
@@ -236,13 +229,11 @@ const createUnifiedItem = async (itemData) => {
   const quantity_total   = itemData.quantity_total || 1;
   const type_metadata    = itemData.type_metadata || {};
   const item_metadata    = itemData.item_metadata || {};
-  // inventory_mode: 'quantity' means CE/Archi bulk barcode; 'unit' is the default.
   const inventory_mode   = itemData.inventory_mode || 'unit';
 
   if (!name || !barcode) throw Object.assign(new Error('Missing required fields: name, barcode'), { status: 400 });
   if (!location_room_id) throw Object.assign(new Error('Room is required'), { status: 400 });
 
-  // Upsert inventory type
   let typeRow;
   const existing = await query(
     `SELECT * FROM inventory_types WHERE name = $1 AND inventory_mode = $2`, [name, inventory_mode]
@@ -258,27 +249,24 @@ const createUnifiedItem = async (itemData) => {
     typeRow = newType.rows[0];
   }
 
-  // ── Quantity mode: insert into inventory_type_stocks ──────────────────────
   if (inventory_mode === 'quantity') {
     const result = await query(
-      `INSERT INTO inventory_type_stocks (type_id, barcode, qty_total, qty_available, room_id)
-       VALUES ($1, $2, $3, $3, $4) RETURNING *`,
-      [typeRow.id, barcode, quantity_total, location_room_id]
+      `INSERT INTO inventory_type_stocks (type_id, barcode, qty_total, qty_available, room_id, metadata)
+       VALUES ($1, $2, $3, $3, $4, $5) RETURNING *`,
+      [typeRow.id, barcode, quantity_total, location_room_id, item_metadata]
     );
     return { ...result.rows[0], inventory_mode: 'quantity', name };
   }
 
-  // ── Consumable ────────────────────────────────────────────────────────────
   if (type === 'consumable') {
     const result = await query(
-      `INSERT INTO inventory_consumables (inventory_type_id, barcode, quantity_total, quantity_available, location_room_id)
-       VALUES ($1, $2, $3, $3, $4) RETURNING *`,
-      [typeRow.id, barcode, quantity_total, location_room_id]
+      `INSERT INTO inventory_consumables (inventory_type_id, barcode, quantity_total, quantity_available, location_room_id, metadata)
+       VALUES ($1, $2, $3, $3, $4, $5) RETURNING *`,
+      [typeRow.id, barcode, quantity_total, location_room_id, item_metadata]
     );
     return result.rows[0];
   }
 
-  // ── Unit-mode borrowable (default: ECE/CpE) ───────────────────────────────
   const result = await query(
     `INSERT INTO inventory_items (inventory_type_id, barcode, location_room_id, status, metadata)
      VALUES ($1, $2, $3, 'available', $4) RETURNING *`,
@@ -293,24 +281,24 @@ const updateUnifiedItem = async (id, itemData) => {
     quantity_total, quantity_available, location_room_id,
     status, type_metadata, item_metadata,
     inventory_mode,
-    // quantity-mode specific
     qty_total, qty_available,
   } = itemData;
 
   if (!type) throw Object.assign(new Error('Missing type field'), { status: 400 });
 
-  // ── Quantity-mode stock entry ─────────────────────────────────────────────
   if (inventory_mode === 'quantity') {
     const stockUpdates = [], stockVals = [];
     let si = 1;
     if (barcode)         { stockUpdates.push(`barcode = $${si++}`);       stockVals.push(barcode); }
     if (qty_total   !== undefined) { stockUpdates.push(`qty_total = $${si++}`);   stockVals.push(qty_total); }
     if (qty_available !== undefined) { stockUpdates.push(`qty_available = $${si++}`); stockVals.push(qty_available); }
+    if (status)          { stockUpdates.push(`status = $${si++}`);        stockVals.push(status); }
+    if (item_metadata)   { stockUpdates.push(`metadata = $${si++}`);      stockVals.push(item_metadata); }
+    
     if (stockUpdates.length) {
       stockVals.push(id);
       await query(`UPDATE inventory_type_stocks SET ${stockUpdates.join(', ')} WHERE id = $${si} RETURNING *`, stockVals);
     }
-    // Also update the type name/metadata if provided
     if (name || sku || type_metadata) {
       const { rows: stockRow } = await query(`SELECT type_id FROM inventory_type_stocks WHERE id = $1`, [id]);
       if (stockRow.length) {
@@ -326,7 +314,6 @@ const updateUnifiedItem = async (id, itemData) => {
     return rows[0];
   }
 
-  // ── Consumable ────────────────────────────────────────────────────────────
   if (type === 'consumable') {
     const item = await query(`SELECT inventory_type_id FROM inventory_consumables WHERE id = $1`, [id]);
     if (!item.rows.length) throw Object.assign(new Error('Consumable not found'), { status: 404 });
@@ -346,13 +333,15 @@ const updateUnifiedItem = async (id, itemData) => {
     if (quantity_total !== undefined)  { updates.push(`quantity_total = $${i++}`);    vals.push(quantity_total); }
     if (quantity_available !== undefined) { updates.push(`quantity_available = $${i++}`); vals.push(quantity_available); }
     if (location_room_id !== undefined)   { updates.push(`location_room_id = $${i++}`);  vals.push(location_room_id); }
+    if (status)                   { updates.push(`status = $${i++}`);             vals.push(status); }
+    if (item_metadata)            { updates.push(`metadata = $${i++}`);           vals.push(item_metadata); }
+    
     if (!updates.length) return { message: 'No physical item fields to update' };
     vals.push(id);
     const result = await query(`UPDATE inventory_consumables SET ${updates.join(', ')} WHERE id = $${i} RETURNING *`, vals);
     return result.rows[0];
   }
 
-  // ── Unit-mode borrowable ──────────────────────────────────────────────────
   const item = await query(`SELECT inventory_type_id FROM inventory_items WHERE id = $1`, [id]);
   if (!item.rows.length) throw Object.assign(new Error('Item not found'), { status: 404 });
   const typeId = item.rows[0].inventory_type_id;
@@ -379,7 +368,6 @@ const updateUnifiedItem = async (id, itemData) => {
 
 const deleteUnifiedItem = async (id, type, inventory_mode) => {
   try {
-    // ── Quantity-mode stock entry ───────────────────────────────────────────
     if (inventory_mode === 'quantity') {
       const result = await query(`DELETE FROM inventory_type_stocks WHERE id = $1 RETURNING id`, [id]);
       if (!result.rows.length) throw Object.assign(new Error('Stock entry not found'), { status: 404 });
@@ -393,24 +381,31 @@ const deleteUnifiedItem = async (id, type, inventory_mode) => {
       return result.rows[0];
     }
 
-    // Fallback: try both tables
     let result = await query(`DELETE FROM inventory_items WHERE id = $1 RETURNING id`, [id]);
     if (result.rows.length) return result.rows[0];
     result = await query(`DELETE FROM inventory_consumables WHERE id = $1 RETURNING id`, [id]);
     if (result.rows.length) return result.rows[0];
     result = await query(`DELETE FROM inventory_type_stocks WHERE id = $1 RETURNING id`, [id]);
     if (result.rows.length) return result.rows[0];
+    
     throw Object.assign(new Error('Item not found'), { status: 404 });
 
   } catch (error) {
+    // Graceful Soft Delete if a Foreign Key Constraint blocks actual deletion
     if (error.code === '23503') {
-      if (type !== 'consumable' && inventory_mode !== 'quantity') {
-        const softDelete = await query(
-          `UPDATE inventory_items SET status = 'archived' WHERE id = $1 RETURNING id`, [id]
-        );
-        return softDelete.rows[0];
+      if (inventory_mode === 'quantity') {
+         await query(`UPDATE inventory_type_stocks SET status = 'archived' WHERE id = $1`, [id]);
+         return { id, archived: true };
       }
-      throw Object.assign(new Error('Cannot delete: item has borrowing history. Set qty to 0 instead.'), { status: 400 });
+      if (type === 'consumable') {
+         await query(`UPDATE inventory_consumables SET status = 'archived' WHERE id = $1`, [id]);
+         return { id, archived: true };
+      }
+      
+      const softDelete = await query(
+        `UPDATE inventory_items SET status = 'archived' WHERE id = $1 RETURNING id`, [id]
+      );
+      return softDelete.rows[0];
     }
     throw error;
   }

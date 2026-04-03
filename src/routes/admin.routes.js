@@ -1,3 +1,4 @@
+// backend/src/routes/admin.routes.js
 const express = require('express');
 const { body } = require('express-validator');
 const router = express.Router();
@@ -16,7 +17,10 @@ router.get('/rooms', authMiddleware.protect, ctrl.getRooms);
 // ==========================================
 // The Bouncer: Everything below this line REQUIRES the 'admin' role
 router.use(authMiddleware.protect, roleMiddleware('admin'));
+
+// Retroactive/Manual Logging
 router.post('/requests/retroactive', ctrl.logRetroactiveRequest);
+router.get('/students/search', ctrl.searchStudents); // Added for the Autocomplete UI!
 
 // Dashboard
 router.get('/dashboard/stats', ctrl.getDashboardStats);
@@ -28,6 +32,8 @@ router.post('/faculty', [
   body('name').notEmpty().trim(),
 ], ctrl.addFaculty);
 router.get('/faculty', ctrl.getFaculty);
+router.put('/faculty/:id', ctrl.updateFaculty);
+router.delete('/faculty/:id', ctrl.deleteFaculty);
 
 // Rooms (Admin Actions)
 router.put('/rooms/:id/availability', [

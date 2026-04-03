@@ -5,52 +5,91 @@ const bcrypt = require('bcrypt');
 const { sendMail } = require('../config/mailer');
 const { broadcast } = require('../config/socket'); 
 
-// ── Dashboard ──────────────────────────────────────────────────────────────
+// ── Search Students (For Autocomplete Modal) ──────────────────────────────
+const searchStudents = async (req, res, next) => {
+  try {
+    const { q } = req.query;
+
+    if (!q || q.trim().length < 2) {
+      return success(res, []);
+    }
+
+    const { rows } = await query(
+      `SELECT id, full_name, student_id, department 
+       FROM students 
+       WHERE full_name ILIKE $1 OR student_id ILIKE $1 
+       LIMIT 10`,
+      [`%${q.trim()}%`]
+    );
+
+    return success(res, rows);
+  } catch (error) {
+    next(error);
+  }
+};
+
+// ── Dashboard (⚡ FIXED: Room Filtering & Correct Status Counts) ───────────
 
 const getDashboardStats = async (req, res, next) => {
   try {
+    const roomId = req.user?.room_id;
+    const params = roomId ? [roomId] : [];
+    
+    // Filter by room if the admin is assigned to one
+    const reqWhere = roomId ? `WHERE room_id = $1` : ``;
+    const invWhere = roomId ? `AND location_room_id = $1` : ``;
+
     const { rows } = await query(`
       SELECT
-        COUNT(*) FILTER (WHERE status = 'PENDING')                           AS pending,
-        COUNT(*) FILTER (WHERE status = 'ISSUED')                            AS active,
-        COUNT(*) FILTER (WHERE status = 'ISSUED' AND issued_time::date = CURRENT_DATE) AS due_today
+        COUNT(*) FILTER (WHERE status IN ('PENDING', 'PENDING APPROVAL')) AS pending,
+        COUNT(*) FILTER (WHERE status IN ('ISSUED', 'PARTIALLY RETURNED')) AS active,
+        -- Due today or Overdue (deadline is today or earlier)
+        COUNT(*) FILTER (WHERE status IN ('ISSUED', 'PARTIALLY RETURNED') AND return_deadline::date <= CURRENT_DATE) AS due_today
       FROM requests
-    `);
+      ${reqWhere}
+    `, params);
 
     const { rows: stock } = await query(`
       SELECT COUNT(*) AS low_stock
       FROM inventory_consumables
-      WHERE quantity_available <= 5
-    `);
+      WHERE quantity_available <= 5 ${invWhere}
+    `, params);
 
     return success(res, {
-      pending:   parseInt(rows[0].pending),
-      active:    parseInt(rows[0].active),
-      due_today: parseInt(rows[0].due_today),
-      low_stock: parseInt(stock[0].low_stock),
+      pending:   parseInt(rows[0].pending) || 0,
+      active:    parseInt(rows[0].active) || 0,
+      due_today: parseInt(rows[0].due_today) || 0,
+      low_stock: parseInt(stock[0].low_stock) || 0,
     });
   } catch (e) { next(e); }
 };
 
 const getRecentRequests = async (req, res, next) => {
   try {
+    const roomId = req.user?.room_id;
+    const params = roomId ? [roomId] : [];
+    const whereClause = roomId ? `WHERE r.room_id = $1` : ``;
+
     const { rows } = await query(`
       SELECT
         r.id,
         r.requester_type,
         r.requester_id,
         COALESCE(u.name, s.full_name) AS requester_name,
+        s.student_id AS student_id,
         rm.code AS room_code,
         r.purpose,
         r.status,
-        r.requested_time
+        r.requested_time,
+        r.created_at
       FROM requests r
       LEFT JOIN rooms rm    ON rm.id = r.room_id
-      LEFT JOIN users u     ON u.id = r.requester_id AND r.requester_type = 'faculty'
-      LEFT JOIN students s  ON s.id = r.requester_id AND r.requester_type = 'student'
+      LEFT JOIN users u     ON u.id::text = r.requester_id::text AND r.requester_type IN ('faculty', 'admin')
+      LEFT JOIN students s  ON (s.id::text = r.requester_id::text OR s.student_id::text = r.requester_id::text) AND r.requester_type = 'student'
+      ${whereClause}
       ORDER BY r.created_at DESC
       LIMIT 10
-    `);
+    `, params);
     return success(res, rows);
   } catch (e) { next(e); }
 };
@@ -527,6 +566,7 @@ const notifyFacultyApproval = async (requestId) => {
   }
 };
 
+// ── Retroactive Log (Manual Paper Backup) ─────────────────────────────────
 const logRetroactiveRequest = async (req, res, next) => {
   const client = await getClient();
   try {
@@ -538,38 +578,50 @@ const logRetroactiveRequest = async (req, res, next) => {
       room_id, 
       purpose, 
       barcodes, 
+      requester_type,
       requested_time, 
       approved_time, 
       issued_time, 
-      returned_time 
+      returned_time,
+      return_deadline
     } = req.body;
 
-    if (!student_id_number || !full_name || !room_id || !barcodes || !requested_time || !approved_time || !issued_time) {
+    if (!full_name || !room_id || !barcodes || !requested_time || !approved_time || !issued_time) {
       await client.query('ROLLBACK');
       return badRequest(res, 'Missing required fields for retroactive logging.');
     }
 
-    // 1. UPSERT Student Profile
-    const { rows: students } = await client.query(
-      `INSERT INTO students (student_id, full_name) 
-       VALUES ($1, $2)
-       ON CONFLICT (student_id) DO UPDATE SET full_name = EXCLUDED.full_name
-       RETURNING id`,
-      [student_id_number, full_name]
-    );
-    const requester_id = students[0].id;
+    let requester_id = null;
 
-    // 2. Determine Status (UPPERCASE throughout — must match request.service.js which
-    //    queries: WHERE status = 'ISSUED' for active items and 'RETURNED' for closed ones)
+    if (requester_type === 'student') {
+      const { rows: students } = await client.query(
+        `INSERT INTO students (student_id, full_name) 
+         VALUES ($1, $2)
+         ON CONFLICT (student_id) DO UPDATE SET full_name = EXCLUDED.full_name
+         RETURNING id`,
+        [student_id_number, full_name]
+      );
+      requester_id = students[0].id;
+    } else {
+      let { rows: facultyRows } = await client.query(`SELECT id FROM users WHERE name = $1 AND role = 'faculty' LIMIT 1`, [full_name]);
+      if (facultyRows.length > 0) {
+        requester_id = facultyRows[0].id;
+      } else {
+        const dummyEmail = `manual_log_${Date.now()}@offline.local`;
+        const { rows: newFaculty } = await client.query(`INSERT INTO users (name, email, role) VALUES ($1, $2, 'faculty') RETURNING id`, [full_name, dummyEmail]);
+        requester_id = newFaculty[0].id;
+      }
+    }
+
     const finalStatus = returned_time ? 'RETURNED' : 'ISSUED';
 
-    // 3. Inject Request (use requested_time as created_at to maintain report order)
     const { rows: reqRows } = await client.query(
       `INSERT INTO requests 
-       (requester_type, requester_id, room_id, purpose, status, created_at, requested_time, approved_time, issued_time, full_return_time)
-       VALUES ('student', $1, $2, $3, $4, $5, $6, $7, $8, $9) 
+       (requester_type, requester_id, room_id, purpose, status, created_at, requested_time, approved_time, issued_time, pickup_datetime, full_return_time, return_deadline)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12) 
        RETURNING id`,
       [
+        requester_type || 'student', 
         requester_id, 
         room_id, 
         purpose || 'Blackout Manual Log', 
@@ -578,15 +630,14 @@ const logRetroactiveRequest = async (req, res, next) => {
         requested_time, 
         approved_time, 
         issued_time,
-        returned_time || null   // stored as full_return_time so report.service can read it
+        issued_time, 
+        returned_time || null,
+        return_deadline || null
       ]
     );
     const requestId = reqRows[0].id;
 
-    // 4. Process the Barcodes
     for (const code of barcodes) {
-      // Fetch the physical item regardless of current status so admin can
-      // retroactively log items borrowed during a blackout
       const { rows: items } = await client.query(
         `SELECT id, inventory_type_id, status FROM inventory_items WHERE barcode = $1`,
         [code]
@@ -599,8 +650,6 @@ const logRetroactiveRequest = async (req, res, next) => {
 
       const item = items[0];
 
-      // Guard: if the item is currently 'borrowed', make sure it isn't already
-      // tracked as ISSUED in another open request_items row
       if (item.status === 'borrowed') {
         const { rows: conflict } = await client.query(
           `SELECT id FROM request_items
@@ -614,21 +663,17 @@ const logRetroactiveRequest = async (req, res, next) => {
       }
 
       if (returned_time) {
-        // Already returned: restore physical stock to available
         await client.query(
           `UPDATE inventory_items SET status = 'available' WHERE id = $1`,
           [item.id]
         );
       } else {
-        // Still out: mark as borrowed
         await client.query(
           `UPDATE inventory_items SET status = 'borrowed' WHERE id = $1`,
           [item.id]
         );
       }
 
-      // Insert with UPPERCASE status — this is what returnItemByBarcode (line 317)
-      // queries: WHERE inventory_item_id = $1 AND status = 'ISSUED'
       await client.query(
         `INSERT INTO request_items (request_id, inventory_type_id, inventory_item_id, quantity, status) 
          VALUES ($1, $2, $3, 1, $4)`,
@@ -637,7 +682,6 @@ const logRetroactiveRequest = async (req, res, next) => {
     }
 
     await client.query('COMMIT');
-
     broadcast('inventory-updated', { reason: 'Retroactive Log' });
 
     return success(res, { request_id: requestId }, 'Paper log successfully injected.');
@@ -650,6 +694,7 @@ const logRetroactiveRequest = async (req, res, next) => {
 };
 
 module.exports = {
+  searchStudents,
   getDashboardStats,
   getRecentRequests,
   getInventory,
