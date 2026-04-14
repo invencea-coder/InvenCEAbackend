@@ -88,12 +88,12 @@ const createRequest = async ({ requester_type, requester_id, requester_email, ro
     const initialStatus = 'PENDING';
 
     const { rows } = await client.query(
-      `INSERT INTO requests 
-        (requester_type, requester_id, room_id, purpose, qr_code, qr_token, 
-         scheduled_time, return_deadline, expires_at, status, pickup_datetime, pickup_start, pickup_end)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13) RETURNING *`,
-      [requester_type, requester_id, room_id || null, purpose || null, groupQr, groupQr, scheduled_time || null, return_deadline || null, expiresAt, initialStatus, pickup_datetime || null, pickup_start || null, pickup_end || null]
-    );
+  `INSERT INTO requests 
+    (requester_type, requester_id, requester_email, room_id, purpose, qr_code, qr_token, 
+     scheduled_time, return_deadline, expires_at, status, pickup_datetime, pickup_start, pickup_end)
+   VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14) RETURNING *`,
+  [requester_type, requester_id, requester_email, room_id || null, purpose || null, groupQr, groupQr, scheduled_time || null, return_deadline || null, expiresAt, initialStatus, pickup_datetime || null, pickup_start || null, pickup_end || null]
+);
 
     const request = rows[0];
     request.requester_email = requester_email;
@@ -131,7 +131,7 @@ const getRequest = async (id) => {
     `SELECT r.*, rm.code AS room_code,
             COALESCE(u.name, s.full_name) AS requester_name,
             s.student_id AS student_id,
-            u.email AS requester_email 
+            COALESCE(r.requester_email, u.email) AS requester_email
      FROM requests r 
      LEFT JOIN rooms rm ON rm.id = r.room_id
      LEFT JOIN users u ON u.id::text = r.requester_id::text AND r.requester_type IN ('faculty', 'admin')
@@ -173,7 +173,7 @@ const getRequestByQR = async (qrCode) => {
     `SELECT r.*, rm.code AS room_code,
             COALESCE(u.name, s.full_name) AS requester_name,
             s.student_id AS student_id,
-            u.email AS requester_email
+            COALESCE(r.requester_email, u.email) AS requester_email
      FROM requests r 
      LEFT JOIN rooms rm ON rm.id = r.room_id
      LEFT JOIN users u ON u.id::text = r.requester_id::text AND r.requester_type IN ('faculty', 'admin')
@@ -249,7 +249,7 @@ const listRequests = async ({ room_id, status, requester_type, requester_id } = 
     `SELECT r.*, rm.code AS room_code,
       COALESCE(u.name, s.full_name) AS requester_name,
       s.student_id AS student_id,
-      u.email AS requester_email,
+      COALESCE(r.requester_email, u.email) AS requester_email,
       (
         SELECT json_agg(json_build_object(
           'id',                     ri.id,
@@ -300,19 +300,15 @@ const approveRequest = async (id, providedEmail) => {
 
     // ⚡ FIX: Removed s.email to prevent database crash
     if (!targetEmail) {
-      try {
-        const { rows: userRows } = await client.query(
-          `SELECT u.email
-           FROM requests r
-           LEFT JOIN users u
-             ON u.id::text = r.requester_id::text
-            AND r.requester_type IN ('faculty', 'admin')
-           WHERE r.id = $1`,
-          [id]
-        );
-        if (userRows.length && userRows[0].email) targetEmail = userRows[0].email;
-      } catch (e) {}
+  try {
+    const { rows: reqRows } = await client.query(
+      `SELECT requester_email FROM requests WHERE id = $1`, [id]
+    );
+    if (reqRows.length && reqRows[0].requester_email) {
+        targetEmail = reqRows[0].requester_email;
     }
+  } catch (e) {}
+}
   });
 
   if (targetEmail) {
@@ -358,19 +354,15 @@ const rejectRequest = async (id, providedEmail, reason) => {
 
     // ⚡ FIX: Removed s.email to prevent database crash
     if (!targetEmail) {
-      try {
-        const { rows: userRows } = await client.query(
-          `SELECT u.email
-           FROM requests r
-           LEFT JOIN users u
-             ON u.id::text = r.requester_id::text
-            AND r.requester_type IN ('faculty', 'admin')
-           WHERE r.id = $1`,
-          [id]
-        );
-        if (userRows.length && userRows[0].email) targetEmail = userRows[0].email;
-      } catch (e) {}
+  try {
+    const { rows: reqRows } = await client.query(
+      `SELECT requester_email FROM requests WHERE id = $1`, [id]
+    );
+    if (reqRows.length && reqRows[0].requester_email) {
+        targetEmail = reqRows[0].requester_email;
     }
+  } catch (e) {}
+}
   });
 
   if (targetEmail) {
