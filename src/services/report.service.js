@@ -41,7 +41,6 @@ const getIssuedReports = async ({ room_id, type, role, from, to }) => {
         r.id AS request_id,
         r.requester_type,
         
-        -- Forces the query to output the School ID (2021-00710)
         COALESCE(s.student_id::text, r.requester_id::text) AS requester_id,
         COALESCE(u.name, s.full_name) AS requester_name,
         
@@ -49,7 +48,6 @@ const getIssuedReports = async ({ room_id, type, role, from, to }) => {
         r.purpose,
         r.status AS request_status,
         
-        -- Safe timestamps that actually exist in your DB schema
         r.created_at,
         r.created_at AS requested_time,
         r.created_at AS requested_at,
@@ -60,13 +58,19 @@ const getIssuedReports = async ({ room_id, type, role, from, to }) => {
         r.return_deadline,
         r.last_return_time,
         
-        json_agg(json_build_object(
-            'item_name', it.name,
-            'quantity_issued', COALESCE(ri.qty_requested, ri.quantity, 1),
-            'quantity_returned', COALESCE(ri.qty_returned, 0),
-            'barcode', COALESCE(ii.barcode, its.barcode, ic.barcode),
-            'item_status', ri.status
-        )) as items
+        -- ⚡ FIX: Filter out nulls so it never returns an empty [null] array
+        COALESCE(
+          json_agg(
+            json_build_object(
+              'item_name', COALESCE(it.name, 'Unknown Item'),
+              'quantity_issued', COALESCE(ri.qty_requested, ri.quantity, 1),
+              'quantity_returned', COALESCE(ri.qty_returned, 0),
+              'barcode', COALESCE(ii.barcode, its.barcode, ic.barcode),
+              'item_status', ri.status
+            )
+          ) FILTER (WHERE ri.id IS NOT NULL),
+          '[]'::json
+        ) as items
         
      FROM requests r
      

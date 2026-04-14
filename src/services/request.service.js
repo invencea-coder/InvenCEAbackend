@@ -69,15 +69,12 @@ const autoVoidExpiredRequests = async () => {
       for (const c of resCons) await client.query(`UPDATE inventory_consumables SET quantity_available = quantity_available + $1 WHERE id = $2`, [c.quantity, c.consumable_id]);
       
       await client.query(`UPDATE request_items SET status = 'CANCELLED' WHERE request_id = $1`, [id]);
-      await client.query(`UPDATE requests SET status = 'EXPIRED' WHERE id = $1`, [id]);
+      await client.query(`UPDATE requests SET status = 'CANCELLED' WHERE id = $1`, [id]);
     }
     return expired.length;
   });
 };
 
-// ─────────────────────────────────────────────────────────────────────────────
-// 1. createRequest (Injects User-Defined return_deadline)
-// ─────────────────────────────────────────────────────────────────────────────
 const createRequest = async ({ requester_type, requester_id, requester_email, room_id, purpose, items, scheduled_time, pickup_datetime, pickup_start, pickup_end, return_deadline }) => {
   return withTransaction(async (client) => {
     let expiresAt = null;
@@ -88,7 +85,7 @@ const createRequest = async ({ requester_type, requester_id, requester_email, ro
     }
 
     const groupQr = crypto.randomBytes(16).toString('hex');
-    const initialStatus = requester_type === 'admin' ? 'APPROVED' : 'PENDING';
+    const initialStatus = 'PENDING';
 
     const { rows } = await client.query(
       `INSERT INTO requests 
@@ -111,8 +108,15 @@ const createRequest = async ({ requester_type, requester_id, requester_email, ro
           );
         } else {
           await client.query(
-            `INSERT INTO request_items (request_id, inventory_type_id, consumable_id, quantity, assigned_to) VALUES ($1, $2, $3, $4, $5)`,
-            [request.id, item.inventory_type_id, item.consumable_id || null, item.quantity || 1, item.assigned_to || 'Requester']
+            `INSERT INTO request_items (request_id, inventory_type_id, inventory_item_id, consumable_id, quantity, assigned_to) VALUES ($1, $2, $3, $4, $5, $6)`,
+            [
+              request.id, 
+              item.inventory_type_id, 
+              item.inventory_item_id || null, 
+              item.consumable_id || null, 
+              item.quantity || 1, 
+              item.assigned_to || 'Requester'
+            ]
           );
         }
       }
@@ -121,14 +125,13 @@ const createRequest = async ({ requester_type, requester_id, requester_email, ro
   });
 };
 
-// ─────────────────────────────────────────────────────────────────────────────
-// 2. getRequest
-// ─────────────────────────────────────────────────────────────────────────────
 const getRequest = async (id) => {
   const { rows } = await query(
+    // ⚡ FIX: Removed s.email to prevent database crash
     `SELECT r.*, rm.code AS room_code,
             COALESCE(u.name, s.full_name) AS requester_name,
-            s.student_id AS student_id
+            s.student_id AS student_id,
+            u.email AS requester_email 
      FROM requests r 
      LEFT JOIN rooms rm ON rm.id = r.room_id
      LEFT JOIN users u ON u.id::text = r.requester_id::text AND r.requester_type IN ('faculty', 'admin')
@@ -162,16 +165,15 @@ const getRequest = async (id) => {
   return { ...requestRow, items };
 };
 
-// ─────────────────────────────────────────────────────────────────────────────
-// 3. getRequestByQR
-// ─────────────────────────────────────────────────────────────────────────────
 const getRequestByQR = async (qrCode) => {
   const isNumeric = /^\d+$/.test(qrCode);
 
   const { rows } = await query(
+    // ⚡ FIX: Removed s.email to prevent database crash
     `SELECT r.*, rm.code AS room_code,
             COALESCE(u.name, s.full_name) AS requester_name,
-            s.student_id AS student_id
+            s.student_id AS student_id,
+            u.email AS requester_email
      FROM requests r 
      LEFT JOIN rooms rm ON rm.id = r.room_id
      LEFT JOIN users u ON u.id::text = r.requester_id::text AND r.requester_type IN ('faculty', 'admin')
@@ -206,9 +208,6 @@ const getRequestByQR = async (qrCode) => {
   return { ...requestRow, items };
 };
 
-// ─────────────────────────────────────────────────────────────────────────────
-// 4. listRequests
-// ─────────────────────────────────────────────────────────────────────────────
 const listRequests = async ({ room_id, status, requester_type, requester_id } = {}) => {
   try { await autoVoidExpiredRequests(); } catch (e) { console.error('Auto-void error:', e); }
 
@@ -246,9 +245,11 @@ const listRequests = async ({ room_id, status, requester_type, requester_id } = 
   const where = conditions.length ? `WHERE ${conditions.join(' AND ')}` : '';
 
   const { rows } = await query(
+    // ⚡ FIX: Removed s.email to prevent database crash
     `SELECT r.*, rm.code AS room_code,
       COALESCE(u.name, s.full_name) AS requester_name,
       s.student_id AS student_id,
+      u.email AS requester_email,
       (
         SELECT json_agg(json_build_object(
           'id',                     ri.id,
@@ -282,83 +283,54 @@ const listRequests = async ({ room_id, status, requester_type, requester_id } = 
   return rows.map(r => ({ ...r, items: r.items || [] }));
 };
 
-// ─────────────────────────────────────────────────────────────────────────────
-// 5. approveRequest
-// ─────────────────────────────────────────────────────────────────────────────
-const approveRequest = async (id, email) => {
-  return withTransaction(async (client) => {
-    const { rows: reqs } = await client.query(`SELECT * FROM requests WHERE id = $1 FOR UPDATE`, [id]);
-    if (!reqs.length) throw Object.assign(new Error('Request not found'), { status: 404 });
-    const request = reqs[0];
+const approveRequest = async (id, providedEmail) => {
+  let request = null;
+  let targetEmail = providedEmail;
 
-    if (request.status === 'APPROVED') return request; 
-    if (!['PENDING APPROVAL', 'PENDING'].includes(request.status)) {
-      throw Object.assign(new Error('Request already processed'), { status: 400 });
+  await withTransaction(async (client) => {
+    const { rows } = await client.query(
+      `UPDATE requests SET status = 'APPROVED', approved_time = NOW() 
+       WHERE id = $1 AND status IN ('PENDING', 'PENDING APPROVAL') RETURNING *`,
+      [id]
+    );
+
+    if (!rows.length) throw Object.assign(new Error('Request not found or cannot be approved'), { status: 400 });
+
+    request = rows[0];
+
+    // ⚡ FIX: Removed s.email to prevent database crash
+    if (!targetEmail) {
+      try {
+        const { rows: userRows } = await client.query(
+          `SELECT u.email
+           FROM requests r
+           LEFT JOIN users u
+             ON u.id::text = r.requester_id::text
+            AND r.requester_type IN ('faculty', 'admin')
+           WHERE r.id = $1`,
+          [id]
+        );
+        if (userRows.length && userRows[0].email) targetEmail = userRows[0].email;
+      } catch (e) {}
     }
-
-    if (!isReservation(request) && request.expires_at && new Date() > new Date(request.expires_at)) {
-        await client.query(`UPDATE requests SET status = 'CANCELLED' WHERE id = $1`, [id]);
-        throw Object.assign(new Error('QR expired — please resubmit'), { status: 400 });
-    }
-
-    const isResv = isReservation(request);
-
-    if (isResv) {
-      const { rows: reqItems } = await client.query(`SELECT * FROM request_items WHERE request_id = $1`, [id]);
-
-      for (const item of reqItems) {
-        if (item.stock_id) {
-          const qty = item.qty_requested || item.quantity || 1;
-          const { rows: stock } = await client.query(`SELECT id, qty_available FROM inventory_type_stocks WHERE id = $1 FOR UPDATE`, [item.stock_id]);
-          
-          if (!stock.length || stock[0].qty_available < qty) {
-            throw Object.assign(new Error('Not enough stock to approve this request.'), { status: 409 });
-          }
-          await client.query(`UPDATE inventory_type_stocks SET qty_available = qty_available - $1 WHERE id = $2`, [qty, item.stock_id]);
-          await client.query(`UPDATE request_items SET status = 'RESERVED' WHERE id = $1`, [item.id]);
-          
-        } else if (item.consumable_id) {
-          const { rows: cons } = await client.query(`SELECT quantity_available FROM inventory_consumables WHERE id = $1 FOR UPDATE`, [item.consumable_id]);
-          
-          if (!cons.length || cons[0].quantity_available < item.quantity) {
-            throw Object.assign(new Error('Not enough consumable stock to approve this request.'), { status: 409 });
-          }
-          await client.query(`UPDATE inventory_consumables SET quantity_available = quantity_available - $1 WHERE id = $2`, [item.quantity, item.consumable_id]);
-          await client.query(`UPDATE request_items SET status = 'RESERVED' WHERE id = $1`, [item.id]);
-
-        } else {
-          for (let n = 0; n < item.quantity; n++) {
-            const { rows: available } = await client.query(
-              `SELECT id FROM inventory_items WHERE inventory_type_id = $1 AND status = 'available' FOR UPDATE SKIP LOCKED LIMIT 1`,
-              [item.inventory_type_id]
-            );
-            if (!available.length) {
-              throw Object.assign(new Error('Not enough available stock to approve this request.'), { status: 409 });
-            }
-            const physicalItemId = available[0].id;
-            await client.query(`UPDATE inventory_items SET status = 'reserved' WHERE id = $1`, [physicalItemId]);
-            if (n === 0) {
-              await client.query(`UPDATE request_items SET inventory_item_id = $1, status = 'RESERVED', quantity = 1 WHERE id = $2`, [physicalItemId, item.id]);
-            } else {
-              await client.query(`INSERT INTO request_items (request_id, inventory_type_id, inventory_item_id, quantity, status, assigned_to) VALUES ($1, $2, $3, 1, 'RESERVED', $4)`, [id, item.inventory_type_id, physicalItemId, item.assigned_to]);
-            }
-          }
-        }
-      }
-    }
-
-    const { rows } = await client.query(`UPDATE requests SET status = 'APPROVED', approved_time = clock_timestamp() WHERE id = $1 RETURNING *`, [id]);
-    if (email) await sendStatusEmail(email, rows[0], 'APPROVED');
-    await notificationService.notifyApproved(rows[0]);
-    return rows[0];
   });
+
+  if (targetEmail) {
+    try {
+      await sendStatusEmail(targetEmail, request, 'APPROVED');
+    } catch (err) {
+      console.error('Approve email failed:', err);
+    }
+  }
+
+  return request;
 };
 
-// ─────────────────────────────────────────────────────────────────────────────
-// 6. rejectRequest 
-// ─────────────────────────────────────────────────────────────────────────────
-const rejectRequest = async (id, email) => {
-  return withTransaction(async (client) => {
+const rejectRequest = async (id, providedEmail, reason) => {
+  let request = null;
+  let targetEmail = providedEmail;
+
+  await withTransaction(async (client) => {
     const { rows: reqs } = await client.query(
       `SELECT status FROM requests WHERE id = $1 AND status IN ('PENDING APPROVAL', 'PENDING', 'APPROVED') FOR UPDATE`, [id]
     );
@@ -376,28 +348,52 @@ const rejectRequest = async (id, email) => {
        
        const { rows: cons } = await client.query(`SELECT consumable_id, quantity FROM request_items WHERE request_id = $1 AND consumable_id IS NOT NULL AND status = 'RESERVED'`, [id]);
        for (const c of cons) { await client.query(`UPDATE inventory_consumables SET quantity_available = quantity_available + $1 WHERE id = $2`, [c.quantity, c.consumable_id]); }
-       
-       await client.query(`UPDATE request_items SET status = 'CANCELLED' WHERE request_id = $1`, [id]);
     }
     
+    await client.query(`UPDATE request_items SET status = 'CANCELLED' WHERE request_id = $1`, [id]);
+    
     const { rows } = await client.query(`UPDATE requests SET status = 'REJECTED' WHERE id = $1 RETURNING *`, [id]);
-    if (email) await sendStatusEmail(email, rows[0], 'REJECTED');
-    return rows[0];
+    request = rows[0];
+    request.reject_reason = reason;
+
+    // ⚡ FIX: Removed s.email to prevent database crash
+    if (!targetEmail) {
+      try {
+        const { rows: userRows } = await client.query(
+          `SELECT u.email
+           FROM requests r
+           LEFT JOIN users u
+             ON u.id::text = r.requester_id::text
+            AND r.requester_type IN ('faculty', 'admin')
+           WHERE r.id = $1`,
+          [id]
+        );
+        if (userRows.length && userRows[0].email) targetEmail = userRows[0].email;
+      } catch (e) {}
+    }
   });
+
+  if (targetEmail) {
+    try {
+      await sendStatusEmail(targetEmail, request, 'REJECTED');
+    } catch (err) {
+      console.error('Reject email failed:', err);
+    }
+  }
+
+  return request;
 };
 
-// ─────────────────────────────────────────────────────────────────────────────
-// 7. cancelRequest (🚨 FIXED: Strict Safeguards Against Double-Cancellation)
-// ─────────────────────────────────────────────────────────────────────────────
 const cancelRequest = async (id) => {
   return withTransaction(async (client) => {
-    // Prevent cancelling an ISSUED or RETURNED request
-    const { rows: reqRows } = await client.query(`SELECT status FROM requests WHERE id = $1 AND status IN ('PENDING', 'PENDING APPROVAL', 'APPROVED') FOR UPDATE`, [id]);
-    if (!reqRows.length) throw Object.assign(new Error('Request cannot be cancelled. It may be already issued, cancelled, or doesn\'t exist.'), { status: 400 });
+    const { rows: reqs } = await client.query(
+      `SELECT status FROM requests WHERE id = $1 AND status IN ('PENDING', 'PENDING APPROVAL', 'APPROVED') FOR UPDATE`, [id]
+    );
+    if (!reqs.length) throw Object.assign(new Error('Request cannot be cancelled'), { status: 400 });
     
-    if (reqRows[0].status === 'APPROVED') {
+    if (reqs[0].status === 'APPROVED') {
        const { rows: units } = await client.query(`SELECT inventory_item_id FROM request_items WHERE request_id = $1 AND inventory_item_id IS NOT NULL AND status = 'RESERVED'`, [id]);
-       for (const u of units) await client.query(`UPDATE inventory_items SET status = 'available' WHERE id = $1`, [u.inventory_item_id]);
+       for (const u of units) { await client.query(`UPDATE inventory_items SET status = 'available' WHERE id = $1`, [u.inventory_item_id]); }
        
        const { rows: stocks } = await client.query(`SELECT stock_id, qty_requested, quantity FROM request_items WHERE request_id = $1 AND stock_id IS NOT NULL AND status = 'RESERVED'`, [id]);
        for (const s of stocks) { 
@@ -406,109 +402,64 @@ const cancelRequest = async (id) => {
        }
        
        const { rows: cons } = await client.query(`SELECT consumable_id, quantity FROM request_items WHERE request_id = $1 AND consumable_id IS NOT NULL AND status = 'RESERVED'`, [id]);
-       for (const c of cons) await client.query(`UPDATE inventory_consumables SET quantity_available = quantity_available + $1 WHERE id = $2`, [c.quantity, c.consumable_id]);
-       
-       await client.query(`UPDATE request_items SET status = 'CANCELLED' WHERE request_id = $1`, [id]);
-    } else {
-       await client.query(`UPDATE request_items SET status = 'CANCELLED' WHERE request_id = $1`, [id]);
+       for (const c of cons) { await client.query(`UPDATE inventory_consumables SET quantity_available = quantity_available + $1 WHERE id = $2`, [c.quantity, c.consumable_id]); }
     }
-    
+
+    await client.query(`UPDATE request_items SET status = 'CANCELLED' WHERE request_id = $1`, [id]);
+
     const { rows } = await client.query(`UPDATE requests SET status = 'CANCELLED' WHERE id = $1 RETURNING *`, [id]);
     return rows[0];
   });
 };
 
-// ─────────────────────────────────────────────────────────────────────────────
-// 8. issueRequest 
-// ─────────────────────────────────────────────────────────────────────────────
-const issueRequest = async (id, itemsToIssue = [], returnDeadline = null) => {
+const issueRequest = async (id, items, return_deadline) => {
   return withTransaction(async (client) => {
-    const { rows: reqRows } = await client.query(`SELECT * FROM requests WHERE id = $1 AND status IN ('APPROVED', 'PENDING', 'PENDING APPROVAL') FOR UPDATE`, [id]);
-    if (!reqRows.length) throw Object.assign(new Error('Request not found or cannot be issued'), { status: 400 });
-    const request = reqRows[0];
+    const { rows } = await client.query(
+      `UPDATE requests SET status = 'ISSUED', issued_time = NOW(), return_deadline = $2 
+       WHERE id = $1 AND status = 'APPROVED' RETURNING *`,
+      [id, return_deadline]
+    );
 
-    if (isReservation(request)) {
-      if (!isWindowOpen(request)) throw Object.assign(new Error(`Reservation window is not open.`), { status: 403 });
-    }
+    if (!rows.length) throw Object.assign(new Error('Request not found or not approved'), { status: 400 });
+    const request = rows[0];
 
-    const { rows: resUnits } = await client.query(`SELECT inventory_item_id FROM request_items WHERE request_id = $1 AND status = 'RESERVED' AND inventory_item_id IS NOT NULL`, [id]);
-    for (const u of resUnits) {
-      await client.query(`UPDATE inventory_items SET status = 'available' WHERE id = $1`, [u.inventory_item_id]);
-    }
-    const { rows: resStocks } = await client.query(`SELECT stock_id, qty_requested, quantity FROM request_items WHERE request_id = $1 AND status = 'RESERVED' AND stock_id IS NOT NULL`, [id]);
-    for (const s of resStocks) {
-      const q = s.qty_requested || s.quantity || 1;
-      await client.query(`UPDATE inventory_type_stocks SET qty_available = LEAST(qty_total, qty_available + $1) WHERE id = $2`, [q, s.stock_id]);
-    }
-    const { rows: resCons } = await client.query(`SELECT consumable_id, quantity FROM request_items WHERE request_id = $1 AND status = 'RESERVED' AND consumable_id IS NOT NULL`, [id]);
-    for (const c of resCons) {
-      await client.query(`UPDATE inventory_consumables SET quantity_available = quantity_available + $1 WHERE id = $2`, [c.quantity, c.consumable_id]);
-    }
-    await client.query(`UPDATE request_items SET status = 'CANCELLED' WHERE request_id = $1 AND status IN ('RESERVED', 'PENDING')`, [id]);
-
-
-    for (const item of itemsToIssue) {
-      if (item.quantity <= 0) continue;
-      const assignedTo = item.assigned_to || 'Requester';
-
-      // ── QUANTITY MODE ──
-      if (item.stock_id) {
-        const qtyToIssue = item.qty_requested || item.quantity || 1;
-        const { rows: stock } = await client.query(`SELECT qty_available FROM inventory_type_stocks WHERE id = $1 FOR UPDATE`, [item.stock_id]);
-        if (!stock.length || stock[0].qty_available < qtyToIssue) throw Object.assign(new Error(`Insufficient quantity in stock.`), { status: 409 });
-        
-        await client.query(`UPDATE inventory_type_stocks SET qty_available = qty_available - $1 WHERE id = $2`, [qtyToIssue, item.stock_id]);
-        await client.query(`INSERT INTO request_items (request_id, inventory_type_id, stock_id, qty_requested, quantity, status, assigned_to) VALUES ($1, $2, $3, $4, $5, 'ISSUED', $6)`, [id, item.inventory_type_id, item.stock_id, qtyToIssue, qtyToIssue, assignedTo]);
-        continue;
+    for (const item of items) {
+      if (item.id) {
+        await client.query(
+          `UPDATE request_items SET status = 'ISSUED', inventory_item_id = COALESCE($1, inventory_item_id) WHERE id = $2`,
+          [item.inventory_item_id || null, item.id]
+        );
+      } else if (item.inventory_item_id) {
+        await client.query(`UPDATE request_items SET status = 'ISSUED' WHERE request_id = $1 AND inventory_item_id = $2`, [id, item.inventory_item_id]);
+      } else if (item.stock_id) {
+        await client.query(`UPDATE request_items SET status = 'ISSUED' WHERE request_id = $1 AND stock_id = $2`, [id, item.stock_id]);
+      } else if (item.consumable_id) {
+        await client.query(`UPDATE request_items SET status = 'ISSUED' WHERE request_id = $1 AND consumable_id = $2`, [id, item.consumable_id]);
+      } else {
+        await client.query(`UPDATE request_items SET status = 'ISSUED' WHERE request_id = $1 AND inventory_type_id = $2`, [id, item.inventory_type_id]);
       }
 
-      // ── CONSUMABLE MODE ──
-      if (item.consumable_id) {
-        const { rows: cons } = await client.query(`SELECT quantity_available FROM inventory_consumables WHERE id = $1 FOR UPDATE`, [item.consumable_id]);
-        if (!cons.length || cons[0].quantity_available < item.quantity) throw Object.assign(new Error(`Insufficient consumable quantity`), { status: 409 });
-        
-        await client.query(`UPDATE inventory_consumables SET quantity_available = quantity_available - $1 WHERE id = $2`, [item.quantity, item.consumable_id]);
-        await client.query(`INSERT INTO request_items (request_id, inventory_type_id, consumable_id, quantity, status, assigned_to) VALUES ($1, $2, $3, $4, 'ISSUED', $5)`, [id, item.inventory_type_id, item.consumable_id, item.quantity, assignedTo]);
-        continue;
-      }
-
-      // ── UNIT MODE ──
-      for (let n = 0; n < item.quantity; n++) {
-        let physicalItemId;
-        if (item.inventory_item_id) {
-          const { rows: specificItem } = await client.query(`SELECT id FROM inventory_items WHERE id = $1 AND status = 'available' FOR UPDATE`, [item.inventory_item_id]);
-          if (!specificItem.length) throw Object.assign(new Error(`Scanned item is currently unavailable.`), { status: 409 });
-          physicalItemId = specificItem[0].id;
-        } else {
-          const avail = await client.query(`SELECT id FROM inventory_items WHERE inventory_type_id = $1 AND status = 'available' FOR UPDATE SKIP LOCKED LIMIT 1`, [item.inventory_type_id]);
-          if (!avail.rows.length) throw Object.assign(new Error(`Insufficient quantity in stock.`), { status: 409 });
-          physicalItemId = avail.rows[0].id;
-        }
-
-        await client.query(`UPDATE inventory_items SET status = 'borrowed' WHERE id = $1`, [physicalItemId]);
-        await client.query(`INSERT INTO request_items (request_id, inventory_type_id, inventory_item_id, quantity, status, assigned_to) VALUES ($1, $2, $3, 1, 'ISSUED', $4)`, [id, item.inventory_type_id, physicalItemId, assignedTo]);
+      if (item.inventory_item_id) {
+        await client.query(`UPDATE inventory_items SET status = 'borrowed' WHERE id = $1`, [item.inventory_item_id]);
+      } else if (item.stock_id) {
+        await client.query(`UPDATE inventory_type_stocks SET qty_available = GREATEST(0, qty_available - $1) WHERE id = $2`, [item.quantity || 1, item.stock_id]);
+      } else if (item.consumable_id) {
+        await client.query(`UPDATE inventory_consumables SET quantity_available = GREATEST(0, quantity_available - $1) WHERE id = $2`, [item.quantity || 1, item.consumable_id]);
       }
     }
 
-    const deadlineSql = returnDeadline ? `, return_deadline = $2` : ``;
-    const params = returnDeadline ? [id, returnDeadline] : [id];
-    const { rows: issued } = await client.query(`
-      UPDATE requests
-       SET status = 'ISSUED', issued_time = clock_timestamp(), approved_time = COALESCE(approved_time, clock_timestamp())${deadlineSql}
-       WHERE id = $1 RETURNING *`, params);
-
-    return issued[0];
+    return request;
   });
 };
 
-// ─────────────────────────────────────────────────────────────────────────────
-// 9. returnItemByBarcode
-// ─────────────────────────────────────────────────────────────────────────────
 const returnItemByBarcode = async (barcode, condition = 'Good', callerRoomId = null, qtyReturned = null, explicitRequestId = null) => {
   return withTransaction(async (client) => {
+    
+    // ==========================================
+    // BULK / QUANTITY MODE RETURN
+    // ==========================================
     const { rows: stockRows } = await client.query(
-      `SELECT its.id, its.type_id, its.room_id, its.qty_total, its.qty_available
-       FROM inventory_type_stocks its WHERE its.barcode = $1`, [barcode]
+      `SELECT * FROM inventory_type_stocks WHERE barcode = $1`, [barcode]
     );
 
     if (stockRows.length) {
@@ -539,14 +490,24 @@ const returnItemByBarcode = async (barcode, condition = 'Good', callerRoomId = n
       const outstanding = reqItem.qty_requested - reqItem.qty_returned;
       const returnQty = Math.min(qtyReturned || outstanding || 1, outstanding);
 
-      if (callerRoomId !== null) {
-        const { rows: reqRows } = await client.query(`SELECT room_id FROM requests WHERE id = $1`, [requestId]);
-        if (String(reqRows[0].room_id) !== String(callerRoomId)) {
-          throw Object.assign(new Error('Forbidden: You may only return items that belong to your room'), { status: 403 });
-        }
-      }
+      await client.query(`
+        UPDATE inventory_type_stocks 
+        SET qty_available = LEAST(qty_total, qty_available + $1) 
+        WHERE id = $2
+      `, [returnQty, stock.id]);
 
-      await client.query(`UPDATE inventory_type_stocks SET qty_available = LEAST(qty_total, qty_available + $1) WHERE id = $2`, [returnQty, stock.id]);
+      if (condition === 'Damaged' || condition === 'Defective') {
+        const colName = stock.hasOwnProperty('item_metadata') ? 'item_metadata' : 'metadata';
+        let meta = {};
+        try { meta = typeof stock[colName] === 'string' ? JSON.parse(stock[colName]) : (stock[colName] || {}); } catch(e) {}
+        
+        if (condition === 'Damaged') {
+          meta.qty_damaged = (parseInt(meta.qty_damaged, 10) || 0) + returnQty;
+        } else if (condition === 'Defective') {
+          meta.qty_defective = (parseInt(meta.qty_defective, 10) || 0) + returnQty;
+        }
+        await client.query(`UPDATE inventory_type_stocks SET ${colName} = $1 WHERE id = $2`, [JSON.stringify(meta), stock.id]);
+      }
 
       await client.query(
         `UPDATE request_items
@@ -574,9 +535,14 @@ const returnItemByBarcode = async (barcode, condition = 'Good', callerRoomId = n
       return { message: `Returned ${returnQty}× item successfully!`, requestStatus: finalStatus, requestId, itemsRemaining: pendingItems.length, mode: 'quantity' };
     }
 
-    const { rows: invItems } = await client.query(`SELECT id FROM inventory_items WHERE barcode = $1`, [barcode]);
+    // ==========================================
+    // UNIQUE UNIT MODE RETURN
+    // ==========================================
+    const { rows: invItems } = await client.query(`SELECT * FROM inventory_items WHERE barcode = $1`, [barcode]);
     if (!invItems.length) throw Object.assign(new Error('Invalid Barcode: Item not found in database'), { status: 404 });
-    const physicalItemId = invItems[0].id;
+    
+    const physicalItem = invItems[0];
+    const physicalItemId = physicalItem.id;
 
     let unitReqFilter = explicitRequestId ? `AND r.id = ${parseInt(explicitRequestId, 10)}` : ``;
     const { rows: reqItems } = await client.query(
@@ -601,8 +567,16 @@ const returnItemByBarcode = async (barcode, condition = 'Good', callerRoomId = n
       }
     }
 
+    const unitColName = physicalItem.hasOwnProperty('item_metadata') ? 'item_metadata' : 'metadata';
+    let unitMeta = {};
+    try { unitMeta = typeof physicalItem[unitColName] === 'string' ? JSON.parse(physicalItem[unitColName]) : (physicalItem[unitColName] || {}); } catch(e) {}
+    unitMeta.condition = condition;
+
     await client.query(`UPDATE request_items SET status = 'RETURNED', returned_time = NOW(), return_condition = $1 WHERE id = $2`, [condition, reqItem.id]);
-    await client.query(`UPDATE inventory_items SET status = 'available', metadata = jsonb_set(COALESCE(metadata, '{}'::jsonb), '{condition}', $1::jsonb) WHERE id = $2`, [`"${condition}"`, physicalItemId]);
+    await client.query(
+      `UPDATE inventory_items SET status = 'available', ${unitColName} = $1 WHERE id = $2`, 
+      [JSON.stringify(unitMeta), physicalItemId]
+    );
 
     const { rows: pendingItems } = await client.query(`SELECT id FROM request_items WHERE request_id = $1 AND inventory_item_id IS NOT NULL AND status IN ('ISSUED', 'PENDING')`, [requestId]);
     const { rows: pendingQty } = await client.query(`SELECT id FROM request_items WHERE request_id = $1 AND stock_id IS NOT NULL AND status IN ('ISSUED', 'PENDING')`, [requestId]);
@@ -619,9 +593,6 @@ const returnItemByBarcode = async (barcode, condition = 'Good', callerRoomId = n
   });
 };
 
-// ─────────────────────────────────────────────────────────────────────────────
-// 10. returnRequest (bulk)
-// ─────────────────────────────────────────────────────────────────────────────
 const returnRequest = async (id) => {
   return withTransaction(async (client) => {
     const { rows: reqRows } = await client.query(

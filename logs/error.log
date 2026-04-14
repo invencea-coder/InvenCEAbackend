@@ -1258,3 +1258,346 @@
     at C:\Users\Teacher\Music\invencea\backend\node_modules\pg-pool\index.js:45:11
     at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
     at async getRecentRequests (C:\Users\Teacher\Music\invencea\backend\src\controllers\admin.controller.js:60:22)
+2026-04-09 09:30:41 [error]: Error: Connection terminated due to connection timeout
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async Object.studentLogin (C:\Users\Teacher\Music\invencea\backend\src\services\auth.service.js:94:20)
+    at async studentLogin (C:\Users\Teacher\Music\invencea\backend\src\controllers\auth.controller.js:57:20)
+2026-04-09 10:32:59 [error]: error: syntax error at or near "135"
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async getCalendarEvents (C:\Users\Teacher\Music\invencea\backend\src\controllers\request.controller.js:186:22)
+2026-04-09 10:33:00 [error]: error: syntax error at or near "135"
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async getCalendarEvents (C:\Users\Teacher\Music\invencea\backend\src\controllers\request.controller.js:186:22)
+2026-04-09 10:33:00 [error]: error: syntax error at or near "135"
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async getCalendarEvents (C:\Users\Teacher\Music\invencea\backend\src\controllers\request.controller.js:186:22)
+2026-04-09 10:41:34 [error]: error: syntax error at or near "135"
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async getCalendarEvents (C:\Users\Teacher\Music\invencea\backend\src\controllers\request.controller.js:186:22)
+2026-04-09 10:41:38 [error]: error: syntax error at or near "135"
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async getCalendarEvents (C:\Users\Teacher\Music\invencea\backend\src\controllers\request.controller.js:186:22)
+2026-04-09 10:41:38 [error]: error: syntax error at or near "135"
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async getCalendarEvents (C:\Users\Teacher\Music\invencea\backend\src\controllers\request.controller.js:186:22)
+2026-04-09 10:41:39 [error]: error: syntax error at or near "135"
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async getCalendarEvents (C:\Users\Teacher\Music\invencea\backend\src\controllers\request.controller.js:186:22)
+2026-04-09 10:41:50 [error]: error: syntax error at or near "135"
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async getCalendarEvents (C:\Users\Teacher\Music\invencea\backend\src\controllers\request.controller.js:186:22)
+2026-04-09 10:46:04 [error]: error: syntax error at or near "135"
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async getCalendarEvents (C:\Users\Teacher\Music\invencea\backend\src\controllers\request.controller.js:186:22)
+2026-04-09 10:46:04 [error]: error: syntax error at or near "135"
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async getCalendarEvents (C:\Users\Teacher\Music\invencea\backend\src\controllers\request.controller.js:186:22)
+2026-04-09 10:46:04 [error]: error: syntax error at or near "135"
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async getCalendarEvents (C:\Users\Teacher\Music\invencea\backend\src\controllers\request.controller.js:186:22)
+2026-04-09 10:47:19 [error]: error: syntax error at or near "135"
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async getCalendarEvents (C:\Users\Teacher\Music\invencea\backend\src\controllers\request.controller.js:186:22)
+2026-04-09 10:52:32 [error]: error: syntax error at or near "135"
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async getCalendarEvents (C:\Users\Teacher\Music\invencea\backend\src\controllers\request.controller.js:186:22)
+2026-04-09 10:52:38 [error]: error: syntax error at or near "135"
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async getCalendarEvents (C:\Users\Teacher\Music\invencea\backend\src\controllers\request.controller.js:186:22)
+2026-04-09 10:52:38 [error]: error: syntax error at or near "135"
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async getCalendarEvents (C:\Users\Teacher\Music\invencea\backend\src\controllers\request.controller.js:186:22)
+2026-04-09 10:52:39 [error]: error: syntax error at or near "135"
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async getCalendarEvents (C:\Users\Teacher\Music\invencea\backend\src\controllers\request.controller.js:186:22)
+2026-04-09 10:52:50 [error]: error: syntax error at or near "135"
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async getCalendarEvents (C:\Users\Teacher\Music\invencea\backend\src\controllers\request.controller.js:186:22)
+2026-04-09 11:00:55 [error]: error: syntax error at or near "135"
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async getCalendarEvents (C:\Users\Teacher\Music\invencea\backend\src\controllers\request.controller.js:186:22)
+2026-04-09 11:00:55 [error]: error: syntax error at or near "135"
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async getCalendarEvents (C:\Users\Teacher\Music\invencea\backend\src\controllers\request.controller.js:186:22)
+2026-04-09 11:00:55 [error]: error: syntax error at or near "135"
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async getCalendarEvents (C:\Users\Teacher\Music\invencea\backend\src\controllers\request.controller.js:186:22)
+2026-04-09 11:01:00 [error]: error: syntax error at or near "135"
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async getCalendarEvents (C:\Users\Teacher\Music\invencea\backend\src\controllers\request.controller.js:186:22)
+2026-04-09 11:03:33 [error]: error: syntax error at or near "135"
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async getCalendarEvents (C:\Users\Teacher\Music\invencea\backend\src\controllers\request.controller.js:186:22)
+2026-04-09 11:03:34 [error]: error: syntax error at or near "135"
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async getCalendarEvents (C:\Users\Teacher\Music\invencea\backend\src\controllers\request.controller.js:186:22)
+2026-04-09 11:03:34 [error]: error: syntax error at or near "135"
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async getCalendarEvents (C:\Users\Teacher\Music\invencea\backend\src\controllers\request.controller.js:186:22)
+2026-04-09 11:03:48 [error]: error: syntax error at or near "135"
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async getCalendarEvents (C:\Users\Teacher\Music\invencea\backend\src\controllers\request.controller.js:186:22)
+2026-04-09 11:03:48 [error]: error: syntax error at or near "135"
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async getCalendarEvents (C:\Users\Teacher\Music\invencea\backend\src\controllers\request.controller.js:186:22)
+2026-04-09 11:03:48 [error]: error: syntax error at or near "135"
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async getCalendarEvents (C:\Users\Teacher\Music\invencea\backend\src\controllers\request.controller.js:186:22)
+2026-04-09 11:04:09 [error]: error: syntax error at or near "135"
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async getCalendarEvents (C:\Users\Teacher\Music\invencea\backend\src\controllers\request.controller.js:186:22)
+2026-04-09 11:04:10 [error]: error: syntax error at or near "135"
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async getCalendarEvents (C:\Users\Teacher\Music\invencea\backend\src\controllers\request.controller.js:186:22)
+2026-04-09 11:04:10 [error]: error: syntax error at or near "135"
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async getCalendarEvents (C:\Users\Teacher\Music\invencea\backend\src\controllers\request.controller.js:186:22)
+2026-04-09 11:11:26 [error]: error: syntax error at or near "135"
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async getCalendarEvents (C:\Users\Teacher\Music\invencea\backend\src\controllers\request.controller.js:186:22)
+2026-04-09 11:11:30 [error]: error: syntax error at or near "135"
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async getCalendarEvents (C:\Users\Teacher\Music\invencea\backend\src\controllers\request.controller.js:186:22)
+2026-04-09 11:11:31 [error]: error: syntax error at or near "135"
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async getCalendarEvents (C:\Users\Teacher\Music\invencea\backend\src\controllers\request.controller.js:186:22)
+2026-04-09 11:11:31 [error]: error: syntax error at or near "135"
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async getCalendarEvents (C:\Users\Teacher\Music\invencea\backend\src\controllers\request.controller.js:186:22)
+2026-04-09 11:11:37 [error]: error: syntax error at or near "135"
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async getCalendarEvents (C:\Users\Teacher\Music\invencea\backend\src\controllers\request.controller.js:186:22)
+2026-04-09 23:56:45 [error]: error: syntax error at or near "<"
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async getCalendarEvents (C:\Users\Teacher\Music\invencea\backend\src\controllers\request.controller.js:177:22)
+2026-04-09 23:56:45 [error]: error: syntax error at or near "<"
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async getCalendarEvents (C:\Users\Teacher\Music\invencea\backend\src\controllers\request.controller.js:177:22)
+2026-04-09 23:56:45 [error]: error: syntax error at or near "<"
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async getCalendarEvents (C:\Users\Teacher\Music\invencea\backend\src\controllers\request.controller.js:177:22)
+2026-04-09 23:56:56 [error]: error: syntax error at or near "<"
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async getCalendarEvents (C:\Users\Teacher\Music\invencea\backend\src\controllers\request.controller.js:177:22)
+2026-04-09 23:57:47 [error]: error: syntax error at or near "<"
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async getCalendarEvents (C:\Users\Teacher\Music\invencea\backend\src\controllers\request.controller.js:177:22)
+2026-04-09 23:57:48 [error]: error: syntax error at or near "<"
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async getCalendarEvents (C:\Users\Teacher\Music\invencea\backend\src\controllers\request.controller.js:177:22)
+2026-04-09 23:57:59 [error]: error: syntax error at or near "<"
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async getCalendarEvents (C:\Users\Teacher\Music\invencea\backend\src\controllers\request.controller.js:177:22)
+2026-04-09 23:57:59 [error]: error: syntax error at or near "<"
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async getCalendarEvents (C:\Users\Teacher\Music\invencea\backend\src\controllers\request.controller.js:177:22)
+2026-04-09 23:58:27 [error]: error: syntax error at or near "<"
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async getCalendarEvents (C:\Users\Teacher\Music\invencea\backend\src\controllers\request.controller.js:177:22)
+2026-04-09 23:58:28 [error]: error: syntax error at or near "<"
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async getCalendarEvents (C:\Users\Teacher\Music\invencea\backend\src\controllers\request.controller.js:177:22)
+2026-04-10 00:00:17 [error]: error: column r.room_ancelrequesid does not exist
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async getCalendarEvents (C:\Users\Teacher\Music\invencea\backend\src\controllers\request.controller.js:177:22)
+2026-04-10 00:00:17 [error]: error: column r.room_ancelrequesid does not exist
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async getCalendarEvents (C:\Users\Teacher\Music\invencea\backend\src\controllers\request.controller.js:177:22)
+2026-04-10 00:00:43 [error]: error: column r.room_ancelrequesid does not exist
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async getCalendarEvents (C:\Users\Teacher\Music\invencea\backend\src\controllers\request.controller.js:177:22)
+2026-04-10 00:00:43 [error]: error: column r.room_ancelrequesid does not exist
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async getCalendarEvents (C:\Users\Teacher\Music\invencea\backend\src\controllers\request.controller.js:177:22)
+2026-04-10 07:06:16 [error]: Error: getaddrinfo ENOTFOUND ep-shiny-moon-a1pq3w4f-pooler.ap-southeast-1.aws.neon.tech
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async Object.getMe (C:\Users\Teacher\Music\invencea\backend\src\services\auth.service.js:226:20)
+    at async getMe (C:\Users\Teacher\Music\invencea\backend\src\controllers\auth.controller.js:158:18)
+2026-04-10 07:06:16 [error]: Error: getaddrinfo ENOTFOUND ep-shiny-moon-a1pq3w4f-pooler.ap-southeast-1.aws.neon.tech
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async Object.getMe (C:\Users\Teacher\Music\invencea\backend\src\services\auth.service.js:226:20)
+    at async getMe (C:\Users\Teacher\Music\invencea\backend\src\controllers\auth.controller.js:158:18)
+2026-04-10 08:38:28 [error]: Error: Scanned item is currently unavailable.
+    at C:\Users\Teacher\Music\invencea\backend\src\services\request.service.js:487:57
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async withTransaction (C:\Users\Teacher\Music\invencea\backend\src\config\db.js:44:20)
+    at async issueRequest (C:\Users\Teacher\Music\invencea\backend\src\controllers\request.controller.js:128:18)
+2026-04-10 08:46:34 [error]: Error: Scanned item is currently unavailable.
+    at C:\Users\Teacher\Music\invencea\backend\src\services\request.service.js:487:57
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async withTransaction (C:\Users\Teacher\Music\invencea\backend\src\config\db.js:44:20)
+    at async issueRequest (C:\Users\Teacher\Music\invencea\backend\src\controllers\request.controller.js:128:18)
+2026-04-10 08:51:57 [error]: Error: Scanned item is currently unavailable.
+    at C:\Users\Teacher\Music\invencea\backend\src\services\request.service.js:487:57
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async withTransaction (C:\Users\Teacher\Music\invencea\backend\src\config\db.js:44:20)
+    at async issueRequest (C:\Users\Teacher\Music\invencea\backend\src\controllers\request.controller.js:128:18)
+2026-04-10 08:56:27 [error]: Error: Request not found or cannot be issued
+    at C:\Users\Teacher\Music\invencea\backend\src\services\request.service.js:434:46
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async withTransaction (C:\Users\Teacher\Music\invencea\backend\src\config\db.js:44:20)
+    at async issueRequest (C:\Users\Teacher\Music\invencea\backend\src\controllers\request.controller.js:128:18)
+2026-04-13 20:42:08 [error]: Error: Scanned item is currently unavailable.
+    at C:\Users\Teacher\Music\invencea\backend\src\services\request.service.js:489:55
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async withTransaction (C:\Users\Teacher\Music\invencea\backend\src\config\db.js:44:20)
+    at async issueRequest (C:\Users\Teacher\Music\invencea\backend\src\controllers\request.controller.js:158:18)
+2026-04-13 21:29:51 [error]: error: column "student_id" does not exist
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async createRequest (C:\Users\Teacher\Music\invencea\backend\src\controllers\request.controller.js:28:35)
+2026-04-13 21:30:03 [error]: error: column "student_id" does not exist
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async createRequest (C:\Users\Teacher\Music\invencea\backend\src\controllers\request.controller.js:28:35)
+2026-04-13 21:30:50 [error]: error: column "student_id" does not exist
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async createRequest (C:\Users\Teacher\Music\invencea\backend\src\controllers\request.controller.js:28:35)
+2026-04-13 23:44:42 [error]: Error: getaddrinfo ENOTFOUND ep-shiny-moon-a1pq3w4f-pooler.ap-southeast-1.aws.neon.tech
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async Object.getMe (C:\Users\Teacher\Music\invencea\backend\src\services\auth.service.js:226:20)
+    at async getMe (C:\Users\Teacher\Music\invencea\backend\src\controllers\auth.controller.js:158:18)
+2026-04-13 23:44:42 [error]: Error: getaddrinfo ENOTFOUND ep-shiny-moon-a1pq3w4f-pooler.ap-southeast-1.aws.neon.tech
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async Object.getMe (C:\Users\Teacher\Music\invencea\backend\src\services\auth.service.js:226:20)
+    at async getMe (C:\Users\Teacher\Music\invencea\backend\src\controllers\auth.controller.js:158:18)
+2026-04-14 08:22:06 [error]: error: column "item_metadata" does not exist
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg\lib\client.js:631:17
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async C:\Users\Teacher\Music\invencea\backend\src\services\request.service.js:481:9
+    at async withTransaction (C:\Users\Teacher\Music\invencea\backend\src\config\db.js:44:20)
+    at async returnItemByBarcode (C:\Users\Teacher\Music\invencea\backend\src\controllers\request.controller.js:176:20)
+2026-04-14 08:22:39 [error]: error: column "item_metadata" does not exist
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg\lib\client.js:631:17
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async C:\Users\Teacher\Music\invencea\backend\src\services\request.service.js:481:9
+    at async withTransaction (C:\Users\Teacher\Music\invencea\backend\src\config\db.js:44:20)
+    at async returnItemByBarcode (C:\Users\Teacher\Music\invencea\backend\src\controllers\request.controller.js:176:20)
+2026-04-14 10:50:41 [error]: error: column its.inventory_type_id does not exist
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg\lib\client.js:631:17
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async C:\Users\Teacher\Music\invencea\backend\src\services\request.service.js:391:33
+    at async withTransaction (C:\Users\Teacher\Music\invencea\backend\src\config\db.js:44:20)
+    at async returnItemByBarcode (C:\Users\Teacher\Music\invencea\backend\src\controllers\request.controller.js:176:20)
+2026-04-14 11:31:09 [error]: error: column s.email does not exist
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async Object.listRequests (C:\Users\Teacher\Music\invencea\backend\src\services\request.service.js:245:20)
+    at async listRequests (C:\Users\Teacher\Music\invencea\backend\src\controllers\request.controller.js:112:18)
+2026-04-14 11:31:09 [error]: error: column s.email does not exist
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async Object.listRequests (C:\Users\Teacher\Music\invencea\backend\src\services\request.service.js:245:20)
+    at async listRequests (C:\Users\Teacher\Music\invencea\backend\src\controllers\request.controller.js:112:18)
+2026-04-14 11:31:29 [error]: error: column s.email does not exist
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async Object.listRequests (C:\Users\Teacher\Music\invencea\backend\src\services\request.service.js:245:20)
+    at async listRequests (C:\Users\Teacher\Music\invencea\backend\src\controllers\request.controller.js:112:18)
+2026-04-14 11:31:30 [error]: error: column s.email does not exist
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async Object.listRequests (C:\Users\Teacher\Music\invencea\backend\src\services\request.service.js:245:20)
+    at async listRequests (C:\Users\Teacher\Music\invencea\backend\src\controllers\request.controller.js:112:18)
+2026-04-14 13:37:32 [error]: error: column s.email does not exist
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async Object.listRequests (C:\Users\Teacher\Music\invencea\backend\src\services\request.service.js:246:20)
+    at async listRequests (C:\Users\Teacher\Music\invencea\backend\src\controllers\request.controller.js:112:18)
+2026-04-14 13:38:50 [error]: error: column s.email does not exist
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async Object.listRequests (C:\Users\Teacher\Music\invencea\backend\src\services\request.service.js:246:20)
+    at async listRequests (C:\Users\Teacher\Music\invencea\backend\src\controllers\request.controller.js:112:18)
+2026-04-14 13:38:50 [error]: error: column s.email does not exist
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async Object.listRequests (C:\Users\Teacher\Music\invencea\backend\src\services\request.service.js:246:20)
+    at async listRequests (C:\Users\Teacher\Music\invencea\backend\src\controllers\request.controller.js:112:18)
+2026-04-14 13:38:54 [error]: error: column s.email does not exist
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async Object.listRequests (C:\Users\Teacher\Music\invencea\backend\src\services\request.service.js:246:20)
+    at async listRequests (C:\Users\Teacher\Music\invencea\backend\src\controllers\request.controller.js:112:18)
+2026-04-14 13:38:54 [error]: error: column s.email does not exist
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async Object.listRequests (C:\Users\Teacher\Music\invencea\backend\src\services\request.service.js:246:20)
+    at async listRequests (C:\Users\Teacher\Music\invencea\backend\src\controllers\request.controller.js:112:18)
+2026-04-14 13:43:14 [error]: error: column s.email does not exist
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async Object.listRequests (C:\Users\Teacher\Music\invencea\backend\src\services\request.service.js:246:20)
+    at async listRequests (C:\Users\Teacher\Music\invencea\backend\src\controllers\request.controller.js:109:18)
+2026-04-14 13:43:14 [error]: error: column s.email does not exist
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async Object.listRequests (C:\Users\Teacher\Music\invencea\backend\src\services\request.service.js:246:20)
+    at async listRequests (C:\Users\Teacher\Music\invencea\backend\src\controllers\request.controller.js:109:18)
+2026-04-14 13:50:53 [error]: error: new row for relation "request_items" violates check constraint "request_items_status_check"
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg\lib\client.js:631:17
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async C:\Users\Teacher\Music\invencea\backend\src\services\request.service.js:334:5
+    at async withTransaction (C:\Users\Teacher\Music\invencea\backend\src\config\db.js:44:20)
+    at async rejectRequest (C:\Users\Teacher\Music\invencea\backend\src\controllers\request.controller.js:147:18)
+2026-04-14 13:50:58 [error]: error: new row for relation "request_items" violates check constraint "request_items_status_check"
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg\lib\client.js:631:17
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async C:\Users\Teacher\Music\invencea\backend\src\services\request.service.js:334:5
+    at async withTransaction (C:\Users\Teacher\Music\invencea\backend\src\config\db.js:44:20)
+    at async rejectRequest (C:\Users\Teacher\Music\invencea\backend\src\controllers\request.controller.js:147:18)

@@ -14,15 +14,28 @@ const searchStudents = async (req, res, next) => {
       return success(res, []);
     }
 
-    const { rows } = await query(
-      `SELECT id, full_name, student_id, department 
+    const searchTerm = `%${q.trim()}%`;
+
+    // 1. Search Students
+    const { rows: students } = await query(
+      `SELECT id, full_name, student_id, department, 'student' AS role 
        FROM students 
        WHERE full_name ILIKE $1 OR student_id ILIKE $1 
        LIMIT 10`,
-      [`%${q.trim()}%`]
+      [searchTerm]
     );
 
-    return success(res, rows);
+    // 2. Search Faculty
+    const { rows: faculty } = await query(
+      `SELECT id, name AS full_name, email AS student_id, 'Faculty Member' AS department, 'faculty' AS role 
+       FROM users 
+       WHERE role = 'faculty' AND (name ILIKE $1 OR email ILIKE $1) 
+       LIMIT 5`,
+      [searchTerm]
+    );
+
+    // Combine and return (mapping faculty to match the same keys so the frontend renders easily)
+    return success(res, [...students, ...faculty]);
   } catch (error) {
     next(error);
   }

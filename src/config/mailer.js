@@ -56,26 +56,47 @@ const sendMail = async ({ to, subject, html, text }) => {
   });
 };
 
-// ── Status Email Template (Beautiful HTML with embedded QR) ───────────────────
+// ── Status Email Template ──────────────────────────────────────────────────────
 const sendStatusEmail = async (email, request, status) => {
   if (!email) return;
 
   const isApproved = status === 'APPROVED';
   const themeColor = isApproved ? '#10b981' : '#ef4444';
   const title      = isApproved ? 'Equipment Request Approved' : 'Equipment Request Denied';
-  
+
   // Format the pickup window gracefully
   let pickupText = 'Ready for immediate pickup (Walk-in)';
   if (request.pickup_start && request.pickup_end) {
     pickupText = `${new Date(request.pickup_start).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })} - ${new Date(request.pickup_end).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}`;
   } else if (request.pickup_datetime) {
     const start = new Date(request.pickup_datetime);
-    const end = new Date(start.getTime() + 15 * 60000); // 15 min window
+    const end   = new Date(start.getTime() + 15 * 60000);
     pickupText = `${start.toLocaleString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })} - ${end.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}`;
   }
 
-  // Use a reliable, fast external API to generate the QR code image on the fly
   const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${request.qr_code || request.id}&margin=10`;
+
+  // Fix: build the denial block with the actual reason if present
+  const denialBlock = `
+    <div style="background-color: #fef2f2; border-left: 4px solid #ef4444; border-radius: 0 8px 8px 0; padding: 16px 20px; margin-top: 20px;">
+      ${request.reject_reason ? `
+        <p style="margin: 0 0 6px 0; font-size: 11px; font-weight: 800; color: #991b1b; text-transform: uppercase; letter-spacing: 1px;">Reason for Denial</p>
+        <p style="margin: 0 0 14px 0; font-size: 15px; color: #7f1d1d; font-style: italic;">"${request.reject_reason}"</p>
+      ` : ''}
+      <p style="margin: 0; font-size: 13px; color: #991b1b;">
+        If you have questions, please contact your department administrator or professor.
+      </p>
+    </div>
+  `;
+
+  const approvalBlock = `
+    <div style="text-align: center; margin-top: 10px;">
+      <p style="margin: 0 0 15px 0; font-size: 14px; font-weight: 600; color: #374151;">Present this QR code at the counter to claim your items:</p>
+      <div style="display: inline-block; padding: 15px; background-color: #ffffff; border: 2px solid #e5e7eb; border-radius: 16px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+        <img src="${qrCodeUrl}" alt="Request QR Code" width="200" height="200" style="display: block; margin: 0 auto; border: none;" />
+      </div>
+    </div>
+  `;
 
   const html = `
     <!DOCTYPE html>
@@ -85,7 +106,7 @@ const sendStatusEmail = async (email, request, status) => {
         <tr>
           <td align="center">
             <table width="100%" cellpadding="0" cellspacing="0" style="max-width: 600px; background-color: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);">
-              
+
               <tr>
                 <td style="background-color: ${themeColor}; padding: 30px 20px; text-align: center;">
                   <h1 style="color: #ffffff; margin: 0; font-size: 24px; font-weight: 800; letter-spacing: 0.5px;">${title}</h1>
@@ -94,37 +115,18 @@ const sendStatusEmail = async (email, request, status) => {
 
               <tr>
                 <td style="padding: 40px 30px;">
-                  <p style="margin: 0 0 20px 0; font-size: 16px; color: #374151; line-height: 1.5;">
-                    Hello,
-                  </p>
+                  <p style="margin: 0 0 20px 0; font-size: 16px; color: #374151; line-height: 1.5;">Hello,</p>
                   <p style="margin: 0 0 30px 0; font-size: 16px; color: #374151; line-height: 1.5;">
-                    Your equipment request (<strong>#${request.id}</strong>) for <em>"${request.purpose || 'General Use'}"</em> has been 
+                    Your equipment request (<strong>#${request.id}</strong>) for <em>"${request.purpose || 'General Use'}"</em> has been
                     <strong style="color: ${themeColor};">${status}</strong> by the administration.
                   </p>
 
                   <div style="background-color: #f9fafb; border: 1px solid #e5e7eb; border-radius: 12px; padding: 20px; margin-bottom: 30px;">
-                    <table width="100%" cellpadding="0" cellspacing="0">
-                      <tr>
-                        <td style="padding-bottom: 10px;">
-                          <p style="margin: 0; font-size: 11px; font-weight: bold; color: #6b7280; text-transform: uppercase; letter-spacing: 1px;">Your Pickup Window</p>
-                          <p style="margin: 4px 0 0 0; font-size: 15px; font-weight: 600; color: #111827;">${pickupText}</p>
-                        </td>
-                      </tr>
-                    </table>
+                    <p style="margin: 0 0 4px 0; font-size: 11px; font-weight: bold; color: #6b7280; text-transform: uppercase; letter-spacing: 1px;">Your Pickup Window</p>
+                    <p style="margin: 0; font-size: 15px; font-weight: 600; color: #111827;">${pickupText}</p>
                   </div>
 
-                  ${isApproved ? `
-                  <div style="text-align: center; margin-top: 10px;">
-                    <p style="margin: 0 0 15px 0; font-size: 14px; font-weight: 600; color: #374151;">Present this QR code at the counter to claim your items:</p>
-                    <div style="display: inline-block; padding: 15px; background-color: #ffffff; border: 2px solid #e5e7eb; border-radius: 16px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
-                      <img src="${qrCodeUrl}" alt="Request QR Code" width="200" height="200" style="display: block; margin: 0 auto; border: none;" />
-                    </div>
-                  </div>
-                  ` : `
-                  <div style="background-color: #fef2f2; border-left: 4px solid #ef4444; padding: 15px; margin-top: 20px;">
-                    <p style="margin: 0; font-size: 14px; color: #991b1b;">Please contact your department administrator or professor if you have any questions regarding this denied request.</p>
-                  </div>
-                  `}
+                  ${isApproved ? approvalBlock : denialBlock}
                 </td>
               </tr>
 
