@@ -55,19 +55,8 @@ const autoVoidExpiredRequests = async () => {
 
     for (const req of expired) {
       const id = req.id;
-      
-      const { rows: resUnits } = await client.query(`SELECT inventory_item_id FROM request_items WHERE request_id = $1 AND status = 'RESERVED' AND inventory_item_id IS NOT NULL`, [id]);
-      for (const u of resUnits) await client.query(`UPDATE inventory_items SET status = 'available' WHERE id = $1`, [u.inventory_item_id]);
-      
-      const { rows: resStocks } = await client.query(`SELECT stock_id, qty_requested, quantity FROM request_items WHERE request_id = $1 AND status = 'RESERVED' AND stock_id IS NOT NULL`, [id]);
-      for (const s of resStocks) {
-        const q = s.qty_requested || s.quantity || 1;
-        await client.query(`UPDATE inventory_type_stocks SET qty_available = LEAST(qty_total, qty_available + $1) WHERE id = $2`, [q, s.stock_id]);
-      }
-
-      const { rows: resCons } = await client.query(`SELECT consumable_id, quantity FROM request_items WHERE request_id = $1 AND status = 'RESERVED' AND consumable_id IS NOT NULL`, [id]);
-      for (const c of resCons) await client.query(`UPDATE inventory_consumables SET quantity_available = quantity_available + $1 WHERE id = $2`, [c.quantity, c.consumable_id]);
-      
+      // DANGEROUS CODE REMOVED: Stock is only deducted on ISSUED. 
+      // Restoring stock for APPROVED/PENDING items was creating ghost inventory.
       await client.query(`UPDATE request_items SET status = 'CANCELLED' WHERE request_id = $1`, [id]);
       await client.query(`UPDATE requests SET status = 'CANCELLED' WHERE id = $1`, [id]);
     }
@@ -88,12 +77,12 @@ const createRequest = async ({ requester_type, requester_id, requester_email, ro
     const initialStatus = 'PENDING';
 
     const { rows } = await client.query(
-  `INSERT INTO requests 
-    (requester_type, requester_id, requester_email, room_id, purpose, qr_code, qr_token, 
-     scheduled_time, return_deadline, expires_at, status, pickup_datetime, pickup_start, pickup_end)
-   VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14) RETURNING *`,
-  [requester_type, requester_id, requester_email, room_id || null, purpose || null, groupQr, groupQr, scheduled_time || null, return_deadline || null, expiresAt, initialStatus, pickup_datetime || null, pickup_start || null, pickup_end || null]
-);
+      `INSERT INTO requests 
+        (requester_type, requester_id, requester_email, room_id, purpose, qr_code, qr_token, 
+         scheduled_time, return_deadline, expires_at, status, pickup_datetime, pickup_start, pickup_end)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14) RETURNING *`,
+      [requester_type, requester_id, requester_email, room_id || null, purpose || null, groupQr, groupQr, scheduled_time || null, return_deadline || null, expiresAt, initialStatus, pickup_datetime || null, pickup_start || null, pickup_end || null]
+    );
 
     const request = rows[0];
     request.requester_email = requester_email;
@@ -127,7 +116,6 @@ const createRequest = async ({ requester_type, requester_id, requester_email, ro
 
 const getRequest = async (id) => {
   const { rows } = await query(
-    // ⚡ FIX: Removed s.email to prevent database crash
     `SELECT r.*, rm.code AS room_code,
             COALESCE(u.name, s.full_name) AS requester_name,
             s.student_id AS student_id,
@@ -169,7 +157,6 @@ const getRequestByQR = async (qrCode) => {
   const isNumeric = /^\d+$/.test(qrCode);
 
   const { rows } = await query(
-    // ⚡ FIX: Removed s.email to prevent database crash
     `SELECT r.*, rm.code AS room_code,
             COALESCE(u.name, s.full_name) AS requester_name,
             s.student_id AS student_id,
@@ -245,7 +232,6 @@ const listRequests = async ({ room_id, status, requester_type, requester_id } = 
   const where = conditions.length ? `WHERE ${conditions.join(' AND ')}` : '';
 
   const { rows } = await query(
-    // ⚡ FIX: Removed s.email to prevent database crash
     `SELECT r.*, rm.code AS room_code,
       COALESCE(u.name, s.full_name) AS requester_name,
       s.student_id AS student_id,
@@ -298,17 +284,16 @@ const approveRequest = async (id, providedEmail) => {
 
     request = rows[0];
 
-    // ⚡ FIX: Removed s.email to prevent database crash
     if (!targetEmail) {
-  try {
-    const { rows: reqRows } = await client.query(
-      `SELECT requester_email FROM requests WHERE id = $1`, [id]
-    );
-    if (reqRows.length && reqRows[0].requester_email) {
-        targetEmail = reqRows[0].requester_email;
+      try {
+        const { rows: reqRows } = await client.query(
+          `SELECT requester_email FROM requests WHERE id = $1`, [id]
+        );
+        if (reqRows.length && reqRows[0].requester_email) {
+            targetEmail = reqRows[0].requester_email;
+        }
+      } catch (e) {}
     }
-  } catch (e) {}
-}
   });
 
   if (targetEmail) {
@@ -332,19 +317,7 @@ const rejectRequest = async (id, providedEmail, reason) => {
     );
     if (!reqs.length) throw Object.assign(new Error('Request not found or already processed'), { status: 400 });
     
-    if (reqs[0].status === 'APPROVED') {
-       const { rows: units } = await client.query(`SELECT inventory_item_id FROM request_items WHERE request_id = $1 AND inventory_item_id IS NOT NULL AND status = 'RESERVED'`, [id]);
-       for (const u of units) { await client.query(`UPDATE inventory_items SET status = 'available' WHERE id = $1`, [u.inventory_item_id]); }
-       
-       const { rows: stocks } = await client.query(`SELECT stock_id, qty_requested, quantity FROM request_items WHERE request_id = $1 AND stock_id IS NOT NULL AND status = 'RESERVED'`, [id]);
-       for (const s of stocks) { 
-         const q = s.qty_requested || s.quantity || 1;
-         await client.query(`UPDATE inventory_type_stocks SET qty_available = LEAST(qty_total, qty_available + $1) WHERE id = $2`, [q, s.stock_id]); 
-       }
-       
-       const { rows: cons } = await client.query(`SELECT consumable_id, quantity FROM request_items WHERE request_id = $1 AND consumable_id IS NOT NULL AND status = 'RESERVED'`, [id]);
-       for (const c of cons) { await client.query(`UPDATE inventory_consumables SET quantity_available = quantity_available + $1 WHERE id = $2`, [c.quantity, c.consumable_id]); }
-    }
+    // DANGEROUS CODE REMOVED: APPROVED items are not yet deducted from qty_available.
     
     await client.query(`UPDATE request_items SET status = 'CANCELLED' WHERE request_id = $1`, [id]);
     
@@ -352,17 +325,16 @@ const rejectRequest = async (id, providedEmail, reason) => {
     request = rows[0];
     request.reject_reason = reason;
 
-    // ⚡ FIX: Removed s.email to prevent database crash
     if (!targetEmail) {
-  try {
-    const { rows: reqRows } = await client.query(
-      `SELECT requester_email FROM requests WHERE id = $1`, [id]
-    );
-    if (reqRows.length && reqRows[0].requester_email) {
-        targetEmail = reqRows[0].requester_email;
+      try {
+        const { rows: reqRows } = await client.query(
+          `SELECT requester_email FROM requests WHERE id = $1`, [id]
+        );
+        if (reqRows.length && reqRows[0].requester_email) {
+            targetEmail = reqRows[0].requester_email;
+        }
+      } catch (e) {}
     }
-  } catch (e) {}
-}
   });
 
   if (targetEmail) {
@@ -383,19 +355,7 @@ const cancelRequest = async (id) => {
     );
     if (!reqs.length) throw Object.assign(new Error('Request cannot be cancelled'), { status: 400 });
     
-    if (reqs[0].status === 'APPROVED') {
-       const { rows: units } = await client.query(`SELECT inventory_item_id FROM request_items WHERE request_id = $1 AND inventory_item_id IS NOT NULL AND status = 'RESERVED'`, [id]);
-       for (const u of units) { await client.query(`UPDATE inventory_items SET status = 'available' WHERE id = $1`, [u.inventory_item_id]); }
-       
-       const { rows: stocks } = await client.query(`SELECT stock_id, qty_requested, quantity FROM request_items WHERE request_id = $1 AND stock_id IS NOT NULL AND status = 'RESERVED'`, [id]);
-       for (const s of stocks) { 
-         const q = s.qty_requested || s.quantity || 1;
-         await client.query(`UPDATE inventory_type_stocks SET qty_available = LEAST(qty_total, qty_available + $1) WHERE id = $2`, [q, s.stock_id]); 
-       }
-       
-       const { rows: cons } = await client.query(`SELECT consumable_id, quantity FROM request_items WHERE request_id = $1 AND consumable_id IS NOT NULL AND status = 'RESERVED'`, [id]);
-       for (const c of cons) { await client.query(`UPDATE inventory_consumables SET quantity_available = quantity_available + $1 WHERE id = $2`, [c.quantity, c.consumable_id]); }
-    }
+    // DANGEROUS CODE REMOVED: APPROVED items are not yet deducted from qty_available.
 
     await client.query(`UPDATE request_items SET status = 'CANCELLED' WHERE request_id = $1`, [id]);
 
@@ -431,6 +391,7 @@ const issueRequest = async (id, items, return_deadline) => {
         await client.query(`UPDATE request_items SET status = 'ISSUED' WHERE request_id = $1 AND inventory_type_id = $2`, [id, item.inventory_type_id]);
       }
 
+      // This is the true point of stock deduction
       if (item.inventory_item_id) {
         await client.query(`UPDATE inventory_items SET status = 'borrowed' WHERE id = $1`, [item.inventory_item_id]);
       } else if (item.stock_id) {
@@ -592,6 +553,7 @@ const returnRequest = async (id) => {
     );
     if (!reqRows.length) throw Object.assign(new Error('Request not found or not issued'), { status: 400 });
 
+    // Restore unit items
     const { rows: unitItems } = await client.query(
       `SELECT ri.inventory_item_id FROM request_items ri
        WHERE ri.request_id = $1 AND ri.inventory_item_id IS NOT NULL AND ri.status IN ('ISSUED', 'PENDING')`, [id]
@@ -600,19 +562,44 @@ const returnRequest = async (id) => {
       await client.query(`UPDATE inventory_items SET status = 'available' WHERE id = $1`, [item.inventory_item_id]);
     }
 
+    // Restore quantity items securely (Subtracting whatever was already partially returned)
     const { rows: qtyItems } = await client.query(
-      `SELECT ri.stock_id, ri.qty_requested FROM request_items ri
+      `SELECT ri.stock_id, ri.qty_requested, COALESCE(ri.qty_returned, 0) as qty_returned 
+       FROM request_items ri
        WHERE ri.request_id = $1 AND ri.stock_id IS NOT NULL AND ri.status IN ('ISSUED', 'PENDING')`, [id]
     );
     for (const item of qtyItems) {
-      await client.query(
-        `UPDATE inventory_type_stocks SET qty_available = LEAST(qty_total, qty_available + $1) WHERE id = $2`,
-        [item.qty_requested || 1, item.stock_id]
-      );
+      const outstanding = Math.max(0, (item.qty_requested || 1) - item.qty_returned);
+      if (outstanding > 0) {
+        await client.query(
+          `UPDATE inventory_type_stocks SET qty_available = LEAST(qty_total, qty_available + $1) WHERE id = $2`,
+          [outstanding, item.stock_id]
+        );
+      }
     }
 
+    // Restore consumable items securely
+    const { rows: consItems } = await client.query(
+      `SELECT ri.consumable_id, ri.quantity, COALESCE(ri.qty_returned, 0) as qty_returned 
+       FROM request_items ri
+       WHERE ri.request_id = $1 AND ri.consumable_id IS NOT NULL AND ri.status IN ('ISSUED', 'PENDING')`, [id]
+    );
+    for (const item of consItems) {
+      const outstanding = Math.max(0, (item.quantity || 1) - item.qty_returned);
+      if (outstanding > 0) {
+        await client.query(
+          `UPDATE inventory_consumables SET quantity_available = quantity_available + $1 WHERE id = $2`,
+          [outstanding, item.consumable_id]
+        );
+      }
+    }
+
+    // Ensure qty_returned is explicitly logged as fulfilled
     await client.query(
-      `UPDATE request_items SET status = 'RETURNED', returned_time = NOW()
+      `UPDATE request_items 
+       SET status = 'RETURNED', 
+           returned_time = NOW(),
+           qty_returned = COALESCE(qty_requested, quantity, 1)
        WHERE request_id = $1 AND status IN ('ISSUED', 'PENDING')`, [id]
     );
     
