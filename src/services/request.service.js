@@ -55,10 +55,9 @@ const autoVoidExpiredRequests = async () => {
 
     for (const req of expired) {
       const id = req.id;
-      // DANGEROUS CODE REMOVED: Stock is only deducted on ISSUED. 
-      // Restoring stock for APPROVED/PENDING items was creating ghost inventory.
-      await client.query(`UPDATE request_items SET status = 'CANCELLED' WHERE request_id = $1`, [id]);
-      await client.query(`UPDATE requests SET status = 'CANCELLED' WHERE id = $1`, [id]);
+      // ⚡ FIX: Use 'VOIDED' instead of 'CANCELLED' for system expirations
+      await client.query(`UPDATE request_items SET status = 'VOIDED' WHERE request_id = $1`, [id]);
+      await client.query(`UPDATE requests SET status = 'VOIDED' WHERE id = $1`, [id]);
     }
     return expired.length;
   });

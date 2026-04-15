@@ -273,6 +273,7 @@ const getCalendarEvents = async (req, res) => {
   }
 };
 
+// src/controllers/request.controller.js
 const cancelRequest = async (req, res) => {
   try {
     const requestRow = await requestService.getRequest(req.params.id);
@@ -284,8 +285,9 @@ const cancelRequest = async (req, res) => {
     const data = await requestService.cancelRequest(req.params.id);
     
     const { broadcast } = require('../config/socket');
-    broadcast('request-updated', { id: req.params.id, status: 'CANCELLED' });
-    broadcast('inventory-updated', { message: 'Items freed from cancellation' });
+    // ⚡ FIX: Added room_id so the Admin Dashboard properly filters and auto-removes it
+    broadcast('request-updated', { id: req.params.id, status: 'CANCELLED', room_id: requestRow.room_id });
+    broadcast('inventory-updated', { message: 'Items freed from cancellation', room_id: requestRow.room_id });
 
     return success(res, data, 'Request cancelled successfully');
   } catch (e) { 
