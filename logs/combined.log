@@ -35936,3 +35936,326 @@
 2026-04-14 19:38:44 [http]: 127.0.0.1 - - [14/Apr/2026:11:38:44 +0000] "GET /api/v1/inventory?room_id=2 HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Avast/146.0.34394.179"
 2026-04-14 19:38:44 [http]: 127.0.0.1 - - [14/Apr/2026:11:38:44 +0000] "GET /api/v1/requests/calendar?room_id=2 HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Avast/146.0.34394.179"
 2026-04-14 19:39:26 [debug]: New DB client connected
+2026-04-14 21:33:46 [info]: InvenCEA backend running on port 4000 [development]
+2026-04-14 21:33:48 [info]: Socket connected: 0H328u31MryhuTisAAAC
+2026-04-14 21:33:48 [info]: Socket connected: O-z3b51TwkHzYMbcAAAD
+2026-04-14 21:33:48 [info]: Socket connected: nF6qGG-_6UGreseUAAAF
+2026-04-14 21:34:12 [debug]: New DB client connected
+2026-04-14 21:34:13 [http]: 127.0.0.1 - - [14/Apr/2026:13:34:13 +0000] "POST /api/v1/auth/admin/login HTTP/1.1" 200 456 "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Avast/146.0.34394.179"
+2026-04-14 21:34:13 [http]: 127.0.0.1 - - [14/Apr/2026:13:34:13 +0000] "GET /api/v1/admin/dashboard/stats HTTP/1.1" 200 96 "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Avast/146.0.34394.179"
+2026-04-14 21:34:13 [http]: 127.0.0.1 - - [14/Apr/2026:13:34:13 +0000] "GET /api/v1/admin/dashboard/recent HTTP/1.1" 200 2862 "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Avast/146.0.34394.179"
+2026-04-14 21:34:13 [info]: Socket connected: kNIhuUwpzSGgwfcNAAAK
+2026-04-14 21:34:13 [info]: Socket connected: hU3DfTIDJ7pcjGCcAAAL
+2026-04-14 21:34:13 [http]: 127.0.0.1 - - [14/Apr/2026:13:34:13 +0000] "GET /api/v1/requests?status=PENDING,PENDING+APPROVAL HTTP/1.1" 200 46 "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Avast/146.0.34394.179"
+2026-04-14 21:34:14 [debug]: New DB client connected
+2026-04-14 21:34:14 [debug]: New DB client connected
+2026-04-14 21:34:14 [http]: 127.0.0.1 - - [14/Apr/2026:13:34:14 +0000] "GET /api/v1/requests?status=PENDING,PENDING+APPROVAL HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Avast/146.0.34394.179"
+2026-04-14 21:34:14 [http]: 127.0.0.1 - - [14/Apr/2026:13:34:14 +0000] "GET /api/v1/admin/dashboard/stats HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Avast/146.0.34394.179"
+2026-04-14 21:34:14 [http]: 127.0.0.1 - - [14/Apr/2026:13:34:14 +0000] "GET /api/v1/admin/dashboard/recent HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Avast/146.0.34394.179"
+2026-04-14 21:34:17 [info]: Socket disconnected: kNIhuUwpzSGgwfcNAAAK
+2026-04-14 21:34:17 [info]: Socket disconnected: hU3DfTIDJ7pcjGCcAAAL
+2026-04-14 21:34:17 [info]: Socket connected: k3inpRRzBRjBEF7dAAAN
+2026-04-14 21:34:17 [http]: 127.0.0.1 - - [14/Apr/2026:13:34:17 +0000] "GET /api/v1/reports/issued?room_id=2 HTTP/1.1" 200 7968 "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Avast/146.0.34394.179"
+2026-04-14 21:34:17 [http]: 127.0.0.1 - - [14/Apr/2026:13:34:17 +0000] "GET /api/v1/reports/issued?room_id=2 HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Avast/146.0.34394.179"
+2026-04-14 21:34:17 [http]: 127.0.0.1 - - [14/Apr/2026:13:34:17 +0000] "GET /api/v1/requests?status=PENDING,PENDING+APPROVAL HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Avast/146.0.34394.179"
+2026-04-14 21:35:02 [info]: Socket disconnected: k3inpRRzBRjBEF7dAAAN
+2026-04-14 21:35:46 [debug]: New DB client connected
+2026-04-14 21:36:46 [debug]: New DB client connected
+2026-04-14 21:37:46 [debug]: New DB client connected
+2026-04-14 21:38:46 [debug]: New DB client connected
+2026-04-14 21:39:46 [debug]: New DB client connected
+2026-04-14 21:40:46 [debug]: New DB client connected
+2026-04-14 21:41:46 [debug]: New DB client connected
+2026-04-14 21:42:46 [debug]: New DB client connected
+2026-04-14 21:43:46 [debug]: New DB client connected
+2026-04-14 21:44:46 [debug]: New DB client connected
+2026-04-14 21:45:46 [debug]: New DB client connected
+2026-04-14 21:46:46 [debug]: New DB client connected
+2026-04-14 21:47:46 [debug]: New DB client connected
+2026-04-14 21:48:46 [debug]: New DB client connected
+2026-04-14 21:49:02 [info]: Socket connected: N6cI38_Ht2hj7DBOAAAP
+2026-04-14 21:49:02 [http]: 127.0.0.1 - - [14/Apr/2026:13:49:02 +0000] "GET /api/v1/reports/issued?room_id=2 HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Avast/146.0.34394.179"
+2026-04-14 21:49:08 [info]: Socket disconnected: N6cI38_Ht2hj7DBOAAAP
+2026-04-14 21:49:08 [http]: 127.0.0.1 - - [14/Apr/2026:13:49:08 +0000] "GET /api/v1/auth/me HTTP/1.1" 200 165 "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Avast/146.0.34394.179"
+2026-04-14 21:49:08 [http]: 127.0.0.1 - - [14/Apr/2026:13:49:08 +0000] "GET /api/v1/auth/me HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Avast/146.0.34394.179"
+2026-04-14 21:49:08 [info]: Socket connected: tF24xIC5GRe992cuAAAS
+2026-04-14 21:49:08 [http]: 127.0.0.1 - - [14/Apr/2026:13:49:08 +0000] "GET /api/v1/reports/issued?room_id=2 HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Avast/146.0.34394.179"
+2026-04-14 21:49:08 [http]: 127.0.0.1 - - [14/Apr/2026:13:49:08 +0000] "GET /api/v1/reports/issued?room_id=2 HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Avast/146.0.34394.179"
+2026-04-14 21:49:08 [debug]: New DB client connected
+2026-04-14 21:49:09 [http]: 127.0.0.1 - - [14/Apr/2026:13:49:09 +0000] "GET /api/v1/requests?status=PENDING,PENDING+APPROVAL HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Avast/146.0.34394.179"
+2026-04-14 21:49:09 [http]: 127.0.0.1 - - [14/Apr/2026:13:49:09 +0000] "GET /api/v1/requests?status=PENDING,PENDING+APPROVAL HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Avast/146.0.34394.179"
+2026-04-14 21:49:30 [http]: 127.0.0.1 - - [14/Apr/2026:13:49:30 +0000] "GET /api/v1/reports/issued?room_id=2 HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Avast/146.0.34394.179"
+2026-04-14 21:49:36 [info]: Socket disconnected: tF24xIC5GRe992cuAAAS
+2026-04-14 21:49:36 [http]: 127.0.0.1 - - [14/Apr/2026:13:49:36 +0000] "GET /api/v1/auth/me HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Avast/146.0.34394.179"
+2026-04-14 21:49:36 [http]: 127.0.0.1 - - [14/Apr/2026:13:49:36 +0000] "GET /api/v1/auth/me HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Avast/146.0.34394.179"
+2026-04-14 21:49:36 [http]: 127.0.0.1 - - [14/Apr/2026:13:49:36 +0000] "GET /api/v1/reports/issued?room_id=2 HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Avast/146.0.34394.179"
+2026-04-14 21:49:36 [info]: Socket connected: DhyNy_K5SRIka4qoAAAV
+2026-04-14 21:49:36 [http]: 127.0.0.1 - - [14/Apr/2026:13:49:36 +0000] "GET /api/v1/reports/issued?room_id=2 HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Avast/146.0.34394.179"
+2026-04-14 21:49:36 [http]: 127.0.0.1 - - [14/Apr/2026:13:49:36 +0000] "GET /api/v1/requests?status=PENDING,PENDING+APPROVAL HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Avast/146.0.34394.179"
+2026-04-14 21:49:37 [http]: 127.0.0.1 - - [14/Apr/2026:13:49:37 +0000] "GET /api/v1/requests?status=PENDING,PENDING+APPROVAL HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Avast/146.0.34394.179"
+2026-04-14 21:50:21 [info]: Socket disconnected: DhyNy_K5SRIka4qoAAAV
+2026-04-14 21:50:46 [debug]: New DB client connected
+2026-04-14 21:51:46 [debug]: New DB client connected
+2026-04-14 21:52:46 [debug]: New DB client connected
+2026-04-14 21:53:46 [debug]: New DB client connected
+2026-04-14 21:54:46 [debug]: New DB client connected
+2026-04-14 21:55:35 [info]: Socket disconnected: nF6qGG-_6UGreseUAAAF
+2026-04-14 21:55:46 [debug]: New DB client connected
+2026-04-14 21:56:46 [debug]: New DB client connected
+2026-04-14 21:57:46 [debug]: New DB client connected
+2026-04-14 21:58:46 [debug]: New DB client connected
+2026-04-14 21:59:46 [debug]: New DB client connected
+2026-04-14 22:00:46 [debug]: New DB client connected
+2026-04-14 22:01:46 [debug]: New DB client connected
+2026-04-14 22:02:46 [debug]: New DB client connected
+2026-04-14 22:03:10 [http]: 127.0.0.1 - - [14/Apr/2026:14:03:10 +0000] "GET /api/v1/auth/me HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Avast/146.0.34394.179"
+2026-04-14 22:03:10 [http]: 127.0.0.1 - - [14/Apr/2026:14:03:10 +0000] "GET /api/v1/auth/me HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Avast/146.0.34394.179"
+2026-04-14 22:03:10 [http]: 127.0.0.1 - - [14/Apr/2026:14:03:10 +0000] "GET /api/v1/reports/issued?room_id=2 HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Avast/146.0.34394.179"
+2026-04-14 22:03:10 [info]: Socket connected: s-PXtClsXjt-5CnPAAAY
+2026-04-14 22:03:10 [http]: 127.0.0.1 - - [14/Apr/2026:14:03:10 +0000] "GET /api/v1/reports/issued?room_id=2 HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Avast/146.0.34394.179"
+2026-04-14 22:03:11 [debug]: New DB client connected
+2026-04-14 22:03:11 [http]: 127.0.0.1 - - [14/Apr/2026:14:03:11 +0000] "GET /api/v1/requests?status=PENDING,PENDING+APPROVAL HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Avast/146.0.34394.179"
+2026-04-14 22:03:11 [http]: 127.0.0.1 - - [14/Apr/2026:14:03:11 +0000] "GET /api/v1/requests?status=PENDING,PENDING+APPROVAL HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Avast/146.0.34394.179"
+2026-04-14 22:03:46 [debug]: New DB client connected
+2026-04-14 22:03:55 [info]: Socket disconnected: s-PXtClsXjt-5CnPAAAY
+2026-04-14 22:04:46 [debug]: New DB client connected
+2026-04-14 22:05:46 [debug]: New DB client connected
+2026-04-14 22:06:46 [debug]: New DB client connected
+2026-04-14 22:07:13 [http]: 127.0.0.1 - - [14/Apr/2026:14:07:13 +0000] "GET /api/v1/auth/me HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Avast/146.0.34394.179"
+2026-04-14 22:07:13 [http]: 127.0.0.1 - - [14/Apr/2026:14:07:13 +0000] "GET /api/v1/auth/me HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Avast/146.0.34394.179"
+2026-04-14 22:07:14 [info]: Socket connected: CDKM01UcBBzF0tm1AAAb
+2026-04-14 22:07:14 [http]: 127.0.0.1 - - [14/Apr/2026:14:07:14 +0000] "GET /api/v1/requests?status=PENDING,PENDING+APPROVAL HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Avast/146.0.34394.179"
+2026-04-14 22:07:14 [debug]: New DB client connected
+2026-04-14 22:07:14 [http]: 127.0.0.1 - - [14/Apr/2026:14:07:14 +0000] "GET /api/v1/reports/issued?room_id=2 HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Avast/146.0.34394.179"
+2026-04-14 22:07:14 [http]: 127.0.0.1 - - [14/Apr/2026:14:07:14 +0000] "GET /api/v1/requests?status=PENDING,PENDING+APPROVAL HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Avast/146.0.34394.179"
+2026-04-14 22:07:14 [http]: 127.0.0.1 - - [14/Apr/2026:14:07:14 +0000] "GET /api/v1/reports/issued?room_id=2 HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Avast/146.0.34394.179"
+2026-04-14 22:07:46 [debug]: New DB client connected
+2026-04-14 22:07:58 [info]: Socket disconnected: CDKM01UcBBzF0tm1AAAb
+2026-04-14 22:08:46 [debug]: New DB client connected
+2026-04-14 22:09:46 [debug]: New DB client connected
+2026-04-14 22:10:34 [info]: Socket connected: zJ0ob6EIvHPkoPlxAAAd
+2026-04-14 22:10:34 [debug]: New DB client connected
+2026-04-14 22:10:35 [http]: 127.0.0.1 - - [14/Apr/2026:14:10:35 +0000] "GET /api/v1/reports/issued?room_id=2 HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Avast/146.0.34394.179"
+2026-04-14 22:10:35 [info]: Socket disconnected: zJ0ob6EIvHPkoPlxAAAd
+2026-04-14 22:10:35 [http]: 127.0.0.1 - - [14/Apr/2026:14:10:35 +0000] "GET /api/v1/auth/me HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Avast/146.0.34394.179"
+2026-04-14 22:10:35 [http]: 127.0.0.1 - - [14/Apr/2026:14:10:35 +0000] "GET /api/v1/auth/me HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Avast/146.0.34394.179"
+2026-04-14 22:10:35 [info]: Socket connected: Gaa-urcAuJKVCOv1AAAg
+2026-04-14 22:10:36 [http]: 127.0.0.1 - - [14/Apr/2026:14:10:36 +0000] "GET /api/v1/reports/issued?room_id=2 HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Avast/146.0.34394.179"
+2026-04-14 22:10:36 [http]: 127.0.0.1 - - [14/Apr/2026:14:10:36 +0000] "GET /api/v1/reports/issued?room_id=2 HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Avast/146.0.34394.179"
+2026-04-14 22:10:36 [debug]: New DB client connected
+2026-04-14 22:10:36 [http]: 127.0.0.1 - - [14/Apr/2026:14:10:36 +0000] "GET /api/v1/requests?status=PENDING,PENDING+APPROVAL HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Avast/146.0.34394.179"
+2026-04-14 22:10:36 [http]: 127.0.0.1 - - [14/Apr/2026:14:10:36 +0000] "GET /api/v1/requests?status=PENDING,PENDING+APPROVAL HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Avast/146.0.34394.179"
+2026-04-14 22:11:20 [info]: Socket disconnected: Gaa-urcAuJKVCOv1AAAg
+2026-04-14 22:11:46 [debug]: New DB client connected
+2026-04-14 22:12:46 [debug]: New DB client connected
+2026-04-14 22:13:46 [debug]: New DB client connected
+2026-04-14 22:13:51 [http]: 127.0.0.1 - - [14/Apr/2026:14:13:51 +0000] "GET /api/v1/auth/me HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Avast/146.0.34394.179"
+2026-04-14 22:13:51 [http]: 127.0.0.1 - - [14/Apr/2026:14:13:51 +0000] "GET /api/v1/auth/me HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Avast/146.0.34394.179"
+2026-04-14 22:13:51 [info]: Socket connected: T2-RxuJGb2PzNpDvAAAj
+2026-04-14 22:13:51 [http]: 127.0.0.1 - - [14/Apr/2026:14:13:51 +0000] "GET /api/v1/requests?status=PENDING,PENDING+APPROVAL HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Avast/146.0.34394.179"
+2026-04-14 22:13:51 [debug]: New DB client connected
+2026-04-14 22:13:52 [http]: 127.0.0.1 - - [14/Apr/2026:14:13:52 +0000] "GET /api/v1/reports/issued?room_id=2 HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Avast/146.0.34394.179"
+2026-04-14 22:13:52 [http]: 127.0.0.1 - - [14/Apr/2026:14:13:52 +0000] "GET /api/v1/requests?status=PENDING,PENDING+APPROVAL HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Avast/146.0.34394.179"
+2026-04-14 22:13:52 [http]: 127.0.0.1 - - [14/Apr/2026:14:13:52 +0000] "GET /api/v1/reports/issued?room_id=2 HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Avast/146.0.34394.179"
+2026-04-14 22:14:36 [info]: Socket disconnected: T2-RxuJGb2PzNpDvAAAj
+2026-04-14 22:14:46 [debug]: New DB client connected
+2026-04-14 22:15:46 [debug]: New DB client connected
+2026-04-14 22:16:46 [debug]: New DB client connected
+2026-04-14 22:17:32 [debug]: New DB client connected
+2026-04-14 22:17:32 [http]: 127.0.0.1 - - [14/Apr/2026:14:17:32 +0000] "GET /api/v1/auth/me HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Avast/146.0.34394.179"
+2026-04-14 22:17:32 [http]: 127.0.0.1 - - [14/Apr/2026:14:17:32 +0000] "GET /api/v1/auth/me HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Avast/146.0.34394.179"
+2026-04-14 22:17:32 [info]: Socket connected: YP0qff7i8PZ21M7GAAAm
+2026-04-14 22:17:32 [debug]: New DB client connected
+2026-04-14 22:17:33 [debug]: New DB client connected
+2026-04-14 22:17:33 [http]: 127.0.0.1 - - [14/Apr/2026:14:17:33 +0000] "GET /api/v1/reports/issued?room_id=2 HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Avast/146.0.34394.179"
+2026-04-14 22:17:33 [http]: 127.0.0.1 - - [14/Apr/2026:14:17:33 +0000] "GET /api/v1/reports/issued?room_id=2 HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Avast/146.0.34394.179"
+2026-04-14 22:17:33 [http]: 127.0.0.1 - - [14/Apr/2026:14:17:33 +0000] "GET /api/v1/requests?status=PENDING,PENDING+APPROVAL HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Avast/146.0.34394.179"
+2026-04-14 22:17:33 [http]: 127.0.0.1 - - [14/Apr/2026:14:17:33 +0000] "GET /api/v1/requests?status=PENDING,PENDING+APPROVAL HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Avast/146.0.34394.179"
+2026-04-14 22:18:17 [info]: Socket disconnected: YP0qff7i8PZ21M7GAAAm
+2026-04-14 22:18:46 [debug]: New DB client connected
+2026-04-14 22:19:46 [debug]: New DB client connected
+2026-04-14 22:20:46 [debug]: New DB client connected
+2026-04-14 22:21:46 [debug]: New DB client connected
+2026-04-14 22:22:46 [debug]: New DB client connected
+2026-04-14 22:23:46 [debug]: New DB client connected
+2026-04-14 22:24:46 [debug]: New DB client connected
+2026-04-14 22:25:46 [debug]: New DB client connected
+2026-04-14 22:26:46 [debug]: New DB client connected
+2026-04-14 22:27:46 [debug]: New DB client connected
+2026-04-14 22:28:46 [debug]: New DB client connected
+2026-04-14 22:29:46 [debug]: New DB client connected
+2026-04-14 22:30:46 [debug]: New DB client connected
+2026-04-14 22:31:46 [debug]: New DB client connected
+2026-04-14 22:32:46 [debug]: New DB client connected
+2026-04-14 22:33:46 [debug]: New DB client connected
+2026-04-14 22:34:46 [debug]: New DB client connected
+2026-04-14 22:35:46 [debug]: New DB client connected
+2026-04-14 22:36:46 [debug]: New DB client connected
+2026-04-14 22:37:46 [debug]: New DB client connected
+2026-04-14 22:38:46 [debug]: New DB client connected
+2026-04-14 22:39:46 [debug]: New DB client connected
+2026-04-14 22:40:46 [debug]: New DB client connected
+2026-04-14 22:41:46 [debug]: New DB client connected
+2026-04-14 22:42:46 [debug]: New DB client connected
+2026-04-14 22:43:46 [debug]: New DB client connected
+2026-04-14 22:44:46 [debug]: New DB client connected
+2026-04-14 22:45:46 [debug]: New DB client connected
+2026-04-14 22:46:46 [debug]: New DB client connected
+2026-04-14 22:47:47 [debug]: New DB client connected
+2026-04-14 22:48:46 [debug]: New DB client connected
+2026-04-14 22:49:46 [debug]: New DB client connected
+2026-04-14 22:50:15 [info]: Socket connected: UZoaCeZye-2hfz33AAAo
+2026-04-14 22:50:19 [info]: Socket disconnected: UZoaCeZye-2hfz33AAAo
+2026-04-14 22:50:35 [debug]: New DB client connected
+2026-04-14 22:50:35 [http]: 127.0.0.1 - - [14/Apr/2026:14:50:35 +0000] "GET /api/v1/auth/me HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Avast/146.0.34394.179"
+2026-04-14 22:50:35 [http]: 127.0.0.1 - - [14/Apr/2026:14:50:35 +0000] "GET /api/v1/auth/me HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Avast/146.0.34394.179"
+2026-04-14 22:50:35 [http]: 127.0.0.1 - - [14/Apr/2026:14:50:35 +0000] "GET /api/v1/reports/issued?room_id=2 HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Avast/146.0.34394.179"
+2026-04-14 22:50:35 [info]: Socket connected: r9E8YCD8xeEt7upqAAAr
+2026-04-14 22:50:35 [http]: 127.0.0.1 - - [14/Apr/2026:14:50:35 +0000] "GET /api/v1/reports/issued?room_id=2 HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Avast/146.0.34394.179"
+2026-04-14 22:50:35 [debug]: New DB client connected
+2026-04-14 22:50:35 [http]: 127.0.0.1 - - [14/Apr/2026:14:50:35 +0000] "GET /api/v1/requests?status=PENDING,PENDING+APPROVAL HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Avast/146.0.34394.179"
+2026-04-14 22:50:36 [http]: 127.0.0.1 - - [14/Apr/2026:14:50:36 +0000] "GET /api/v1/requests?status=PENDING,PENDING+APPROVAL HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Avast/146.0.34394.179"
+2026-04-14 22:50:37 [info]: Socket disconnected: r9E8YCD8xeEt7upqAAAr
+2026-04-14 22:50:37 [info]: Socket connected: z-8heQL0DTq1tscMAAAt
+2026-04-14 22:50:37 [http]: 127.0.0.1 - - [14/Apr/2026:14:50:37 +0000] "GET /api/v1/admin/rooms HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Avast/146.0.34394.179"
+2026-04-14 22:50:37 [http]: 127.0.0.1 - - [14/Apr/2026:14:50:37 +0000] "GET /api/v1/admin/rooms HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Avast/146.0.34394.179"
+2026-04-14 22:50:37 [http]: 127.0.0.1 - - [14/Apr/2026:14:50:37 +0000] "GET /api/v1/requests?status=PENDING,PENDING+APPROVAL HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Avast/146.0.34394.179"
+2026-04-14 22:51:12 [http]: 127.0.0.1 - - [14/Apr/2026:14:51:12 +0000] "GET /api/v1/admin/rooms HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Avast/146.0.34394.179"
+2026-04-14 22:51:19 [info]: Socket disconnected: z-8heQL0DTq1tscMAAAt
+2026-04-14 22:51:19 [http]: 127.0.0.1 - - [14/Apr/2026:14:51:19 +0000] "GET /api/v1/admin/rooms HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Avast/146.0.34394.179"
+2026-04-14 22:51:19 [http]: 127.0.0.1 - - [14/Apr/2026:14:51:19 +0000] "GET /api/v1/requests?status=PENDING,PENDING+APPROVAL HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Avast/146.0.34394.179"
+2026-04-14 22:51:19 [info]: Socket connected: lekeSE3QmG7tx5kQAAAx
+2026-04-14 22:51:19 [info]: Socket connected: S7W9-K_OewCAWNGQAAAy
+2026-04-14 22:51:19 [info]: Socket connected: UtYHGoe5s4jlpRuCAAAz
+2026-04-14 22:51:19 [info]: Socket disconnected: lekeSE3QmG7tx5kQAAAx
+2026-04-14 22:51:20 [http]: 127.0.0.1 - - [14/Apr/2026:14:51:20 +0000] "GET /api/v1/requests?status=ISSUED,PARTIALLY+RETURNED HTTP/1.1" 200 46 "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Avast/146.0.34394.179"
+2026-04-14 22:51:20 [debug]: New DB client connected
+2026-04-14 22:51:20 [http]: 127.0.0.1 - - [14/Apr/2026:14:51:20 +0000] "GET /api/v1/admin/rooms HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Avast/146.0.34394.179"
+2026-04-14 22:51:20 [http]: 127.0.0.1 - - [14/Apr/2026:14:51:20 +0000] "GET /api/v1/requests?status=ISSUED,PARTIALLY+RETURNED HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Avast/146.0.34394.179"
+2026-04-14 22:51:20 [info]: Socket disconnected: S7W9-K_OewCAWNGQAAAy
+2026-04-14 22:51:20 [info]: Socket connected: 25U9WkKAc7AotbVoAAA1
+2026-04-14 22:51:20 [info]: Socket disconnected: UtYHGoe5s4jlpRuCAAAz
+2026-04-14 22:51:20 [http]: 127.0.0.1 - - [14/Apr/2026:14:51:20 +0000] "GET /api/v1/reports/issued?room_id=2 HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Avast/146.0.34394.179"
+2026-04-14 22:51:20 [http]: 127.0.0.1 - - [14/Apr/2026:14:51:20 +0000] "GET /api/v1/reports/issued?room_id=2 HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Avast/146.0.34394.179"
+2026-04-14 22:51:20 [http]: 127.0.0.1 - - [14/Apr/2026:14:51:20 +0000] "GET /api/v1/requests?status=PENDING,PENDING+APPROVAL HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Avast/146.0.34394.179"
+2026-04-14 22:51:21 [info]: Socket disconnected: 25U9WkKAc7AotbVoAAA1
+2026-04-14 22:51:21 [info]: Socket connected: w5-brY-u-Z01f6mxAAA5
+2026-04-14 22:51:21 [info]: Socket connected: OI3Kd0tK5wymb1eAAAA6
+2026-04-14 22:51:21 [info]: Socket connected: vL07deoE57EPNcOcAAA7
+2026-04-14 22:51:21 [http]: 127.0.0.1 - - [14/Apr/2026:14:51:21 +0000] "GET /api/v1/admin/rooms HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Avast/146.0.34394.179"
+2026-04-14 22:51:21 [http]: 127.0.0.1 - - [14/Apr/2026:14:51:21 +0000] "GET /api/v1/admin/rooms HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Avast/146.0.34394.179"
+2026-04-14 22:51:21 [info]: Socket disconnected: w5-brY-u-Z01f6mxAAA5
+2026-04-14 22:51:21 [http]: 127.0.0.1 - - [14/Apr/2026:14:51:21 +0000] "GET /api/v1/requests?status=PENDING,PENDING+APPROVAL HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Avast/146.0.34394.179"
+2026-04-14 22:51:22 [debug]: New DB client connected
+2026-04-14 22:51:22 [http]: 127.0.0.1 - - [14/Apr/2026:14:51:22 +0000] "GET /api/v1/requests?status=ISSUED,PARTIALLY+RETURNED HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Avast/146.0.34394.179"
+2026-04-14 22:51:22 [info]: Socket disconnected: OI3Kd0tK5wymb1eAAAA6
+2026-04-14 22:51:22 [http]: 127.0.0.1 - - [14/Apr/2026:14:51:22 +0000] "GET /api/v1/admin/rooms HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Avast/146.0.34394.179"
+2026-04-14 22:51:22 [info]: Socket connected: 1FXJn6f1SghOj22nAAA_
+2026-04-14 22:51:22 [info]: Socket connected: 6-HOAi_-sobxhi1UAABA
+2026-04-14 22:51:22 [info]: Socket connected: QK6PgqL7hITlc6zjAABB
+2026-04-14 22:51:22 [info]: Socket disconnected: vL07deoE57EPNcOcAAA7
+2026-04-14 22:51:22 [http]: 127.0.0.1 - - [14/Apr/2026:14:51:22 +0000] "GET /api/v1/admin/rooms HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Avast/146.0.34394.179"
+2026-04-14 22:51:22 [http]: 127.0.0.1 - - [14/Apr/2026:14:51:22 +0000] "GET /api/v1/requests?status=ISSUED,PARTIALLY+RETURNED HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Avast/146.0.34394.179"
+2026-04-14 22:51:22 [http]: 127.0.0.1 - - [14/Apr/2026:14:51:22 +0000] "GET /api/v1/requests?status=PENDING,PENDING+APPROVAL HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Avast/146.0.34394.179"
+2026-04-14 22:51:22 [debug]: New DB client connected
+2026-04-14 22:51:22 [debug]: New DB client connected
+2026-04-14 22:51:22 [debug]: New DB client connected
+2026-04-14 22:51:22 [debug]: New DB client connected
+2026-04-14 22:51:22 [debug]: New DB client connected
+2026-04-14 22:51:22 [http]: 127.0.0.1 - - [14/Apr/2026:14:51:22 +0000] "GET /api/v1/requests/calendar?room_id=2 HTTP/1.1" 200 26 "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Avast/146.0.34394.179"
+2026-04-14 22:51:22 [info]: Socket disconnected: 1FXJn6f1SghOj22nAAA_
+2026-04-14 22:51:22 [http]: 127.0.0.1 - - [14/Apr/2026:14:51:22 +0000] "GET /api/v1/requests/calendar?room_id=2 HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Avast/146.0.34394.179"
+2026-04-14 22:51:22 [http]: 127.0.0.1 - - [14/Apr/2026:14:51:22 +0000] "GET /api/v1/inventory?room_id=2 HTTP/1.1" 200 15970 "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Avast/146.0.34394.179"
+2026-04-14 22:51:22 [http]: 127.0.0.1 - - [14/Apr/2026:14:51:22 +0000] "GET /api/v1/inventory?room_id=2 HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Avast/146.0.34394.179"
+2026-04-14 22:51:23 [http]: 127.0.0.1 - - [14/Apr/2026:14:51:23 +0000] "GET /api/v1/requests?room_id=2 HTTP/1.1" 200 19569 "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Avast/146.0.34394.179"
+2026-04-14 22:51:23 [info]: Socket disconnected: 6-HOAi_-sobxhi1UAABA
+2026-04-14 22:51:23 [info]: Socket connected: B3FsKULmO01hFKi8AABD
+2026-04-14 22:51:23 [http]: 127.0.0.1 - - [14/Apr/2026:14:51:23 +0000] "GET /api/v1/admin/rooms HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Avast/146.0.34394.179"
+2026-04-14 22:51:23 [info]: Socket disconnected: QK6PgqL7hITlc6zjAABB
+2026-04-14 22:51:23 [http]: 127.0.0.1 - - [14/Apr/2026:14:51:23 +0000] "GET /api/v1/admin/rooms HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Avast/146.0.34394.179"
+2026-04-14 22:51:23 [http]: 127.0.0.1 - - [14/Apr/2026:14:51:23 +0000] "GET /api/v1/inventory HTTP/1.1" 200 15970 "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Avast/146.0.34394.179"
+2026-04-14 22:51:23 [http]: 127.0.0.1 - - [14/Apr/2026:14:51:23 +0000] "GET /api/v1/inventory HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Avast/146.0.34394.179"
+2026-04-14 22:51:23 [http]: 127.0.0.1 - - [14/Apr/2026:14:51:23 +0000] "GET /api/v1/requests?status=PENDING,PENDING+APPROVAL HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Avast/146.0.34394.179"
+2026-04-14 22:51:23 [http]: 127.0.0.1 - - [14/Apr/2026:14:51:23 +0000] "GET /api/v1/requests?room_id=2 HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Avast/146.0.34394.179"
+2026-04-14 22:51:24 [info]: Socket disconnected: B3FsKULmO01hFKi8AABD
+2026-04-14 22:51:24 [info]: Socket connected: sIsBR0ropxSk7wPnAABH
+2026-04-14 22:51:24 [info]: Socket connected: U1GLlpREFoeHzt7TAABI
+2026-04-14 22:51:24 [http]: 127.0.0.1 - - [14/Apr/2026:14:51:24 +0000] "GET /api/v1/admin/dashboard/recent HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Avast/146.0.34394.179"
+2026-04-14 22:51:24 [http]: 127.0.0.1 - - [14/Apr/2026:14:51:24 +0000] "GET /api/v1/admin/dashboard/stats HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Avast/146.0.34394.179"
+2026-04-14 22:51:24 [http]: 127.0.0.1 - - [14/Apr/2026:14:51:24 +0000] "GET /api/v1/admin/dashboard/recent HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Avast/146.0.34394.179"
+2026-04-14 22:51:24 [http]: 127.0.0.1 - - [14/Apr/2026:14:51:24 +0000] "GET /api/v1/admin/dashboard/stats HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Avast/146.0.34394.179"
+2026-04-14 22:51:24 [http]: 127.0.0.1 - - [14/Apr/2026:14:51:24 +0000] "GET /api/v1/requests?status=PENDING,PENDING+APPROVAL HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Avast/146.0.34394.179"
+2026-04-14 22:51:26 [info]: Socket disconnected: U1GLlpREFoeHzt7TAABI
+2026-04-14 22:51:26 [info]: Socket disconnected: sIsBR0ropxSk7wPnAABH
+2026-04-14 22:51:26 [info]: Socket connected: 3jZyt6AMForGVp34AABK
+2026-04-14 22:51:26 [http]: 127.0.0.1 - - [14/Apr/2026:14:51:26 +0000] "GET /api/v1/admin/rooms HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Avast/146.0.34394.179"
+2026-04-14 22:51:26 [http]: 127.0.0.1 - - [14/Apr/2026:14:51:26 +0000] "GET /api/v1/admin/rooms HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Avast/146.0.34394.179"
+2026-04-14 22:51:26 [http]: 127.0.0.1 - - [14/Apr/2026:14:51:26 +0000] "GET /api/v1/requests?status=PENDING,PENDING+APPROVAL HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Avast/146.0.34394.179"
+2026-04-14 22:52:47 [debug]: New DB client connected
+2026-04-14 22:53:47 [debug]: New DB client connected
+2026-04-14 22:54:47 [debug]: New DB client connected
+2026-04-14 22:55:47 [debug]: New DB client connected
+2026-04-14 22:56:33 [debug]: New DB client connected
+2026-04-14 22:56:33 [http]: 127.0.0.1 - - [14/Apr/2026:14:56:33 +0000] "GET /api/v1/admin/rooms HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Avast/146.0.34394.179"
+2026-04-14 22:56:57 [http]: 127.0.0.1 - - [14/Apr/2026:14:56:57 +0000] "GET /api/v1/admin/rooms HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Avast/146.0.34394.179"
+2026-04-14 22:57:47 [debug]: New DB client connected
+2026-04-14 22:57:47 [info]: Socket disconnected: 3jZyt6AMForGVp34AABK
+2026-04-14 22:57:47 [info]: Socket connected: UOvLW2lF6blvjVu_AABO
+2026-04-14 22:57:47 [info]: Socket connected: d6m51YyoO88KvBKVAABP
+2026-04-14 22:57:47 [http]: 127.0.0.1 - - [14/Apr/2026:14:57:47 +0000] "GET /api/v1/requests/calendar?room_id=2 HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Avast/146.0.34394.179"
+2026-04-14 22:57:47 [debug]: New DB client connected
+2026-04-14 22:57:47 [debug]: New DB client connected
+2026-04-14 22:57:47 [debug]: New DB client connected
+2026-04-14 22:57:47 [debug]: New DB client connected
+2026-04-14 22:57:47 [debug]: New DB client connected
+2026-04-14 22:57:47 [debug]: New DB client connected
+2026-04-14 22:57:47 [http]: 127.0.0.1 - - [14/Apr/2026:14:57:47 +0000] "GET /api/v1/admin/rooms HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Avast/146.0.34394.179"
+2026-04-14 22:57:47 [http]: 127.0.0.1 - - [14/Apr/2026:14:57:47 +0000] "GET /api/v1/inventory?room_id=2 HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Avast/146.0.34394.179"
+2026-04-14 22:57:47 [http]: 127.0.0.1 - - [14/Apr/2026:14:57:47 +0000] "GET /api/v1/requests/calendar?room_id=2 HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Avast/146.0.34394.179"
+2026-04-14 22:57:48 [http]: 127.0.0.1 - - [14/Apr/2026:14:57:48 +0000] "GET /api/v1/admin/rooms HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Avast/146.0.34394.179"
+2026-04-14 22:57:48 [http]: 127.0.0.1 - - [14/Apr/2026:14:57:48 +0000] "GET /api/v1/inventory?room_id=2 HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Avast/146.0.34394.179"
+2026-04-14 22:57:48 [http]: 127.0.0.1 - - [14/Apr/2026:14:57:48 +0000] "GET /api/v1/requests?status=PENDING,PENDING+APPROVAL HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Avast/146.0.34394.179"
+2026-04-14 22:57:48 [http]: 127.0.0.1 - - [14/Apr/2026:14:57:48 +0000] "GET /api/v1/requests?room_id=2 HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Avast/146.0.34394.179"
+2026-04-14 22:57:48 [http]: 127.0.0.1 - - [14/Apr/2026:14:57:48 +0000] "GET /api/v1/requests?room_id=2 HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Avast/146.0.34394.179"
+2026-04-14 22:57:49 [info]: Socket disconnected: UOvLW2lF6blvjVu_AABO
+2026-04-14 22:57:49 [info]: Socket connected: ydqpHeNXpyU_lfq2AABT
+2026-04-14 22:57:49 [info]: Socket connected: GltK7WAKgZpWzeeIAABU
+2026-04-14 22:57:49 [info]: Socket connected: 8mIBya9LRmjS-9AZAABV
+2026-04-14 22:57:49 [http]: 127.0.0.1 - - [14/Apr/2026:14:57:49 +0000] "GET /api/v1/admin/rooms HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Avast/146.0.34394.179"
+2026-04-14 22:57:49 [info]: Socket disconnected: d6m51YyoO88KvBKVAABP
+2026-04-14 22:57:49 [http]: 127.0.0.1 - - [14/Apr/2026:14:57:49 +0000] "GET /api/v1/admin/rooms HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Avast/146.0.34394.179"
+2026-04-14 22:57:49 [info]: Socket disconnected: ydqpHeNXpyU_lfq2AABT
+2026-04-14 22:57:49 [http]: 127.0.0.1 - - [14/Apr/2026:14:57:49 +0000] "GET /api/v1/requests?status=ISSUED,PARTIALLY+RETURNED HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Avast/146.0.34394.179"
+2026-04-14 22:57:49 [http]: 127.0.0.1 - - [14/Apr/2026:14:57:49 +0000] "GET /api/v1/requests?status=PENDING,PENDING+APPROVAL HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Avast/146.0.34394.179"
+2026-04-14 22:57:49 [http]: 127.0.0.1 - - [14/Apr/2026:14:57:49 +0000] "GET /api/v1/requests?status=ISSUED,PARTIALLY+RETURNED HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Avast/146.0.34394.179"
+2026-04-14 22:57:50 [info]: Socket disconnected: GltK7WAKgZpWzeeIAABU
+2026-04-14 22:57:50 [info]: Socket connected: Hvil9ZVu1w5ldAolAABX
+2026-04-14 22:57:50 [info]: Socket disconnected: 8mIBya9LRmjS-9AZAABV
+2026-04-14 22:57:50 [http]: 127.0.0.1 - - [14/Apr/2026:14:57:50 +0000] "GET /api/v1/reports/issued?room_id=2 HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Avast/146.0.34394.179"
+2026-04-14 22:57:50 [http]: 127.0.0.1 - - [14/Apr/2026:14:57:50 +0000] "GET /api/v1/reports/issued?room_id=2 HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Avast/146.0.34394.179"
+2026-04-14 22:57:50 [http]: 127.0.0.1 - - [14/Apr/2026:14:57:50 +0000] "GET /api/v1/requests?status=PENDING,PENDING+APPROVAL HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Avast/146.0.34394.179"
+2026-04-14 22:58:47 [debug]: New DB client connected
+2026-04-14 22:59:46 [debug]: New DB client connected
+2026-04-14 23:00:47 [debug]: New DB client connected
+2026-04-14 23:01:47 [debug]: New DB client connected
+2026-04-14 23:02:03 [http]: 127.0.0.1 - - [14/Apr/2026:15:02:03 +0000] "GET /api/v1/reports/issued?room_id=2 HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Avast/146.0.34394.179"
+2026-04-14 23:02:47 [debug]: New DB client connected
+2026-04-14 23:03:47 [debug]: New DB client connected
+2026-04-14 23:04:47 [debug]: New DB client connected
+2026-04-14 23:05:47 [debug]: New DB client connected
+2026-04-14 23:06:47 [debug]: New DB client connected
+2026-04-14 23:07:47 [debug]: New DB client connected
+2026-04-14 23:08:47 [debug]: New DB client connected
+2026-04-14 23:09:47 [debug]: New DB client connected
+2026-04-14 23:10:47 [debug]: New DB client connected
+2026-04-14 23:11:47 [debug]: New DB client connected
+2026-04-14 23:12:47 [debug]: New DB client connected
+2026-04-14 23:13:47 [debug]: New DB client connected
+2026-04-14 23:14:47 [debug]: New DB client connected
+2026-04-14 23:15:47 [debug]: New DB client connected
+2026-04-14 23:16:47 [debug]: New DB client connected
+2026-04-14 23:17:47 [debug]: New DB client connected
+2026-04-14 23:18:47 [debug]: New DB client connected
+2026-04-14 23:19:47 [debug]: New DB client connected
+2026-04-14 23:20:47 [debug]: New DB client connected
+2026-04-14 23:21:11 [info]: InvenCEA backend running on port 4000 [development]

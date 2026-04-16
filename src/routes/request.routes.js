@@ -75,6 +75,10 @@ router.post(
 // 🔥 Dynamic ID route MUST go LAST among the GET routes!
 router.get('/:id', ctrl.getRequest);
 
+// ⚡ ADDED CANCELLATION ROUTE HERE ⚡
+// Students/Faculty can cancel their own requests, Admins can cancel any
+router.put('/:id/cancel', ctrl.cancelRequest);
+
 // ─────────────────────────────────────────────────────────────────────────────
 // ADMIN-ONLY ROUTES
 // ─────────────────────────────────────────────────────────────────────────────
