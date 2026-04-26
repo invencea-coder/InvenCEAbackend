@@ -82,6 +82,14 @@ router.put('/:id/cancel', ctrl.cancelRequest);
 // ─────────────────────────────────────────────────────────────────────────────
 // ADMIN-ONLY ROUTES
 // ─────────────────────────────────────────────────────────────────────────────
+
+// ─────────────────────────────────────────────────────────────────────────────
+// ADMIN-ONLY ROUTES
+// ─────────────────────────────────────────────────────────────────────────────
+
+// Retroactive Manual Log Injection (Must be before any wildcard or generic routes)
+router.post('/retroactive', roleMiddleware('admin'), ctrl.createRetroactiveLog);
+
 router.put('/:id/approve', roleMiddleware('admin'), ctrl.approveRequest);
 router.put('/:id/reject', roleMiddleware('admin'), ctrl.rejectRequest);
 router.put('/:id/issue', roleMiddleware('admin'), ctrl.issueRequest);

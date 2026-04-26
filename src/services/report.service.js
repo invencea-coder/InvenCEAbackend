@@ -41,7 +41,8 @@ const getIssuedReports = async ({ room_id, type, role, from, to }) => {
         r.id AS request_id,
         r.requester_type,
         
-        COALESCE(s.student_id::text, r.requester_id::text) AS requester_id,
+        -- ⚡ FIX: Pull student_id for students, email for faculty, fallback to DB id
+        COALESCE(s.student_id::text, u.email::text, r.requester_id::text) AS requester_id,
         COALESCE(u.name, s.full_name) AS requester_name,
         
         r.room_id,
@@ -86,7 +87,7 @@ const getIssuedReports = async ({ room_id, type, role, from, to }) => {
      ${whereClause}
      
      GROUP BY 
-        r.id, r.requester_type, r.requester_id, u.name, s.full_name, s.student_id, 
+        r.id, r.requester_type, r.requester_id, u.name, u.email, s.full_name, s.student_id, 
         r.room_id, r.purpose, r.status, r.created_at, r.approved_time, r.issued_time, 
         r.return_deadline, r.last_return_time
      ORDER BY r.issued_time DESC`,

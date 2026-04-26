@@ -318,7 +318,7 @@ const rejectRequest = async (id, providedEmail, reason) => {
     
     // DANGEROUS CODE REMOVED: APPROVED items are not yet deducted from qty_available.
     
-    await client.query(`UPDATE request_items SET status = 'CANCELLED' WHERE request_id = $1`, [id]);
+    await client.query(`UPDATE request_items SET status = 'REJECTED' WHERE request_id = $1`, [id]);
     
     const { rows } = await client.query(`UPDATE requests SET status = 'REJECTED' WHERE id = $1 RETURNING *`, [id]);
     request = rows[0];

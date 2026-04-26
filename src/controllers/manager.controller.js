@@ -61,14 +61,12 @@ const provisionUser = async (req, res, next) => {
       return badRequest(res, 'A temporary password is required when provisioning an admin.');
     }
 
-    // Hash the password for admin accounts; faculty use OTP so no password needed
     let hashedPassword = null;
     if (role === 'admin') {
       const SALT_ROUNDS = 12;
       hashedPassword = await bcrypt.hash(password, SALT_ROUNDS);
     }
 
-    // Insert the new user — admins get a hashed password and must reset on first login
     const { rows } = await query(
       `INSERT INTO users (email, name, role, room_id, password_hash, needs_password_reset)
        VALUES ($1, $2, $3, $4, $5, $6)
@@ -83,7 +81,6 @@ const provisionUser = async (req, res, next) => {
       ]
     );
 
-    // Send Welcome Email
     try {
       const roleTitle = role === 'admin' ? 'Laboratory Administrator' : 'Faculty Member';
       const adminPasswordNote =
@@ -118,7 +115,6 @@ const removeUser = async (req, res, next) => {
   try {
     const { id } = req.params;
 
-    // Prevent the manager from deleting themselves
     if (String(id) === String(req.user.id)) {
       return badRequest(res, 'You cannot delete your own manager account.');
     }
@@ -132,6 +128,9 @@ const removeUser = async (req, res, next) => {
     return success(res, null, 'User securely removed from the system.');
   } catch (e) { next(e); }
 };
+
+// ── Student Management ────────────────────────────────────────────────────
+
 const getAllStudents = async (req, res, next) => {
   try {
     const { rows } = await query(`SELECT id, full_name, student_id, department, created_at FROM students ORDER BY full_name`);
@@ -144,13 +143,9 @@ const bulkAddStudents = async (req, res, next) => {
     const { students } = req.body;
     if (!students || !students.length) return badRequest(res, 'No student data provided');
 
-    // Default PIN for bulk uploads is '1234'
     const defaultPinHash = await bcrypt.hash('1234', 10);
-
-    // Prepare array for pg-format: [[full_name, student_id, pin_hash], [...]]
     const values = students.map(s => [s.full_name, s.student_id, defaultPinHash]);
 
-    // ON CONFLICT DO NOTHING prevents errors if a student is already in the DB
     const sql = format(
       `INSERT INTO students (full_name, student_id, pin_hash) VALUES %L ON CONFLICT (student_id) DO NOTHING`,
       values
@@ -169,6 +164,33 @@ const bulkDeleteStudents = async (req, res, next) => {
     const { rowCount } = await query(`DELETE FROM students WHERE id = ANY($1::int[])`, [ids]);
     return success(res, null, `Deleted ${rowCount} students.`);
   } catch (e) { next(e); }
+};
+
+/**
+ * NEW: Reset Student PIN back to '1234'
+ */
+const resetStudentPin = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+
+    // 1. Hash the default PIN "1234"
+    const SALT_ROUNDS = 10;
+    const defaultPinHash = await bcrypt.hash('1234', SALT_ROUNDS);
+
+    // 2. Update the student in the database
+    const result = await query(
+      `UPDATE students SET pin_hash = $1 WHERE id = $2 RETURNING id`,
+      [defaultPinHash, id]
+    );
+
+    if (result.rowCount === 0) {
+      return notFound(res, 'Student not found.');
+    }
+
+    return success(res, null, 'Student PIN has been reset to 1234.');
+  } catch (err) {
+    next(err);
+  }
 };
 
 // ── Directory Management (Faculty) ────────────────────────────────────────
@@ -195,7 +217,6 @@ const bulkDeleteFaculty = async (req, res, next) => {
     const { ids } = req.body;
     if (!ids || !ids.length) return badRequest(res, 'No IDs provided');
 
-    // Prevent deleting non-faculty or the manager themselves just in case
     const { rowCount } = await query(`DELETE FROM users WHERE id = ANY($1::int[]) AND role = 'faculty'`, [ids]);
     return success(res, null, `Deleted ${rowCount} faculty members.`);
   } catch (e) { next(e); }
@@ -209,6 +230,7 @@ module.exports = {
   getAllStudents,
   bulkAddStudents,
   bulkDeleteStudents,
+  resetStudentPin, // Exporting the new function
   bulkAddFaculty,
   bulkDeleteFaculty
 };

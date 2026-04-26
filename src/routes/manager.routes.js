@@ -27,5 +27,6 @@ router.delete('/students/bulk', managerCtrl.bulkDeleteStudents);
 
 router.post('/faculty/bulk', managerCtrl.bulkAddFaculty);
 router.delete('/faculty/bulk', managerCtrl.bulkDeleteFaculty);
+router.put('/students/:id/reset-pin', managerCtrl.resetStudentPin);
 
 module.exports = router;

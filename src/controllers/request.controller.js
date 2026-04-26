@@ -63,6 +63,141 @@ const createRequest = async (req, res) => {
   }
 };
 
+const createRetroactiveLog = async (req, res) => {
+  try {
+    if (req.user.role !== 'admin') {
+      return res.status(403).json({ success: false, message: 'Forbidden: Admin access required.' });
+    }
+
+    const {
+      student_id_number,
+      full_name,
+      room_id,
+      purpose,
+      barcodes,
+      requester_type,
+      created_at,        
+      approved_time,
+      issued_time,
+      return_deadline,
+      returned_time // We will use this to set the status, but NOT insert it into a missing column
+    } = req.body;
+
+    if (!barcodes || barcodes.length === 0) {
+      return badRequest(res, 'At least one barcode is required.');
+    }
+
+    // 1. Resolve Requester ID based on type
+    let actual_requester_id = null;
+    if (requester_type === 'student') {
+      const { rows: stuRows } = await query(`SELECT id FROM students WHERE student_id = $1`, [student_id_number]);
+      if (stuRows.length > 0) {
+        actual_requester_id = stuRows[0].id;
+      } else {
+        // Create a temporary student record if they don't exist yet
+        const defaultPinHash = await require('bcrypt').hash('1234', 10);
+        const { rows: newStu } = await query(
+          `INSERT INTO students (student_id, full_name, pin_hash) VALUES ($1, $2, $3) RETURNING id`,
+          [student_id_number, full_name, defaultPinHash]
+        );
+        actual_requester_id = newStu[0].id;
+      }
+    } else {
+      // Faculty resolution
+      const { rows: facRows } = await query(
+        `SELECT id FROM users WHERE email = $1 AND role = 'faculty'`,
+        [student_id_number]
+      );
+      if (facRows.length > 0) {
+        actual_requester_id = facRows[0].id;
+      } else {
+        return badRequest(res, `Faculty member with email/ID ${student_id_number} not found in system.`);
+      }
+    }
+
+    // 2. Resolve Barcodes into Physical Inventory Items
+    const { rows: invItems } = await query(
+      `SELECT id, inventory_type_id, barcode FROM inventory_items WHERE barcode = ANY($1::text[])`,
+      [barcodes]
+    );
+
+    if (invItems.length !== barcodes.length) {
+      const foundBarcodes = invItems.map(i => i.barcode);
+      const missing = barcodes.filter(b => !foundBarcodes.includes(b));
+      return badRequest(res, `The following barcodes were not found in inventory: ${missing.join(', ')}`);
+    }
+
+    // 3. Create the Main Request Row
+    const finalStatus = returned_time ? 'RETURNED' : 'ISSUED';
+    
+    // 👇 FIX: Use the correct column name "last_return_time"
+    const { rows: reqRows } = await query(
+      `INSERT INTO requests 
+        (requester_id, requester_type, room_id, purpose, status, created_at, approved_time, issued_time, return_deadline, last_return_time) 
+       VALUES 
+        ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) 
+       RETURNING id`,
+      [
+        actual_requester_id,
+        requester_type,
+        room_id,
+        purpose,
+        finalStatus,
+        created_at,        
+        approved_time,
+        issued_time,
+        return_deadline || null,
+        returned_time || null  // <--- This now accurately saves your 07:53 PM
+      ]
+    );
+    const newRequestId = reqRows[0].id;
+
+    // 4. Create the Request Items Links & Update Physical Inventory
+    const itemPromises = invItems.map(async (item) => {
+      // Add link table row
+      await query(
+        `INSERT INTO request_items (request_id, inventory_type_id, inventory_item_id, quantity, status, assigned_to) 
+         VALUES ($1, $2, $3, $4, $5, $6)`,
+        [newRequestId, item.inventory_type_id, item.id, 1, finalStatus, 'Requester']
+      );
+
+      // Update physical item status
+      const itemStatus = returned_time ? 'available' : 'borrowed';
+      await query(
+        `UPDATE inventory_items SET status = $1 WHERE id = $2`,
+        [itemStatus, item.id]
+      );
+      
+      // If the item is marked as RETURNED, we should insert a record into `return_logs` or similar history table if you use one.
+      // E.g., if you have an `item_returns` table:
+      if (returned_time) {
+          // You might need to adjust this depending on your database schema for return logs.
+          // This is a common pattern to log the specific return timestamp for an item.
+          try {
+              await query(
+                  `INSERT INTO item_returns (request_item_id, returned_at, condition_upon_return, receiver_id)
+                   VALUES ((SELECT id FROM request_items WHERE request_id = $1 AND inventory_item_id = $2 LIMIT 1), $3, 'Good', $4)`,
+                  [newRequestId, item.id, returned_time, req.user.id]
+              );
+          } catch(logErr) {
+               console.warn("Could not log to item_returns table, skipping return log insertion.", logErr.message);
+          }
+      }
+    });
+
+    await Promise.all(itemPromises);
+
+    // 5. Tell the frontend to refresh
+    const { broadcast } = require('../config/socket');
+    broadcast('inventory-updated', { message: 'Retroactive log processed' });
+
+    return success(res, { id: newRequestId }, 'Retroactive log injected successfully.');
+  } catch (e) {
+    console.error("❌ Retroactive Log Error:", e);
+    return res.status(500).json({ success: false, message: e.message || 'Internal Server Error' });
+  }
+};
+
 const getRequest = async (req, res) => {
   try {
     const data = await requestService.getRequest(req.params.id);
@@ -297,5 +432,5 @@ const cancelRequest = async (req, res) => {
 
 module.exports = {
   createRequest, getRequest, getRequestByQR, listRequests, approveRequest,
-  rejectRequest, issueRequest, returnItemByBarcode, returnRequest, getCalendarEvents, cancelRequest
+  rejectRequest, issueRequest, returnItemByBarcode, returnRequest, getCalendarEvents, cancelRequest, createRetroactiveLog
 };

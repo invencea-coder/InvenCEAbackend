@@ -1601,3 +1601,59 @@
     at async C:\Users\Teacher\Music\invencea\backend\src\services\request.service.js:334:5
     at async withTransaction (C:\Users\Teacher\Music\invencea\backend\src\config\db.js:44:20)
     at async rejectRequest (C:\Users\Teacher\Music\invencea\backend\src\controllers\request.controller.js:147:18)
+2026-04-26 14:54:45 [error]: Error: read ECONNRESET
+    at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20)
+2026-04-26 15:44:24 [error]: Error: read ECONNRESET
+    at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20)
+2026-04-26 16:40:19 [error]: Error: Invalid credentials
+    at Object.adminLogin (C:\Users\Teacher\Music\invencea\backend\src\services\auth.service.js:153:35)
+    at async adminLogin (C:\Users\Teacher\Music\invencea\backend\src\controllers\auth.controller.js:98:20)
+2026-04-26 16:40:44 [error]: Error: Invalid credentials
+    at Object.adminLogin (C:\Users\Teacher\Music\invencea\backend\src\services\auth.service.js:153:35)
+    at async adminLogin (C:\Users\Teacher\Music\invencea\backend\src\controllers\auth.controller.js:98:20)
+2026-04-26 16:40:45 [error]: Error: Invalid credentials
+    at Object.adminLogin (C:\Users\Teacher\Music\invencea\backend\src\services\auth.service.js:153:35)
+    at async adminLogin (C:\Users\Teacher\Music\invencea\backend\src\controllers\auth.controller.js:98:20)
+2026-04-26 16:40:46 [error]: Error: Invalid credentials
+    at Object.adminLogin (C:\Users\Teacher\Music\invencea\backend\src\services\auth.service.js:153:35)
+    at async adminLogin (C:\Users\Teacher\Music\invencea\backend\src\controllers\auth.controller.js:98:20)
+2026-04-26 20:18:11 [error]: Error: getaddrinfo ENOTFOUND ep-shiny-moon-a1pq3w4f-pooler.ap-southeast-1.aws.neon.tech
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async Object.getMe (C:\Users\Teacher\Music\invencea\backend\src\services\auth.service.js:211:20)
+    at async getMe (C:\Users\Teacher\Music\invencea\backend\src\controllers\auth.controller.js:158:18)
+2026-04-26 20:18:11 [error]: Error: getaddrinfo ENOTFOUND ep-shiny-moon-a1pq3w4f-pooler.ap-southeast-1.aws.neon.tech
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async Object.getMe (C:\Users\Teacher\Music\invencea\backend\src\services\auth.service.js:211:20)
+    at async getMe (C:\Users\Teacher\Music\invencea\backend\src\controllers\auth.controller.js:158:18)
+2026-04-26 20:18:11 [error]: Error: getaddrinfo ENOTFOUND ep-shiny-moon-a1pq3w4f-pooler.ap-southeast-1.aws.neon.tech
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async Object.getMe (C:\Users\Teacher\Music\invencea\backend\src\services\auth.service.js:211:20)
+    at async getMe (C:\Users\Teacher\Music\invencea\backend\src\controllers\auth.controller.js:158:18)
+2026-04-26 20:18:11 [error]: Error: getaddrinfo ENOTFOUND ep-shiny-moon-a1pq3w4f-pooler.ap-southeast-1.aws.neon.tech
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async Object.getMe (C:\Users\Teacher\Music\invencea\backend\src\services\auth.service.js:211:20)
+    at async getMe (C:\Users\Teacher\Music\invencea\backend\src\controllers\auth.controller.js:158:18)
+2026-04-26 20:18:11 [error]: Error: getaddrinfo ENOTFOUND ep-shiny-moon-a1pq3w4f-pooler.ap-southeast-1.aws.neon.tech
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async Object.getMe (C:\Users\Teacher\Music\invencea\backend\src\services\auth.service.js:204:22)
+    at async getMe (C:\Users\Teacher\Music\invencea\backend\src\controllers\auth.controller.js:158:18)
+2026-04-26 20:18:11 [error]: Error: getaddrinfo ENOTFOUND ep-shiny-moon-a1pq3w4f-pooler.ap-southeast-1.aws.neon.tech
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async Object.getMe (C:\Users\Teacher\Music\invencea\backend\src\services\auth.service.js:204:22)
+    at async getMe (C:\Users\Teacher\Music\invencea\backend\src\controllers\auth.controller.js:158:18)
+2026-04-26 20:31:13 [error]: Error: Connection terminated due to connection timeout
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async Object.sendFacultyOTP (C:\Users\Teacher\Music\invencea\backend\src\services\auth.service.js:16:20)
+    at async sendOTP (C:\Users\Teacher\Music\invencea\backend\src\controllers\auth.controller.js:16:20)
+2026-04-26 20:31:38 [error]: Error: Connection terminated due to connection timeout
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async Object.getMe (C:\Users\Teacher\Music\invencea\backend\src\services\auth.service.js:211:20)
+    at async getMe (C:\Users\Teacher\Music\invencea\backend\src\controllers\auth.controller.js:158:18)
