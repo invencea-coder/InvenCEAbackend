@@ -4,7 +4,6 @@ const router = express.Router();
 const managerCtrl = require('../controllers/manager.controller');
 const authMiddleware = require('../middleware/authMiddleware'); 
 
-// 🔴 Security Check: Only 'manager' can pass this gate
 const requireManager = (req, res, next) => {
   if (req.user.role !== 'manager') {
     return res.status(403).json({ success: false, message: 'Forbidden: System Manager access only.' });
@@ -12,7 +11,6 @@ const requireManager = (req, res, next) => {
   next();
 };
 
-// ✅ THE FIX: We added ".protect" to extract the actual middleware function!
 router.use(authMiddleware.protect); 
 router.use(requireManager);
 
@@ -25,8 +23,12 @@ router.get('/students', managerCtrl.getAllStudents);
 router.post('/students/bulk', managerCtrl.bulkAddStudents);
 router.delete('/students/bulk', managerCtrl.bulkDeleteStudents);
 
+router.get('/faculty', managerCtrl.getAllFaculty);
 router.post('/faculty/bulk', managerCtrl.bulkAddFaculty);
 router.delete('/faculty/bulk', managerCtrl.bulkDeleteFaculty);
 router.put('/students/:id/reset-pin', managerCtrl.resetStudentPin);
+
+// ⚡ ADDED: The Audits route!
+router.get('/audits', managerCtrl.getAuditLogs);
 
 module.exports = router;

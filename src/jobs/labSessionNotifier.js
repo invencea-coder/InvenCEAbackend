@@ -28,6 +28,7 @@ const initLabSessionNotifier = (io) => {
           purpose:      session.purpose,
           end_time:     session.end_time,
           room_name:    session.room_name,
+          room_id:      session.room_id, // ⚡ ADDED: So frontend can filter by room!
           faculty_name: session.faculty_name,
           claimants:    session.claimants?.filter(Boolean) || [],
         });
@@ -40,6 +41,7 @@ const initLabSessionNotifier = (io) => {
           purpose:      session.purpose,
           end_time:     session.end_time,
           room_name:    session.room_name,
+          room_id:      session.room_id, // ⚡ ADDED: So frontend can filter by room!
           faculty_name: session.faculty_name,
           claimants:    session.claimants?.filter(Boolean) || [],
         });
@@ -49,8 +51,6 @@ const initLabSessionNotifier = (io) => {
         for (const claimant of claimants) {
           if (!claimant?.student_name) continue;
           try {
-            // Get student email — join to students table if you store emails
-            // For now we'll log and skip email if no email stored for students
             logger.info(`[LabNotifier] Would email student ${claimant.student_name} — return by ${endTime}`);
           } catch (e) {
             logger.error(`[LabNotifier] Email failed for ${claimant.student_name}: ${e.message}`);

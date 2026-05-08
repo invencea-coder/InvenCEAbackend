@@ -1,16 +1,11 @@
 const { query } = require('../config/db');
 const { exportReportsToExcel } = require('../utils/excelExporter');
 
-/**
- * Build issued report rows with optional filters
- * Aligned parameters with the controller (type, from, to) and added room_id
- */
 const getIssuedReports = async ({ room_id, type, role, from, to }) => {
   const conditions = ["r.status IN ('ISSUED', 'PARTIALLY RETURNED', 'RETURNED')"];
   const values = [];
   let i = 1;
 
-  // Role Filtering
   const activeRole = role || type;
   if (activeRole === 'faculty') {
     conditions.push(`r.requester_type = 'faculty'`);
@@ -18,13 +13,11 @@ const getIssuedReports = async ({ room_id, type, role, from, to }) => {
     conditions.push(`r.requester_type = 'student'`);
   }
 
-  // Room Filtering
-  if (room_id) {
+  if (room_id && room_id !== 'all') {
     conditions.push(`r.room_id = $${i++}`);
     values.push(room_id);
   }
 
-  // Date Filtering
   if (from) {
     conditions.push(`r.issued_time >= $${i++}`);
     values.push(from);
@@ -41,9 +34,10 @@ const getIssuedReports = async ({ room_id, type, role, from, to }) => {
         r.id AS request_id,
         r.requester_type,
         
-        -- ⚡ FIX: Pull student_id for students, email for faculty, fallback to DB id
         COALESCE(s.student_id::text, u.email::text, r.requester_id::text) AS requester_id,
-        COALESCE(u.name, s.full_name) AS requester_name,
+        
+        -- ⚡ THE FIX: Removed r.requester_name. It now safely pulls from u.name (Faculty) or s.full_name (Students)
+        COALESCE(u.name, s.full_name, 'Unknown User') AS requester_name,
         
         r.room_id,
         r.purpose,
@@ -59,7 +53,6 @@ const getIssuedReports = async ({ room_id, type, role, from, to }) => {
         r.return_deadline,
         r.last_return_time,
         
-        -- ⚡ FIX: Filter out nulls so it never returns an empty [null] array
         COALESCE(
           json_agg(
             json_build_object(
@@ -75,7 +68,7 @@ const getIssuedReports = async ({ room_id, type, role, from, to }) => {
         
      FROM requests r
      
-     LEFT JOIN users u ON u.id::text = r.requester_id::text AND r.requester_type IN ('faculty', 'admin')
+     LEFT JOIN users u ON u.id::text = r.requester_id::text AND r.requester_type IN ('faculty', 'admin', 'dean')
      LEFT JOIN students s ON (s.id::text = r.requester_id::text OR s.student_id::text = r.requester_id::text) AND r.requester_type = 'student'
      
      LEFT JOIN request_items ri ON r.id = ri.request_id
@@ -86,6 +79,7 @@ const getIssuedReports = async ({ room_id, type, role, from, to }) => {
      
      ${whereClause}
      
+     -- ⚡ THE FIX: Removed r.requester_name from the GROUP BY clause as well
      GROUP BY 
         r.id, r.requester_type, r.requester_id, u.name, u.email, s.full_name, s.student_id, 
         r.room_id, r.purpose, r.status, r.created_at, r.approved_time, r.issued_time, 
@@ -116,16 +110,13 @@ const deleteFilteredReports = async ({ type, role, from, to, room_id }) => {
   if (activeRole === 'faculty') { conditions.push(`requester_type = 'faculty'`); }
   else if (activeRole === 'student') { conditions.push(`requester_type = 'student'`); }
 
-  if (room_id) { conditions.push(`room_id = $${i++}`); values.push(room_id); }
+  if (room_id && room_id !== 'all') { conditions.push(`room_id = $${i++}`); values.push(room_id); }
   if (from) { conditions.push(`issued_time >= $${i++}`); values.push(from); }
   if (to) { conditions.push(`issued_time <= $${i++}`); values.push(to + ' 23:59:59'); }
 
   const where = `WHERE ${conditions.join(' AND ')}`;
 
-  const { rowCount } = await query(
-    `DELETE FROM requests ${where}`,
-    values
-  );
+  const { rowCount } = await query(`DELETE FROM requests ${where}`, values);
 
   return { deleted: rowCount };
 };

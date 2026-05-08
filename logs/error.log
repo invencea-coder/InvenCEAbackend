@@ -1657,3 +1657,89 @@
     at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
     at async Object.getMe (C:\Users\Teacher\Music\invencea\backend\src\services\auth.service.js:211:20)
     at async getMe (C:\Users\Teacher\Music\invencea\backend\src\controllers\auth.controller.js:158:18)
+2026-05-02 01:40:54 [error]: Error: Invalid credentials
+    at Object.adminLogin (C:\Users\Teacher\Music\invencea\backend\src\services\auth.service.js:153:35)
+    at async adminLogin (C:\Users\Teacher\Music\invencea\backend\src\controllers\auth.controller.js:98:20)
+2026-05-06 21:34:29 [error]: Error: Connection terminated due to connection timeout
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async Promise.all (index 2)
+    at async Object.listAll (C:\Users\Teacher\Music\invencea\backend\src\services\inventory.service.js:207:49)
+    at async listAll (C:\Users\Teacher\Music\invencea\backend\src\controllers\inventory.controller.js:59:18)
+2026-05-06 21:34:29 [error]: Error: Connection terminated due to connection timeout
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async getRooms (C:\Users\Teacher\Music\invencea\backend\src\controllers\admin.controller.js:449:22)
+2026-05-06 21:34:34 [error]: Error: Connection terminated due to connection timeout
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async getRooms (C:\Users\Teacher\Music\invencea\backend\src\controllers\admin.controller.js:449:22)
+2026-05-06 21:34:34 [error]: Error: Connection terminated due to connection timeout
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async Promise.all (index 2)
+    at async Object.listAll (C:\Users\Teacher\Music\invencea\backend\src\services\inventory.service.js:207:49)
+    at async listAll (C:\Users\Teacher\Music\invencea\backend\src\controllers\inventory.controller.js:59:18)
+2026-05-07 07:13:25 [error]: Error: Connection terminated due to connection timeout
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async Object.adminLogin (C:\Users\Teacher\Music\invencea\backend\src\services\auth.service.js:139:20)
+    at async adminLogin (C:\Users\Teacher\Music\invencea\backend\src\controllers\auth.controller.js:98:20)
+2026-05-07 07:13:58 [error]: Error: Invalid 4-Digit PIN
+    at Object.studentLogin (C:\Users\Teacher\Music\invencea\backend\src\services\auth.service.js:100:27)
+    at async studentLogin (C:\Users\Teacher\Music\invencea\backend\src\controllers\auth.controller.js:57:20)
+2026-05-07 08:04:22 [error]: Error: Invalid credentials
+    at Object.adminLogin (C:\Users\Teacher\Music\invencea\backend\src\services\auth.service.js:164:35)
+    at async adminLogin (C:\Users\Teacher\Music\invencea\backend\src\controllers\auth.controller.js:78:20)
+2026-05-07 08:55:57 [error]: Error: Connection terminated due to connection timeout
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async Object.getMe (C:\Users\Teacher\Music\invencea\backend\src\services\auth.service.js:222:20)
+    at async getMe (C:\Users\Teacher\Music\invencea\backend\src\controllers\auth.controller.js:135:18)
+2026-05-07 09:44:45 [error]: error: column r.requester_name does not exist
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async Object.getIssuedReports (C:\Users\Teacher\Music\invencea\backend\src\services\report.service.js:32:20)
+    at async getReports (C:\Users\Teacher\Music\invencea\backend\src\controllers\report.controller.js:19:18)
+2026-05-07 09:44:46 [error]: error: column r.requester_name does not exist
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async Object.getIssuedReports (C:\Users\Teacher\Music\invencea\backend\src\services\report.service.js:32:20)
+    at async getReports (C:\Users\Teacher\Music\invencea\backend\src\controllers\report.controller.js:19:18)
+2026-05-07 10:11:22 [error]: error: column r.requester_name does not exist
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async Object.getIssuedReports (C:\Users\Teacher\Music\invencea\backend\src\services\report.service.js:32:20)
+    at async getReports (C:\Users\Teacher\Music\invencea\backend\src\controllers\report.controller.js:19:18)
+2026-05-07 10:11:23 [error]: error: column r.requester_name does not exist
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async Object.getIssuedReports (C:\Users\Teacher\Music\invencea\backend\src\services\report.service.js:32:20)
+    at async getReports (C:\Users\Teacher\Music\invencea\backend\src\controllers\report.controller.js:19:18)
+2026-05-07 10:11:44 [error]: error: column r.requester_name does not exist
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async Object.getIssuedReports (C:\Users\Teacher\Music\invencea\backend\src\services\report.service.js:32:20)
+    at async getReports (C:\Users\Teacher\Music\invencea\backend\src\controllers\report.controller.js:19:18)
+2026-05-07 10:11:44 [error]: error: column r.requester_name does not exist
+    at C:\Users\Teacher\Music\invencea\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async Object.getIssuedReports (C:\Users\Teacher\Music\invencea\backend\src\services\report.service.js:32:20)
+    at async getReports (C:\Users\Teacher\Music\invencea\backend\src\controllers\report.controller.js:19:18)
+2026-05-07 16:03:44 [error]: Error: Invalid credentials or unauthorized role
+    at Object.adminLogin (C:\Users\Teacher\Music\invencea\backend\src\services\auth.service.js:112:41)
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async adminLogin (C:\Users\Teacher\Music\invencea\backend\src\controllers\auth.controller.js:63:20)
+2026-05-07 16:03:54 [error]: Error: Invalid credentials or unauthorized role
+    at Object.adminLogin (C:\Users\Teacher\Music\invencea\backend\src\services\auth.service.js:112:41)
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async adminLogin (C:\Users\Teacher\Music\invencea\backend\src\controllers\auth.controller.js:63:20)
+2026-05-07 16:04:22 [error]: Error: Invalid credentials
+    at Object.adminLogin (C:\Users\Teacher\Music\invencea\backend\src\services\auth.service.js:118:35)
+    at async adminLogin (C:\Users\Teacher\Music\invencea\backend\src\controllers\auth.controller.js:63:20)
+2026-05-07 16:05:18 [error]: Error: Invalid credentials
+    at Object.adminLogin (C:\Users\Teacher\Music\invencea\backend\src\services\auth.service.js:118:35)
+    at async adminLogin (C:\Users\Teacher\Music\invencea\backend\src\controllers\auth.controller.js:63:20)
+2026-05-07 16:05:20 [error]: Error: Invalid credentials
+    at Object.adminLogin (C:\Users\Teacher\Music\invencea\backend\src\services\auth.service.js:118:35)
+    at async adminLogin (C:\Users\Teacher\Music\invencea\backend\src\controllers\auth.controller.js:63:20)

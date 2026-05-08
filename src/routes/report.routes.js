@@ -1,14 +1,17 @@
 const express = require('express');
 const router = express.Router();
-const ctrl = require('../controllers/report.controller');
-const authMiddleware = require('../middleware/authMiddleware');
-const roleMiddleware = require('../middleware/roleMiddleware');
 
-// Use protect middleware explicitly
-router.use(authMiddleware.protect, roleMiddleware('admin'));
+// 1. Import the controller correctly as reportCtrl
+const reportCtrl = require('../controllers/report.controller');
 
-router.get('/issued', ctrl.getReports);
-router.get('/export', ctrl.exportReports);
-router.delete('/', ctrl.deleteReports);
+// 2. Import only the specific middleware functions you need
+const { protect, authorize } = require('../middleware/authMiddleware');
+
+// 3. (REMOVED the global router.use() that was blocking Deans and Managers)
+
+// 4. Define the routes with the correct authorization array for all 3 roles
+router.get('/issued', protect, authorize('admin', 'manager', 'dean'), reportCtrl.getReports);
+router.get('/export', protect, authorize('admin', 'manager', 'dean'), reportCtrl.exportReports);
+router.delete('/',    protect, authorize('admin', 'manager', 'dean'), reportCtrl.deleteReports);
 
 module.exports = router;

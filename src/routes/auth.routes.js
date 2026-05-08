@@ -77,4 +77,7 @@ router.post(
 // Get current authenticated user (session restore)
 router.get('/me', authMiddleware.protect, ctrl.getMe);
 
+// ⚡ ADDED: Logout route (Protected so it knows WHO is logging out)
+router.post('/logout', authMiddleware.protect, ctrl.logout);
+
 module.exports = router;
