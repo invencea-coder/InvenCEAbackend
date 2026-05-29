@@ -316,7 +316,7 @@ const rejectRequest = async (id, providedEmail, reason) => {
     );
     if (!reqs.length) throw Object.assign(new Error('Request not found or already processed'), { status: 400 });
     
-    // DANGEROUS CODE REMOVED: APPROVED items are not yet deducted from qty_available.
+    
     
     await client.query(`UPDATE request_items SET status = 'REJECTED' WHERE request_id = $1`, [id]);
     
@@ -407,9 +407,6 @@ const issueRequest = async (id, items, return_deadline) => {
 const returnItemByBarcode = async (barcode, condition = 'Good', callerRoomId = null, qtyReturned = null, explicitRequestId = null) => {
   return withTransaction(async (client) => {
     
-    // ==========================================
-    // BULK / QUANTITY MODE RETURN
-    // ==========================================
     const { rows: stockRows } = await client.query(
       `SELECT * FROM inventory_type_stocks WHERE barcode = $1`, [barcode]
     );

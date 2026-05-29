@@ -40790,3 +40790,113 @@
 2026-05-07 16:18:40 [info]: Socket disconnected: mprkVqTGPx4Lx7DOAAEm
 2026-05-07 16:18:40 [info]: Socket disconnected: AkIfJIBZwPm4iNdpAAEs
 2026-05-07 16:18:40 [info]: Socket disconnected: vbudH8Ii6cMj_vAVAAGG
+2026-05-29 15:16:51 [info]: InvenCEA backend running on port 4000 [development]
+2026-05-29 15:17:52 [debug]: New DB client connected
+2026-05-29 15:18:51 [debug]: New DB client connected
+2026-05-29 15:19:51 [debug]: New DB client connected
+2026-05-29 15:20:51 [debug]: New DB client connected
+2026-05-29 15:21:51 [debug]: New DB client connected
+2026-05-29 15:22:51 [debug]: New DB client connected
+2026-05-29 15:23:51 [debug]: New DB client connected
+2026-05-29 15:24:51 [debug]: New DB client connected
+2026-05-29 15:25:51 [debug]: New DB client connected
+2026-05-29 15:26:51 [debug]: New DB client connected
+2026-05-29 15:27:51 [debug]: New DB client connected
+2026-05-29 15:28:51 [debug]: New DB client connected
+2026-05-29 15:29:51 [debug]: New DB client connected
+2026-05-29 15:30:51 [debug]: New DB client connected
+2026-05-29 15:31:51 [debug]: New DB client connected
+2026-05-29 15:32:52 [debug]: New DB client connected
+2026-05-29 15:33:51 [debug]: New DB client connected
+2026-05-29 15:34:52 [debug]: New DB client connected
+2026-05-29 15:35:52 [debug]: New DB client connected
+2026-05-29 15:36:42 [debug]: New DB client connected
+2026-05-29 15:36:43 [http]: 127.0.0.1 - - [29/May/2026:07:36:43 +0000] "POST /api/v1/auth/admin/login HTTP/1.1" 200 479 "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36 Avast/147.0.0.0"
+2026-05-29 15:36:43 [http]: 127.0.0.1 - - [29/May/2026:07:36:43 +0000] "GET /api/v1/manager/stats HTTP/1.1" 200 76 "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36 Avast/147.0.0.0"
+2026-05-29 15:36:43 [http]: 127.0.0.1 - - [29/May/2026:07:36:43 +0000] "GET /api/v1/manager/stats HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36 Avast/147.0.0.0"
+2026-05-29 15:36:44 [debug]: New DB client connected
+2026-05-29 15:36:44 [http]: 127.0.0.1 - - [29/May/2026:07:36:44 +0000] "GET /api/v1/manager/users HTTP/1.1" 200 1494 "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36 Avast/147.0.0.0"
+2026-05-29 15:36:44 [http]: 127.0.0.1 - - [29/May/2026:07:36:44 +0000] "GET /api/v1/manager/users HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36 Avast/147.0.0.0"
+2026-05-29 15:36:44 [http]: 127.0.0.1 - - [29/May/2026:07:36:44 +0000] "GET /api/v1/admin/rooms HTTP/1.1" 200 579 "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36 Avast/147.0.0.0"
+2026-05-29 15:36:44 [http]: 127.0.0.1 - - [29/May/2026:07:36:44 +0000] "GET /api/v1/admin/rooms HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36 Avast/147.0.0.0"
+2026-05-29 15:36:45 [http]: 127.0.0.1 - - [29/May/2026:07:36:45 +0000] "GET /api/v1/manager/students HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36 Avast/147.0.0.0"
+2026-05-29 15:36:46 [http]: 127.0.0.1 - - [29/May/2026:07:36:46 +0000] "GET /api/v1/manager/students HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36 Avast/147.0.0.0"
+2026-05-29 15:36:46 [http]: 127.0.0.1 - - [29/May/2026:07:36:46 +0000] "GET /api/v1/manager/stats HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36 Avast/147.0.0.0"
+2026-05-29 15:36:46 [http]: 127.0.0.1 - - [29/May/2026:07:36:46 +0000] "GET /api/v1/manager/users HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36 Avast/147.0.0.0"
+2026-05-29 15:36:46 [http]: 127.0.0.1 - - [29/May/2026:07:36:46 +0000] "GET /api/v1/manager/stats HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36 Avast/147.0.0.0"
+2026-05-29 15:36:46 [http]: 127.0.0.1 - - [29/May/2026:07:36:46 +0000] "GET /api/v1/admin/rooms HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36 Avast/147.0.0.0"
+2026-05-29 15:36:46 [http]: 127.0.0.1 - - [29/May/2026:07:36:46 +0000] "GET /api/v1/manager/users HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36 Avast/147.0.0.0"
+2026-05-29 15:36:46 [http]: 127.0.0.1 - - [29/May/2026:07:36:46 +0000] "GET /api/v1/admin/rooms HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36 Avast/147.0.0.0"
+2026-05-29 15:36:48 [http]: 127.0.0.1 - - [29/May/2026:07:36:48 +0000] "GET /api/v1/manager/students HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36 Avast/147.0.0.0"
+2026-05-29 15:36:48 [http]: 127.0.0.1 - - [29/May/2026:07:36:48 +0000] "GET /api/v1/manager/students HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36 Avast/147.0.0.0"
+2026-05-29 15:36:56 [http]: 127.0.0.1 - - [29/May/2026:07:36:56 +0000] "PUT /api/v1/manager/students/3691/reset-pin HTTP/1.1" 200 76 "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36 Avast/147.0.0.0"
+2026-05-29 15:36:59 [http]: 127.0.0.1 - - [29/May/2026:07:36:59 +0000] "POST /api/v1/auth/logout HTTP/1.1" 200 51 "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36 Avast/147.0.0.0"
+2026-05-29 15:37:08 [http]: 127.0.0.1 - - [29/May/2026:07:37:08 +0000] "POST /api/v1/auth/student/login HTTP/1.1" 200 421 "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36 Avast/147.0.0.0"
+2026-05-29 15:37:08 [http]: 127.0.0.1 - - [29/May/2026:07:37:08 +0000] "GET /api/v1/requests HTTP/1.1" 200 1400 "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36 Avast/147.0.0.0"
+2026-05-29 15:37:08 [http]: 127.0.0.1 - - [29/May/2026:07:37:08 +0000] "GET /api/v1/requests HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36 Avast/147.0.0.0"
+2026-05-29 15:37:44 [debug]: New DB client connected
+2026-05-29 15:37:45 [http]: 127.0.0.1 - - [29/May/2026:07:37:45 +0000] "POST /api/v1/auth/admin/login HTTP/1.1" 200 479 "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36 Avast/147.0.0.0"
+2026-05-29 15:37:45 [http]: 127.0.0.1 - - [29/May/2026:07:37:45 +0000] "GET /api/v1/manager/stats HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36 Avast/147.0.0.0"
+2026-05-29 15:37:45 [http]: 127.0.0.1 - - [29/May/2026:07:37:45 +0000] "GET /api/v1/manager/stats HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36 Avast/147.0.0.0"
+2026-05-29 15:37:45 [http]: 127.0.0.1 - - [29/May/2026:07:37:45 +0000] "GET /api/v1/manager/users HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36 Avast/147.0.0.0"
+2026-05-29 15:37:45 [http]: 127.0.0.1 - - [29/May/2026:07:37:45 +0000] "GET /api/v1/manager/users HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36 Avast/147.0.0.0"
+2026-05-29 15:37:46 [debug]: New DB client connected
+2026-05-29 15:37:46 [http]: 127.0.0.1 - - [29/May/2026:07:37:46 +0000] "GET /api/v1/admin/rooms HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36 Avast/147.0.0.0"
+2026-05-29 15:37:46 [http]: 127.0.0.1 - - [29/May/2026:07:37:46 +0000] "GET /api/v1/admin/rooms HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36 Avast/147.0.0.0"
+2026-05-29 15:37:47 [http]: 127.0.0.1 - - [29/May/2026:07:37:47 +0000] "GET /api/v1/manager/students HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36 Avast/147.0.0.0"
+2026-05-29 15:37:47 [http]: 127.0.0.1 - - [29/May/2026:07:37:47 +0000] "GET /api/v1/manager/students HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36 Avast/147.0.0.0"
+2026-05-29 15:38:10 [http]: 127.0.0.1 - - [29/May/2026:07:38:10 +0000] "POST /api/v1/auth/logout HTTP/1.1" 200 51 "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36 Avast/147.0.0.0"
+2026-05-29 15:38:17 [http]: 127.0.0.1 - - [29/May/2026:07:38:17 +0000] "POST /api/v1/auth/student/login HTTP/1.1" 200 414 "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36 Avast/147.0.0.0"
+2026-05-29 15:38:18 [http]: 127.0.0.1 - - [29/May/2026:07:38:18 +0000] "GET /api/v1/requests HTTP/1.1" 200 46 "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36 Avast/147.0.0.0"
+2026-05-29 15:38:18 [http]: 127.0.0.1 - - [29/May/2026:07:38:18 +0000] "GET /api/v1/requests HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36 Avast/147.0.0.0"
+2026-05-29 15:38:40 [info]: InvenCEA backend running on port 4000 [development]
+2026-05-29 15:39:40 [debug]: New DB client connected
+2026-05-29 15:40:40 [debug]: New DB client connected
+2026-05-29 15:41:40 [debug]: New DB client connected
+2026-05-29 15:42:40 [debug]: New DB client connected
+2026-05-29 15:43:40 [debug]: New DB client connected
+2026-05-29 15:44:40 [debug]: New DB client connected
+2026-05-29 15:45:28 [debug]: New DB client connected
+2026-05-29 15:45:28 [http]: 127.0.0.1 - - [29/May/2026:07:45:28 +0000] "GET /api/v1/requests HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36 Avast/147.0.0.0"
+2026-05-29 15:45:56 [http]: 127.0.0.1 - - [29/May/2026:07:45:56 +0000] "GET /api/v1/auth/me HTTP/1.1" 200 156 "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36 Avast/147.0.0.0"
+2026-05-29 15:45:56 [http]: 127.0.0.1 - - [29/May/2026:07:45:56 +0000] "GET /api/v1/auth/me HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36 Avast/147.0.0.0"
+2026-05-29 15:45:57 [http]: 127.0.0.1 - - [29/May/2026:07:45:57 +0000] "GET /api/v1/requests HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36 Avast/147.0.0.0"
+2026-05-29 15:45:57 [http]: 127.0.0.1 - - [29/May/2026:07:45:57 +0000] "GET /api/v1/requests HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36 Avast/147.0.0.0"
+2026-05-29 15:45:58 [http]: 127.0.0.1 - - [29/May/2026:07:45:58 +0000] "POST /api/v1/auth/logout HTTP/1.1" 200 51 "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36 Avast/147.0.0.0"
+2026-05-29 15:46:13 [http]: 127.0.0.1 - - [29/May/2026:07:46:13 +0000] "POST /api/v1/auth/student/login HTTP/1.1" 200 435 "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36 Avast/147.0.0.0"
+2026-05-29 15:46:13 [http]: 127.0.0.1 - - [29/May/2026:07:46:13 +0000] "GET /api/v1/requests HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36 Avast/147.0.0.0"
+2026-05-29 15:46:14 [http]: 127.0.0.1 - - [29/May/2026:07:46:14 +0000] "GET /api/v1/requests HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36 Avast/147.0.0.0"
+2026-05-29 15:47:40 [debug]: New DB client connected
+2026-05-29 15:48:40 [debug]: New DB client connected
+2026-05-29 15:49:40 [debug]: New DB client connected
+2026-05-29 15:50:40 [debug]: New DB client connected
+2026-05-29 15:51:40 [debug]: New DB client connected
+2026-05-29 15:52:40 [debug]: New DB client connected
+2026-05-29 15:53:40 [debug]: New DB client connected
+2026-05-29 15:54:40 [debug]: New DB client connected
+2026-05-29 15:55:40 [debug]: New DB client connected
+2026-05-29 15:56:40 [debug]: New DB client connected
+2026-05-29 15:57:12 [info]: InvenCEA backend running on port 4000 [development]
+2026-05-29 15:57:45 [debug]: New DB client connected
+2026-05-29 15:57:45 [http]: 127.0.0.1 - - [29/May/2026:07:57:45 +0000] "POST /api/v1/auth/logout HTTP/1.1" 200 51 "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36 Avast/147.0.0.0"
+2026-05-29 15:57:54 [http]: 127.0.0.1 - - [29/May/2026:07:57:54 +0000] "POST /api/v1/auth/student/login HTTP/1.1" 200 457 "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36 Avast/147.0.0.0"
+2026-05-29 15:57:54 [http]: 127.0.0.1 - - [29/May/2026:07:57:54 +0000] "GET /api/v1/requests HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36 Avast/147.0.0.0"
+2026-05-29 15:57:55 [http]: 127.0.0.1 - - [29/May/2026:07:57:55 +0000] "GET /api/v1/requests HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36 Avast/147.0.0.0"
+2026-05-29 15:58:07 [info]: Student 3401 changed their PIN successfully.
+2026-05-29 15:58:07 [http]: 127.0.0.1 - - [29/May/2026:07:58:07 +0000] "PUT /api/v1/auth/student/change-pin HTTP/1.1" 200 66 "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36 Avast/147.0.0.0"
+2026-05-29 15:58:08 [http]: 127.0.0.1 - - [29/May/2026:07:58:08 +0000] "GET /api/v1/auth/me HTTP/1.1" 200 165 "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36 Avast/147.0.0.0"
+2026-05-29 15:58:08 [http]: 127.0.0.1 - - [29/May/2026:07:58:08 +0000] "GET /api/v1/auth/me HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36 Avast/147.0.0.0"
+2026-05-29 15:58:08 [debug]: New DB client connected
+2026-05-29 15:58:09 [http]: 127.0.0.1 - - [29/May/2026:07:58:09 +0000] "GET /api/v1/requests HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36 Avast/147.0.0.0"
+2026-05-29 15:58:09 [http]: 127.0.0.1 - - [29/May/2026:07:58:09 +0000] "GET /api/v1/requests HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36 Avast/147.0.0.0"
+2026-05-29 15:58:10 [http]: 127.0.0.1 - - [29/May/2026:07:58:10 +0000] "POST /api/v1/auth/logout HTTP/1.1" 200 51 "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36 Avast/147.0.0.0"
+2026-05-29 15:58:17 [error]: Error: Invalid 4-Digit PIN
+    at Object.studentLogin (C:\Users\Teacher\Music\invencea\backend\src\services\auth.service.js:83:35)
+    at async studentLogin (C:\Users\Teacher\Music\invencea\backend\src\controllers\auth.controller.js:37:20)
+2026-05-29 15:58:17 [http]: 127.0.0.1 - - [29/May/2026:07:58:17 +0000] "POST /api/v1/auth/student/login HTTP/1.1" 401 49 "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36 Avast/147.0.0.0"
+2026-05-29 15:58:21 [http]: 127.0.0.1 - - [29/May/2026:07:58:21 +0000] "POST /api/v1/auth/student/login HTTP/1.1" 200 458 "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36 Avast/147.0.0.0"
+2026-05-29 15:58:21 [http]: 127.0.0.1 - - [29/May/2026:07:58:21 +0000] "GET /api/v1/requests HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36 Avast/147.0.0.0"
+2026-05-29 15:58:22 [http]: 127.0.0.1 - - [29/May/2026:07:58:22 +0000] "GET /api/v1/requests HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36 Avast/147.0.0.0"
+2026-05-29 15:58:23 [http]: 127.0.0.1 - - [29/May/2026:07:58:23 +0000] "POST /api/v1/auth/logout HTTP/1.1" 200 51 "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36 Avast/147.0.0.0"
+2026-05-29 15:59:12 [debug]: New DB client connected
+2026-05-29 16:00:12 [debug]: New DB client connected

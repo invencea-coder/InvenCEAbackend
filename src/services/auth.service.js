@@ -1,3 +1,4 @@
+// src/services/auth.service.js
 const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
@@ -81,9 +82,22 @@ const studentLogin = async (student_id, pin) => {
   const match = await bcrypt.compare(pin, student.pin_hash);
   if (!match) throw Object.assign(new Error('Invalid 4-Digit PIN'), { status: 401 });
 
+  // ⚡ FIX: Verify if the stored password corresponds to the default uninitialized credential profile string ('1234')
+  const isDefaultPin = await bcrypt.compare('1234', student.pin_hash);
+
   const token = jwt.sign({ id: student.id, role: 'student', name: student.full_name, student_id: student.student_id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_IN || '7d' });
 
-  return { token, user: { id: student.id, full_name: student.full_name, student_id: student.student_id, department: student.department, role: 'student' } };
+  return { 
+    token, 
+    user: { 
+      id: student.id, 
+      full_name: student.full_name, 
+      student_id: student.student_id, 
+      department: student.department, 
+      role: 'student',
+      is_default_pin: isDefaultPin // ⚡ FIX: Explicit parameter mapping to allow immediate client tracking checks
+    } 
+  };
 };
 
 const changeStudentPin = async (userId, currentPin, newPin) => {
@@ -102,7 +116,6 @@ const changeStudentPin = async (userId, currentPin, newPin) => {
 };
 
 const adminLogin = async (email, password) => {
-  // ⚡ FIX: Added 'dean' so Deans can log in
   const { rows } = await query(
     `SELECT id, email, name, password_hash, role, room_id, needs_password_reset
      FROM users

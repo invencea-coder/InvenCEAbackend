@@ -1743,3 +1743,6 @@
 2026-05-07 16:05:20 [error]: Error: Invalid credentials
     at Object.adminLogin (C:\Users\Teacher\Music\invencea\backend\src\services\auth.service.js:118:35)
     at async adminLogin (C:\Users\Teacher\Music\invencea\backend\src\controllers\auth.controller.js:63:20)
+2026-05-29 15:58:17 [error]: Error: Invalid 4-Digit PIN
+    at Object.studentLogin (C:\Users\Teacher\Music\invencea\backend\src\services\auth.service.js:83:35)
+    at async studentLogin (C:\Users\Teacher\Music\invencea\backend\src\controllers\auth.controller.js:37:20)
